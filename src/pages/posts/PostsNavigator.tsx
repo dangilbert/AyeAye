@@ -5,6 +5,7 @@ export const PostsNavigator = () => {
   return (
     <SafeAreaView>
       <Text>Posts feed</Text>
+      <Text>Home screen shows options for viewing</Text>
     </SafeAreaView>
   );
 };

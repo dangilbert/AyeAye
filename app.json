@@ -33,6 +33,12 @@
         "projectId": "5abd0b3c-4752-4ae7-bf66-bfa58530a529"
       }
     },
-    "owner": "perketel"
+    "owner": "perketel",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/5abd0b3c-4752-4ae7-bf66-bfa58530a529"
+    }
   }
 }
