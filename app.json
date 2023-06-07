@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AyeAye",
-    "slug": "AyeAye",
+    "slug": "ayeaye",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "eu.dangilbert.ayeaye"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "eu.dangilbert.ayeaye"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5abd0b3c-4752-4ae7-bf66-bfa58530a529"
+      }
+    },
+    "owner": "perketel"
   }
 }
