@@ -25,7 +25,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeRoot } from "./src/pages/home/root";
-import { AppearanceProvider } from "react-native-appearance";
 import { ThemeProvider } from "./src/theme";
 
 const Tab = createBottomTabNavigator();
@@ -57,22 +56,18 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppearanceProvider>
-        <ThemeProvider>
-          <PaperProvider
-            theme={theme === "dark" ? MD3DarkTheme : MD3LightTheme}
+      <ThemeProvider>
+        <PaperProvider theme={theme === "dark" ? MD3DarkTheme : MD3LightTheme}>
+          <NavigationContainer
+            theme={theme === "dark" ? DarkTheme : DefaultTheme}
           >
-            <NavigationContainer
-              theme={theme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <RootStack.Navigator screenOptions={{ headerShown: false }}>
-                <RootStack.Screen name={"HOME"} component={HomeRoot} />
-              </RootStack.Navigator>
-              <StatusBar style="auto" />
-            </NavigationContainer>
-          </PaperProvider>
-        </ThemeProvider>
-      </AppearanceProvider>
+            <RootStack.Navigator screenOptions={{ headerShown: false }}>
+              <RootStack.Screen name={"HOME"} component={HomeRoot} />
+            </RootStack.Navigator>
+            <StatusBar style="auto" />
+          </NavigationContainer>
+        </PaperProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

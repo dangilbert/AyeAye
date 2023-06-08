@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { useColorScheme } from "react-native-appearance";
 import { lightColors, darkColors, ThemeColors } from "./colors";
 import { ThemeSizes } from "./dimens";
+import { Appearance } from "react-native";
 
 export type Theme = {
   isDark: boolean;
@@ -19,7 +19,7 @@ export const ThemeContext = createContext<Theme>({
 
 export const ThemeProvider = (props) => {
   // Getting the device color theme, this will also work with react-native-web
-  const colorScheme = useColorScheme(); // Can be dark | light | no-preference
+  const colorScheme = Appearance.getColorScheme(); // Can be dark | light | no-preference
 
   /*
    * To enable changing the app theme dynamicly in the app (run-time)
