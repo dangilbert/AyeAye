@@ -10,8 +10,8 @@
     "web": "expo start --web",
     "publish:dev:ios": "eas build --profile development --platform ios",
     "publish:preview:ios": "eas build --profile preview --platform ios",
-    "update:preview": "eas update --profile preview",
-    "update:production": "eas update --profile production"
+    "update:preview": "eas update --channel preview",
+    "update:production": "eas update --channel production"
   },
   "dependencies": {
     "@lukemorales/query-key-factory": "^1.2.0",
