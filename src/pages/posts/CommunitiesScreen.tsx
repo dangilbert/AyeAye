@@ -24,6 +24,15 @@ export const CommunitiesScreen = ({ navigation }) => {
   return (
     <>
       <ThemedText variant="subheading">Communities@lemmy.ml</ThemedText>
+      <Button
+        key={"all@lemmy.ml"}
+        title={`All@lemmy.ml`}
+        onPress={() => {
+          navigation.navigate("CommunityFeed", {
+            communityId: undefined,
+          });
+        }}
+      />
       {communities &&
         communities.map((community) => {
           return (
