@@ -4,6 +4,7 @@
   },
   "build": {
     "development": {
+      "node": "18.12.1",
       "developmentClient": true,
       "distribution": "internal",
       "env": {
@@ -11,10 +12,12 @@
       }
     },
     "preview": {
+      "node": "18.12.1",
       "channel": "preview",
       "distribution": "internal"
     },
     "production": {
+      "node": "18.12.1",
       "channel": "production"
     }
   },
