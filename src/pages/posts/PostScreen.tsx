@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { ScrollView, StyleSheet } from "react-native";
 import { Theme, useTheme } from "../../theme";
-import { PostDetail } from "../../components/PostDetail";
+import { PostDetail } from "../../components/post/PostDetail";
 
 export const PostScreen = ({ route }) => {
   const postId = route.params.postId;

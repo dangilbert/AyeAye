@@ -1,7 +1,8 @@
-import { Button } from "react-native";
 import { ThemedText } from "../../components/ThemedText";
 import { LemmyHttp, PostView } from "lemmy-js-client";
 import { useEffect, useState } from "react";
+import { PostCard } from "../../components/post/PostCard";
+import { ScrollView } from "react-native";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
@@ -26,22 +27,11 @@ export const CommunityScreen = ({ navigation, route }) => {
   }, [setPosts]);
 
   return (
-    <>
-      <ThemedText>Community feed</ThemedText>
+    <ScrollView>
       {posts &&
         posts.map((post) => {
-          return (
-            <Button
-              key={post.post.id}
-              title={post.post.name}
-              onPress={() => {
-                navigation.navigate("Post", {
-                  postId: post.post.id,
-                });
-              }}
-            />
-          );
+          return <PostCard post={post} />;
         })}
-    </>
+    </ScrollView>
   );
 };

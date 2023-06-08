@@ -7,7 +7,7 @@ export const ThemeSizes = {
   },
   text: {
     heading: 24,
-    subheading: 16,
+    subheading: 20,
     body: 14,
     label: 12,
   },

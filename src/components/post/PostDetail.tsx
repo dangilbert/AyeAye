@@ -1,7 +1,8 @@
 import { Fragment, useState } from "react";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
-import { Theme, useTheme } from "../theme";
-import { Pressable, StyleSheet } from "react-native";
+import { useTheme } from "../../theme";
+import { Pressable } from "react-native";
+import { markdownStyles } from "./styles";
 
 export interface PostDetailProps {
   post: {
@@ -13,19 +14,20 @@ export interface PostDetailProps {
 
 export const PostDetail = ({ post: { id, name, body } }: PostDetailProps) => {
   const theme = useTheme();
-  const themedStyle = styles(theme);
+  const themedStyle = markdownStyles(theme);
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const titleOptions: useMarkdownHookOptions = {
     styles: {
-      text: themedStyle.title,
+      ...themedStyle,
+      text: themedStyle.h1,
     },
   };
 
   const bodyOptions: useMarkdownHookOptions = {
     styles: {
-      text: themedStyle.body,
+      ...themedStyle,
     },
   };
 
@@ -54,16 +56,3 @@ export const PostDetail = ({ post: { id, name, body } }: PostDetailProps) => {
     </Fragment>
   );
 };
-
-const styles = (theme: Theme) =>
-  StyleSheet.create({
-    title: {
-      color: theme.colors.text,
-      fontSize: theme.sizes.text.heading,
-      fontWeight: "bold",
-    },
-    body: {
-      color: theme.colors.text,
-      fontSize: theme.sizes.text.body,
-    },
-  });

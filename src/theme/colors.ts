@@ -6,6 +6,7 @@ export type ThemeColors = {
   iconActive: string;
   button: string;
   buttonText: string;
+  border: string;
 };
 
 // Light theme colors
@@ -17,6 +18,7 @@ export const lightColors = {
   iconActive: "#e68a00",
   button: "black",
   buttonText: "#e68a00",
+  border: "#e68a00",
 };
 
 // Dark theme colors
@@ -28,4 +30,5 @@ export const darkColors = {
   iconActive: "#e68a00",
   button: "orange",
   buttonText: "black",
+  border: "#e68a00",
 };
