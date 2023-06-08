@@ -1,5 +1,4 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { Text } from "react-native";
 import { PostsNavigator } from "../posts/PostsNavigator";
 import { InboxNavigator } from "../inbox/InboxNavigator";
 import { AccountNavigator } from "../account/AccountNavigator";

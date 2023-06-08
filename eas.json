@@ -19,6 +19,8 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "appleTeamId": "6N3SHT7B5B"
+    }
   }
 }

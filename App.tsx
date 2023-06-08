@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { useLogin } from "./src/pods/auth/useLogin";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -16,6 +16,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeRoot } from "./src/pages/home/root";
+import { AppearanceProvider } from "react-native-appearance";
+import { ThemeProvider } from "./src/theme";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,9 +32,10 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2 } },
 });
 
+const RootStack = createNativeStackNavigator();
+
 export default function App() {
   useOnlineManager();
-
   useAppState(onAppStateChange);
 
   // TODO fetch the feed from lemmy.ml
@@ -41,14 +44,18 @@ export default function App() {
   //   password: "gdBkM.UHRJDNiQBHrC*hvKd2nPEg!T",
   // });
 
-  // console.log(loginResult);
-
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer>
-        <HomeRoot />
-        <StatusBar style="auto" />
-      </NavigationContainer>
+      <AppearanceProvider>
+        <ThemeProvider>
+          <NavigationContainer>
+            <RootStack.Navigator screenOptions={{ headerShown: false }}>
+              <RootStack.Screen name={"HOME"} component={HomeRoot} />
+            </RootStack.Navigator>
+            <StatusBar style="auto" />
+          </NavigationContainer>
+        </ThemeProvider>
+      </AppearanceProvider>
     </QueryClientProvider>
   );
 }
