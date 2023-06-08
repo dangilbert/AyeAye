@@ -1,7 +1,16 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, useColorScheme } from "react-native";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  Provider as PaperProvider,
+} from "react-native-paper";
 import { useLogin } from "./src/pods/auth/useLogin";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from "@react-navigation/native";
 import {
   QueryClient,
   QueryClientProvider,
@@ -44,16 +53,24 @@ export default function App() {
   //   password: "gdBkM.UHRJDNiQBHrC*hvKd2nPEg!T",
   // });
 
+  const theme = useColorScheme();
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppearanceProvider>
         <ThemeProvider>
-          <NavigationContainer>
-            <RootStack.Navigator screenOptions={{ headerShown: false }}>
-              <RootStack.Screen name={"HOME"} component={HomeRoot} />
-            </RootStack.Navigator>
-            <StatusBar style="auto" />
-          </NavigationContainer>
+          <PaperProvider
+            theme={theme === "dark" ? MD3DarkTheme : MD3LightTheme}
+          >
+            <NavigationContainer
+              theme={theme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <RootStack.Navigator screenOptions={{ headerShown: false }}>
+                <RootStack.Screen name={"HOME"} component={HomeRoot} />
+              </RootStack.Navigator>
+              <StatusBar style="auto" />
+            </NavigationContainer>
+          </PaperProvider>
         </ThemeProvider>
       </AppearanceProvider>
     </QueryClientProvider>

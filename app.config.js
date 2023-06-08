@@ -5,6 +5,7 @@ export default {
     name: IS_DEV ? "AyeAye (Dev)" : "AyeAye",
     slug: "ayeaye",
     version: "0.0.1",
+    runtimeVersion: "1",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",

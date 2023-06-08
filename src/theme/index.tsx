@@ -1,11 +1,20 @@
 import { useState, useEffect, useContext, createContext } from "react";
 import { useColorScheme } from "react-native-appearance";
-import { lightColors, darkColors } from "./colors";
+import { lightColors, darkColors, ThemeColors } from "./colors";
+import { ThemeSizes } from "./dimens";
 
-export const ThemeContext = createContext({
+export type Theme = {
+  isDark: boolean;
+  colors: ThemeColors;
+  sizes: typeof ThemeSizes;
+  setScheme(scheme: Theme): void;
+};
+
+export const ThemeContext = createContext<Theme>({
   isDark: false,
   colors: lightColors,
-  setScheme: (scheme: any) => {},
+  sizes: ThemeSizes,
+  setScheme: (scheme: Theme) => {},
 });
 
 export const ThemeProvider = (props) => {
@@ -27,6 +36,8 @@ export const ThemeProvider = (props) => {
     isDark,
     // Changing color schemes according to theme
     colors: isDark ? darkColors : lightColors,
+    // Sizes are the same for all themes (currently)
+    sizes: ThemeSizes,
     // Overrides the isDark value will cause re-render inside the context.
     setScheme: (scheme) => setIsDark(scheme === "dark"),
   };

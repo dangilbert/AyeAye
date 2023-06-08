@@ -23,6 +23,12 @@
       "ios": {
         "appleTeamId": "6N3SHT7B5B"
       }
+    },
+    "development": {
+      "extends": "production"
+    },
+    "preview": {
+      "extends": "production"
     }
   }
 }

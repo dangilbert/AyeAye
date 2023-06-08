@@ -1,12 +1,12 @@
-import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemedText } from "../../components/ThemedText";
 
 export const AccountNavigator = () => {
   return (
     <SafeAreaView>
-      <Text>Account view</Text>
-      <Text>Username</Text>
-      <Text>Host Server</Text>
+      <ThemedText>Account view</ThemedText>
+      <ThemedText>Username</ThemedText>
+      <ThemedText>Host Server</ThemedText>
     </SafeAreaView>
   );
 };
