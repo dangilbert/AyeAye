@@ -3,8 +3,10 @@ import { Theme, useTheme } from "../../theme";
 import { markdownStyles } from "./styles";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Fragment } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { LinkPreview } from "@flyerhq/react-native-link-preview";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export interface PostCardProps {
   post: PostView;
@@ -26,23 +28,54 @@ export const PostCard = ({ post }) => {
 
   const postTitle = useMarkdown(post.post.name, titleOptions);
 
+  console.log("url", post.post.url);
+  console.log("thumbnailUrl", post.post.thumbnail_url);
+
   return (
-    <View key={`post_${post.post.id}`} style={themedStyle.container}>
-      {postTitle &&
-        postTitle.map((element, index) => {
-          return (
-            <Pressable
-              onPress={() =>
-                navigation.navigate("Post", {
-                  postId: post.post.id,
-                })
-              }
-            >
-              <Fragment key={`title_${index}`}>{element}</Fragment>
-            </Pressable>
-          );
-        })}
-    </View>
+    <Pressable
+      key={`post_${post.post.id}`}
+      style={themedStyle.container}
+      onPress={() =>
+        navigation.navigate("Post", {
+          postId: post.post.id,
+        })
+      }
+    >
+      {post.post.thumbnail_url && (
+        <Image
+          style={themedStyle.image}
+          source={{ uri: post.post.thumbnail_url }}
+        />
+      )}
+      {!post.post.thumbnail_url && post.post.url && (
+        <LinkPreview
+          text={post.post.url}
+          renderLinkPreview={(previewData) => {
+            return (
+              <Image
+                style={themedStyle.image}
+                source={{ uri: previewData.previewData?.image?.url }}
+              />
+            );
+          }}
+        />
+      )}
+      {!post.post.thumbnail_url && !post.post.url && (
+        <View style={themedStyle.iconContainer}>
+          <MaterialIcons
+            name={"text-snippet"}
+            size={themedStyle.icon.size}
+            color={themedStyle.icon.color}
+          />
+        </View>
+      )}
+      <View style={themedStyle.title}>
+        {postTitle &&
+          postTitle.map((element, index) => {
+            return <Fragment key={`title_${index}`}>{element}</Fragment>;
+          })}
+      </View>
+    </Pressable>
   );
 };
 
@@ -55,5 +88,30 @@ const styles = (theme: Theme) =>
       margin: 5,
       padding: 5,
       borderRadius: 5,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    image: {
+      width: 60,
+      height: 50,
+      marginEnd: 10,
+      borderRadius: 5,
+    },
+    title: {
+      flex: 1,
+    },
+    icon: {
+      size: 50,
+      color: theme.colors.text,
+      margin: 10,
+    },
+    iconContainer: {
+      width: 60,
+      height: 50,
+      marginEnd: 10,
+      borderRadius: 5,
+      backgroundColor: theme.colors.border,
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
