@@ -26,6 +26,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeRoot } from "./src/pages/home/root";
 import { ThemeProvider } from "./src/theme";
+import { MediaModalScreen } from "./src/components/media/MediaModalScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -62,7 +63,15 @@ export default function App() {
             theme={theme === "dark" ? DarkTheme : DefaultTheme}
           >
             <RootStack.Navigator screenOptions={{ headerShown: false }}>
-              <RootStack.Screen name={"HOME"} component={HomeRoot} />
+              <RootStack.Group>
+                <RootStack.Screen name={"HOME"} component={HomeRoot} />
+              </RootStack.Group>
+              <RootStack.Group screenOptions={{ presentation: "modal" }}>
+                <RootStack.Screen
+                  name={"MediaModal"}
+                  component={MediaModalScreen}
+                />
+              </RootStack.Group>
             </RootStack.Navigator>
             <StatusBar style="auto" />
           </NavigationContainer>

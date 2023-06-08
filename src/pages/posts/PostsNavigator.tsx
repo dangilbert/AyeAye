@@ -1,5 +1,3 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemedText } from "../../components/ThemedText";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CommunitiesScreen } from "./CommunitiesScreen";
 import { CommunityScreen } from "./CommunityScreen";

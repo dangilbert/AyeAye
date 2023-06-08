@@ -26,6 +26,8 @@ export const PostScreen = ({ route }) => {
     })();
   }, [setPost]);
 
+  console.log(post);
+
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
@@ -37,6 +39,8 @@ export const PostScreen = ({ route }) => {
             id: post.post.id,
             name: post.post.name,
             body: post.post.body,
+            thumbnail_url: post.post.thumbnail_url,
+            url: post.post.url,
           }}
         />
       )}

@@ -28,9 +28,6 @@ export const PostCard = ({ post }) => {
 
   const postTitle = useMarkdown(post.post.name, titleOptions);
 
-  console.log("url", post.post.url);
-  console.log("thumbnailUrl", post.post.thumbnail_url);
-
   return (
     <Pressable
       key={`post_${post.post.id}`}
@@ -42,10 +39,18 @@ export const PostCard = ({ post }) => {
       }
     >
       {post.post.thumbnail_url && (
-        <Image
-          style={themedStyle.image}
-          source={{ uri: post.post.thumbnail_url }}
-        />
+        <Pressable
+          onPress={() =>
+            navigation.navigate("MediaModal", {
+              imageUri: post.post.url ?? post.post.thumbnail_url,
+            })
+          }
+        >
+          <Image
+            style={themedStyle.image}
+            source={{ uri: post.post.thumbnail_url }}
+          />
+        </Pressable>
       )}
       {!post.post.thumbnail_url && post.post.url && (
         <LinkPreview
