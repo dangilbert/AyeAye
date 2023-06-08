@@ -4,7 +4,7 @@ export default {
   expo: {
     name: IS_DEV ? "AyeAye (Dev)" : "AyeAye",
     slug: "ayeaye",
-    version: "1.0.0",
+    version: "0.0.1",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
