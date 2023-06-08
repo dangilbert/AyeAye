@@ -30,10 +30,10 @@ export const PostDetail = ({ post: { id, name, body } }: PostDetailProps) => {
   };
 
   const postTitle = useMarkdown(name, titleOptions);
-  const postBody = useMarkdown(body, bodyOptions);
+  const postBody = useMarkdown(body ?? "", bodyOptions);
 
   return (
-    <>
+    <Fragment key={`post_${id}`}>
       {postTitle &&
         postTitle.map((element, index) => {
           return (
@@ -51,7 +51,7 @@ export const PostDetail = ({ post: { id, name, body } }: PostDetailProps) => {
             </Pressable>
           );
         })}
-    </>
+    </Fragment>
   );
 };
 
