@@ -1,8 +1,10 @@
 import { ThemedText } from "../../components/ThemedText";
 import { LemmyHttp, PostView } from "lemmy-js-client";
 import { useEffect, useState } from "react";
-import Markdown from "react-native-markdown-displayer";
-import { ScrollView } from "react-native";
+
+import { ScrollView, StyleSheet } from "react-native";
+import { Theme, useTheme } from "../../theme";
+import { PostDetail } from "../../components/PostDetail";
 
 export const PostScreen = ({ route }) => {
   const postId = route.params.postId;
@@ -30,14 +32,13 @@ export const PostScreen = ({ route }) => {
       style={{ height: "100%", padding: 10 }}
     >
       {post && (
-        <ThemedText variant="subheading">
-          <Markdown>{post.post.name}</Markdown>
-        </ThemedText>
-      )}
-      {post && (
-        <ThemedText variant="body">
-          <Markdown>{post.post.body}</Markdown>
-        </ThemedText>
+        <PostDetail
+          post={{
+            id: post.post.id,
+            name: post.post.name,
+            body: post.post.body,
+          }}
+        />
       )}
     </ScrollView>
   );

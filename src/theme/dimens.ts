@@ -5,4 +5,10 @@ export const ThemeSizes = {
     large: 32,
     tabBar: 20,
   },
+  text: {
+    heading: 24,
+    subheading: 16,
+    body: 14,
+    label: 12,
+  },
 };
