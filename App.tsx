@@ -50,7 +50,7 @@ export default function App() {
   // TODO fetch the feed from lemmy.ml
   // const loginResult = useLogin("https://lemmy.dangilbert.eu", {
   //   username_or_email: "perketel",
-  //   password: "gdBkM.UHRJDNiQBHrC*hvKd2nPEg!T",
+  //   password: "redacted",
   // });
 
   const theme = useColorScheme();
