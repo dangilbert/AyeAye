@@ -1,16 +1,43 @@
 import { Button } from "react-native";
 import { ThemedText } from "../../components/ThemedText";
+import { LemmyHttp, CommunityView } from "lemmy-js-client";
+import { useEffect, useState } from "react";
 
 export const CommunitiesScreen = ({ navigation }) => {
+  const [communities, setCommunities] = useState<CommunityView[]>();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
+        const res = await client.listCommunities({
+          type_: "All",
+        });
+
+        setCommunities(res.communities);
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [setCommunities]);
+
   return (
     <>
-      <ThemedText>Communities content</ThemedText>
-      <Button
-        title="Go to community"
-        onPress={() => {
-          navigation.navigate("CommunityFeed");
-        }}
-      />
+      <ThemedText variant="subheading">Communities@lemmy.ml</ThemedText>
+      {communities &&
+        communities.map((community) => {
+          return (
+            <Button
+              key={community.community.id}
+              title={`${community.community.name}@${community.community.instance_id}`}
+              onPress={() => {
+                navigation.navigate("CommunityFeed", {
+                  communityId: community.community.id,
+                });
+              }}
+            />
+          );
+        })}
     </>
   );
 };
