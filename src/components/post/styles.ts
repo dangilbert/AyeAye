@@ -1,4 +1,4 @@
-import { Theme } from "../../theme";
+import { Theme } from "@rn-app/theme";
 import { StyleSheet } from "react-native";
 
 export const markdownStyles = (theme: Theme) =>

@@ -1,10 +1,8 @@
-import { ThemedText } from "../../components/ThemedText";
 import { LemmyHttp, PostView } from "lemmy-js-client";
 import { useEffect, useState } from "react";
 
-import { ScrollView, StyleSheet } from "react-native";
-import { Theme, useTheme } from "../../theme";
-import { PostDetail } from "../../components/post/PostDetail";
+import { ScrollView } from "react-native";
+import { PostDetail } from "@rn-app/components/post/PostDetail";
 
 export const PostScreen = ({ route }) => {
   const postId = route.params.postId;

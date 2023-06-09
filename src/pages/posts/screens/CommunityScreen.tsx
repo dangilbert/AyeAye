@@ -1,10 +1,9 @@
-import { ThemedText } from "../../components/ThemedText";
 import { LemmyHttp, PostView } from "lemmy-js-client";
 import { useEffect, useState } from "react";
-import { PostCard } from "../../components/post/PostCard";
+import { PostCard } from "@rn-app/components/post/PostCard";
 import { ScrollView } from "react-native";
 
-export const CommunityScreen = ({ navigation, route }) => {
+export const CommunityScreen = ({ route }) => {
   const communityId = route.params.communityId;
   const [posts, setPosts] = useState<PostView[]>();
   // TODO set up react query caching to get the community detailsg

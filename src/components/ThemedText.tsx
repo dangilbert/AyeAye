@@ -1,5 +1,5 @@
 import { StyleSheet, Text } from "react-native";
-import { Theme, useTheme } from "../theme";
+import { Theme, useTheme } from "@rn-app/theme";
 
 export type TextVariant = "heading" | "subheading" | "body" | "label";
 

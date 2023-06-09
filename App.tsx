@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, useColorScheme } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import {
   MD3DarkTheme,
   MD3LightTheme,
   Provider as PaperProvider,
 } from "react-native-paper";
-import { useLogin } from "./src/pods/auth/useLogin";
 import {
   DarkTheme,
   DefaultTheme,
@@ -20,17 +19,12 @@ import React from "react";
 import { useAppState } from "./src/hooks/useAppState";
 import { useOnlineManager } from "./src/hooks/useOnlineManager";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import {
-//   createAppContainer,
-// } from '@react-navigation/native';
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { HomeRoot } from "./src/pages/home/root";
 import { ThemeProvider } from "./src/theme";
 import { MediaModalScreen } from "./src/components/media/MediaModalScreen";
 
-const Tab = createBottomTabNavigator();
-
-function onAppStateChange(status) {
+function onAppStateChange(status: any) {
   // React Query already supports in web browser refetch on window focus by default
   if (Platform.OS !== "web") {
     focusManager.setFocused(status === "active");
@@ -80,12 +74,3 @@ export default function App() {
     </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

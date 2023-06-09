@@ -1,5 +1,5 @@
 import { ImageZoom } from "@likashefqet/react-native-image-zoom";
-import { Theme, useTheme } from "../../theme";
+import { Theme, useTheme } from "@rn-app/theme";
 import { StyleSheet, View } from "react-native";
 
 export const MediaModalScreen = ({ route }) => {

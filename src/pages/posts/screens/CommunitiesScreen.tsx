@@ -1,5 +1,5 @@
 import { Button } from "react-native";
-import { ThemedText } from "../../components/ThemedText";
+import { ThemedText } from "../../../components/ThemedText";
 import { LemmyHttp, CommunityView } from "lemmy-js-client";
 import { useEffect, useState } from "react";
 

@@ -1,5 +1,5 @@
 import { PostView } from "lemmy-js-client";
-import { Theme, useTheme } from "../../theme";
+import { Theme, useTheme } from "@rn-app/theme";
 import { markdownStyles } from "./styles";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Fragment } from "react";

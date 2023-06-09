@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Theme, useTheme } from "../theme";
+import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export type TabBarIconNames =

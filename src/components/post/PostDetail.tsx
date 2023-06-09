@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
-import { Theme, useTheme } from "../../theme";
+import { Theme, useTheme } from "@rn-app/theme";
 import { Pressable, Image, StyleSheet, View } from "react-native";
 import { markdownStyles } from "./styles";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
