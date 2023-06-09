@@ -25,6 +25,10 @@
         "./src/*/index",
         "./src/*"
       ],
+      "@pages/*": [
+        "./src/pages/*/index",
+        "./src/pages/*"
+      ],
       "~/*": [
         "*"
       ],

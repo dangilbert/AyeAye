@@ -5,7 +5,7 @@ import { Pressable, Image, StyleSheet, View } from "react-native";
 import { markdownStyles } from "./styles";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ThemedText } from "../ThemedText";
+import { ThemedText } from "@rn-app/components/ThemedText";
 import { useNavigation } from "@react-navigation/native";
 
 export interface PostDetailProps {

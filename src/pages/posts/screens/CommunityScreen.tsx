@@ -29,7 +29,7 @@ export const CommunityScreen = ({ route }) => {
     <ScrollView>
       {posts &&
         posts.map((post) => {
-          return <PostCard post={post} />;
+          return <PostCard key={`postcard_${post.post.id}`} post={post} />;
         })}
     </ScrollView>
   );

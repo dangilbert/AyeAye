@@ -11,6 +11,7 @@ module.exports = function (api) {
           root: ["./src"],
           alias: {
             "@rn-app": "./src",
+            "@pages": "./src/pages",
             "~": "./",
           },
         },

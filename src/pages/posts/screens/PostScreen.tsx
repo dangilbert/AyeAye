@@ -24,8 +24,6 @@ export const PostScreen = ({ route }) => {
     })();
   }, [setPost]);
 
-  console.log(post);
-
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"

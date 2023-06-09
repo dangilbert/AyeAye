@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemedText } from "../../components/ThemedText";
+import { ThemedText } from "@rn-app/components/ThemedText";
 
 export const SearchNavigator = () => {
   return (

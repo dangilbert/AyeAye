@@ -1,10 +1,10 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { PostsNavigator } from "../posts/PostsNavigator";
-import { InboxNavigator } from "../inbox/InboxNavigator";
-import { AccountNavigator } from "../account/AccountNavigator";
-import { SearchNavigator } from "../search/SearchNavigator";
-import { SettingsNavigator } from "../settings/SettingsNavigator";
-import { TabBarIcon } from "../../components/TabBarIcon";
+import { PostsNavigator } from "@pages/posts/PostsNavigator";
+import { InboxNavigator } from "@pages/inbox/InboxNavigator";
+import { AccountNavigator } from "@pages/account/AccountNavigator";
+import { SearchNavigator } from "@pages/search/SearchNavigator";
+import { SettingsNavigator } from "@pages/settings/SettingsNavigator";
+import { TabBarIcon } from "@rn-app/components/TabBarIcon";
 
 const Tab = createMaterialBottomTabNavigator();
 
