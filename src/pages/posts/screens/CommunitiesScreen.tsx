@@ -1,44 +1,36 @@
-import { Button } from "react-native";
+import { Button, ScrollView, StyleSheet, View } from "react-native";
 import { ThemedText } from "@rn-app/components/ThemedText";
-import { LemmyHttp, CommunityView } from "lemmy-js-client";
-import { useEffect, useState } from "react";
+import { useCommunities } from "../hooks/useCommunities";
+import { CommunityListItem } from "@rn-app/components/community/CommunityListItem";
+import { Theme, useTheme } from "@rn-app/theme";
 
 export const CommunitiesScreen = ({ navigation }) => {
-  const [communities, setCommunities] = useState<CommunityView[]>();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        let client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
-        const res = await client.listCommunities({
-          type_: "All",
-        });
-
-        setCommunities(res.communities);
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, [setCommunities]);
+  const { data: communities } = useCommunities();
+  const themedStyles = styles(useTheme());
 
   return (
-    <>
-      <ThemedText variant="subheading">Communities@lemmy.ml</ThemedText>
-      <Button
+    <ScrollView>
+      <View style={themedStyles.sectionHeader}>
+        <ThemedText variant="subheading">Communities@lemmy.ml</ThemedText>
+      </View>
+      <CommunityListItem
         key={"all@lemmy.ml"}
-        title={`All@lemmy.ml`}
+        name={`All@lemmy.ml`}
+        customIcon="menu"
         onPress={() => {
           navigation.navigate("CommunityFeed", {
             communityId: undefined,
+            communityType: "All",
           });
         }}
       />
       {communities &&
         communities.map((community) => {
           return (
-            <Button
-              key={community.community.id}
-              title={`${community.community.name}@${community.community.instance_id}`}
+            <CommunityListItem
+              key={`community_${community.community.id}`}
+              name={community.community.name}
+              icon={community.community.icon}
               onPress={() => {
                 navigation.navigate("CommunityFeed", {
                   communityId: community.community.id,
@@ -47,6 +39,14 @@ export const CommunitiesScreen = ({ navigation }) => {
             />
           );
         })}
-    </>
+    </ScrollView>
   );
 };
+
+const styles = (theme: Theme) =>
+  StyleSheet.create({
+    sectionHeader: {
+      padding: 10,
+      backgroundColor: theme.colors.secondaryBackground,
+    },
+  });

@@ -1,29 +1,19 @@
-import { LemmyHttp, PostView } from "lemmy-js-client";
-import { useEffect, useState } from "react";
 import { PostCard } from "@rn-app/components/post/PostCard";
 import { ScrollView } from "react-native";
+import { useCommunity, usePosts } from "../hooks/useCommunities";
+import { useEffect } from "react";
 
-export const CommunityScreen = ({ route }) => {
+export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
-  const [posts, setPosts] = useState<PostView[]>();
-  // TODO set up react query caching to get the community detailsg
-  // const [communityName, setCommunityName] = useState<string>();
+
+  const { data: community } = useCommunity(communityId);
+  const { data: posts } = usePosts(communityId);
 
   useEffect(() => {
-    (async () => {
-      try {
-        let client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
-        const res = await client.getPosts({
-          type_: "All",
-          community_id: communityId,
-        });
-
-        setPosts(res.posts);
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, [setPosts]);
+    navigation.setOptions({
+      title: community?.community.name ?? "<Community>",
+    });
+  }, [community]);
 
   return (
     <ScrollView>

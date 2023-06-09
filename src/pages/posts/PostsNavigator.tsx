@@ -16,7 +16,7 @@ export const PostsNavigator = () => {
       <Stack.Screen
         name="CommunityFeed"
         component={CommunityScreen}
-        options={{ title: "<Community name>" }}
+        options={{ title: "<Community info>" }}
       />
       <Stack.Screen
         name="Post"
