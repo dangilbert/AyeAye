@@ -1,5 +1,5 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { LemmyHttp } from "lemmy-js-client";
+import { GetPostResponse, LemmyHttp, PostView } from "lemmy-js-client";
 
 const getCommunitiesForUser = async (
   userId?: string,
@@ -14,14 +14,15 @@ const getCommunitiesForUser = async (
 };
 
 const getPostsForCommunity = async (
+  page: number,
   communityId?: number,
-
   userId?: string
 ) => {
   const client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
   return await client.getPosts({
     type_: "All",
     community_id: communityId,
+    page: page,
   });
 };
 
@@ -36,6 +37,14 @@ export const communityQueries = createQueryKeys("communities", {
     userId?: string
   ) => ({
     queryKey: [{ communityId, communityType, userId, entity: "posts" }],
-    queryFn: () => getPostsForCommunity(communityId, communityType, userId),
+    queryFn: async ({
+      pageParam = 1,
+    }): Promise<{ nextPage: number; posts: PostView[] }> => {
+      const res = await getPostsForCommunity(pageParam, communityId, userId);
+      return {
+        ...res,
+        nextPage: pageParam + 1,
+      };
+    },
   }),
 });
