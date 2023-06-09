@@ -3,6 +3,9 @@ import { ThemedText, CreatorLine } from "@rn-app/components";
 import { StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
+import { markdownStyles } from "../post/styles";
+import { Fragment } from "react";
 
 export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const theme = useTheme();
@@ -10,6 +13,14 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
 
   const commentIndentColors = theme.colors.commentIndentHighlight;
   const commentIndent = comment.comment.path.split(".").length - 2;
+
+  const themedMarkdownStyle = markdownStyles(theme);
+  const bodyOptions: useMarkdownHookOptions = {
+    styles: {
+      ...themedMarkdownStyle,
+    },
+  };
+  const commentBody = useMarkdown(comment.comment.content, bodyOptions);
 
   return (
     <View
@@ -31,7 +42,14 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         creator={comment.creator}
         published={new Date(comment.comment.published)}
       />
-      <ThemedText variant="label">{comment.comment.content}</ThemedText>
+      {commentBody &&
+        commentBody.map((element, index) => {
+          return (
+            <Fragment key={`comment_${comment.comment.id}_body_${index}`}>
+              {element}
+            </Fragment>
+          );
+        })}
       <View style={themedStyle.footer}>
         <View style={themedStyle.footerAction}>
           <MaterialIcons
