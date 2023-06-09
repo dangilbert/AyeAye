@@ -34,7 +34,7 @@ export const usePosts = (communityId: number) => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
       ...communityQueries.posts(communityId),
-      getNextPageParam: (lastPage) => lastPage.nextPage,
+      getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
     });
 
   return {

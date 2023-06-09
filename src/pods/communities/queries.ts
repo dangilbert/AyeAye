@@ -39,11 +39,16 @@ export const communityQueries = createQueryKeys("communities", {
     queryKey: [{ communityId, communityType, userId, entity: "posts" }],
     queryFn: async ({
       pageParam = 1,
-    }): Promise<{ nextPage: number; posts: PostView[] }> => {
+    }): Promise<{
+      nextPage: number;
+      hasNextPage: Boolean;
+      posts: PostView[];
+    }> => {
       const res = await getPostsForCommunity(pageParam, communityId, userId);
       return {
         ...res,
         nextPage: pageParam + 1,
+        hasNextPage: res.posts.length > 0,
       };
     },
   }),

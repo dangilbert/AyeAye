@@ -2,7 +2,7 @@ import { PostCard } from "@rn-app/components/post/PostCard";
 import { useCommunity, usePosts } from "../hooks/useCommunities";
 import { useEffect } from "react";
 import { IOScrollView, InView } from "react-native-intersection-observer";
-import { ActivityIndicator, ProgressBar } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
@@ -23,6 +23,7 @@ export const CommunityScreen = ({ navigation, route }) => {
   }, [community]);
 
   return (
+    // TODO replace with a flashlist and onEndReachedThreshold for infinite loading
     <IOScrollView>
       {posts &&
         posts.pages.flatMap((page) => {
@@ -30,7 +31,7 @@ export const CommunityScreen = ({ navigation, route }) => {
             return <PostCard key={`postcard_${post.post.id}`} post={post} />;
           });
         })}
-      {!isLoading && !isFetchingNextPage && (
+      {!isLoading && !isFetchingNextPage && hasNextPage && (
         <InView
           style={{ height: 50 }}
           onChange={(inView: boolean) => {
