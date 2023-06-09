@@ -22,14 +22,7 @@ export default {
         : "eu.dangilbert.ayeaye",
     },
     android: {
-      adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#ffffff",
-      },
       package: IS_DEV ? "eu.dangilbert.ayeaye.dev" : "eu.dangilbert.ayeaye",
-    },
-    web: {
-      favicon: "./assets/favicon.png",
     },
     extra: {
       eas: {
