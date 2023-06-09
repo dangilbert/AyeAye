@@ -7,6 +7,7 @@ export type ThemeColors = {
   button: string;
   buttonText: string;
   border: string;
+  commentIndentHighlight: string[];
 };
 
 // Light theme colors
@@ -19,6 +20,8 @@ export const lightColors = {
   button: "black",
   buttonText: "#e68a00",
   border: "#e68a00",
+  // List of bright, not gray, colors for comment indent highlight
+  commentIndentHighlight: ["#f2f200", "#e600e6", "#00d9d9", "#c0c0ff"],
 };
 
 // Dark theme colors
@@ -31,4 +34,5 @@ export const darkColors = {
   button: "orange",
   buttonText: "black",
   border: "#e68a00",
+  commentIndentHighlight: ["#f2f200", "#e600e6", "#00d9d9", "#c0c0ff"],
 };

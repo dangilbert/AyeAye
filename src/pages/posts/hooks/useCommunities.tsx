@@ -45,3 +45,20 @@ export const usePosts = (communityId: number) => {
     hasNextPage,
   };
 };
+
+export const useComments = (postId: number, communityId?: number) => {
+  console.log("Fetching comments for post", postId, communityId);
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useInfiniteQuery({
+      ...communityQueries.comments(postId, communityId),
+      getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
+    });
+
+  return {
+    isLoading,
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  };
+};

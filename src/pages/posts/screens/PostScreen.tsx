@@ -1,13 +1,23 @@
-import { LemmyHttp, PostView } from "lemmy-js-client";
+import { CommentView, LemmyHttp, PostView } from "lemmy-js-client";
 import { useEffect, useState } from "react";
 
-import { ScrollView } from "react-native";
 import { PostDetail } from "@rn-app/components/post/PostDetail";
+import { useComments } from "../hooks/useCommunities";
+import { IOScrollView, InView } from "react-native-intersection-observer";
+import { ActivityIndicator } from "react-native-paper";
+import { CommentItem } from "@rn-app/components/comment/CommentItem";
 
 export const PostScreen = ({ route }) => {
   const postId = route.params.postId;
 
   const [post, setPost] = useState<PostView>();
+  const {
+    data: comments,
+    fetchNextPage,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useComments(postId, post?.community.id);
 
   useEffect(() => {
     (async () => {
@@ -24,8 +34,29 @@ export const PostScreen = ({ route }) => {
     })();
   }, [setPost]);
 
+  const commentMap: Map<number, CommentView[]> = comments?.pages
+    .flatMap((page) => page.comments)
+    ?.reduce((commentMap, comment) => {
+      const parentId = parseInt(comment.comment.path.split(".").slice(-2)[0]);
+      commentMap[parentId] = commentMap[parentId] ?? [];
+      commentMap[parentId].push(comment);
+      return commentMap;
+    }, new Map());
+
+  const commentList: CommentView[] = [];
+  const buildTree = (commentId: number) => {
+    if (commentMap[commentId]) {
+      commentMap[commentId].forEach((comment) => {
+        commentList.push(comment);
+        buildTree(comment.comment.id);
+      });
+    }
+  };
+
+  commentMap && buildTree(0);
+
   return (
-    <ScrollView
+    <IOScrollView
       contentInsetAdjustmentBehavior="automatic"
       style={{ height: "100%", padding: 10 }}
     >
@@ -40,6 +71,26 @@ export const PostScreen = ({ route }) => {
           }}
         />
       )}
-    </ScrollView>
+      {commentList &&
+        commentList.map((comment) => {
+          return (
+            <CommentItem
+              key={`commentitem_${comment.comment.id}`}
+              comment={comment}
+            />
+          );
+        })}
+      {!isLoading && !isFetchingNextPage && hasNextPage && (
+        <InView
+          style={{ height: 50 }}
+          onChange={(inView: boolean) => {
+            inView && fetchNextPage();
+          }}
+        />
+      )}
+      {(isLoading || isFetchingNextPage) && (
+        <ActivityIndicator style={{ height: 50 }} />
+      )}
+    </IOScrollView>
   );
 };

@@ -1,5 +1,10 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { GetPostResponse, LemmyHttp, PostView } from "lemmy-js-client";
+import {
+  CommentView,
+  GetPostResponse,
+  LemmyHttp,
+  PostView,
+} from "lemmy-js-client";
 
 const getCommunitiesForUser = async (
   userId?: string,
@@ -26,6 +31,25 @@ const getPostsForCommunity = async (
   });
 };
 
+const getCommentsForPost = async (
+  page: number,
+  postId?: number,
+  communityId?: number,
+  userId?: string
+) => {
+  const client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
+  console.log("getCommentsForPost", page, postId);
+  return await client.getComments({
+    // type_: "All",
+    // community_id: communityId,
+    post_id: postId,
+    page: page,
+    max_depth: 3,
+    limit: 1,
+    // sort: "Hot",
+  });
+};
+
 export const communityQueries = createQueryKeys("communities", {
   communities: (userId?: string) => ({
     queryKey: [{ userId, entity: "communities" }],
@@ -33,7 +57,7 @@ export const communityQueries = createQueryKeys("communities", {
   }),
   posts: (
     communityId?: number,
-    communityType?: "All" | "Subscribed",
+    communityType?: "All" | "Subscribed" | "Local",
     userId?: string
   ) => ({
     queryKey: [{ communityId, communityType, userId, entity: "posts" }],
@@ -50,6 +74,38 @@ export const communityQueries = createQueryKeys("communities", {
         nextPage: pageParam + 1,
         hasNextPage: res.posts.length > 0,
       };
+    },
+  }),
+  comments: (postId: number, communityId?: number, userId?: string) => ({
+    queryKey: [{ communityId, postId, userId, entity: "comments" }],
+    queryFn: async ({
+      pageParam = 1,
+    }): Promise<{
+      nextPage: number;
+      hasNextPage: Boolean;
+      comments: CommentView[];
+    }> => {
+      try {
+        const res = await getCommentsForPost(
+          pageParam,
+          postId,
+          communityId,
+          userId
+        );
+        return {
+          ...res,
+          nextPage: pageParam + 1,
+          // It looks like `page` does nothing on this request. Disabling pagination for now.
+          hasNextPage: false, //res.comments.length > 0,
+        };
+      } catch (e) {
+        console.log(e);
+        return {
+          nextPage: pageParam + 1,
+          hasNextPage: false,
+          comments: [],
+        };
+      }
     },
   }),
 });
