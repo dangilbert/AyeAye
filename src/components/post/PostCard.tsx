@@ -3,17 +3,18 @@ import { Theme, useTheme } from "@rn-app/theme";
 import { markdownStyles } from "./styles";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Fragment } from "react";
-import { Pressable, StyleSheet, View, Image } from "react-native";
+import { Pressable, StyleSheet, View, Image, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ThemedText } from "../ThemedText";
 
 export interface PostCardProps {
   post: PostView;
 }
 
 // TODO pass the Id and fetch this from reeact query
-export const PostCard = ({ post }) => {
+export const PostCard = ({ post }: PostCardProps) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const themedMarkdownStyle = markdownStyles(theme);
@@ -74,11 +75,51 @@ export const PostCard = ({ post }) => {
           />
         </View>
       )}
-      <View style={themedStyle.title}>
-        {postTitle &&
-          postTitle.map((element, index) => {
-            return <Fragment key={`title_${index}`}>{element}</Fragment>;
-          })}
+      <View style={themedStyle.rightContent}>
+        <View style={themedStyle.creator}>
+          <ThemedText variant="label">
+            {post.creator.name}
+            {"@<instance name...> to "}
+            {post.community.name}
+          </ThemedText>
+        </View>
+        <View style={themedStyle.title}>
+          {postTitle &&
+            postTitle.map((element, index) => {
+              return <Fragment key={`title_${index}`}>{element}</Fragment>;
+            })}
+        </View>
+        <View style={themedStyle.footer}>
+          <View style={themedStyle.footerAction}>
+            <MaterialIcons
+              name="comment"
+              size={themedStyle.footer.iconSize}
+              color={themedStyle.footer.iconColor}
+            />
+            <ThemedText variant="label">{post.counts.comments}</ThemedText>
+          </View>
+          <View style={themedStyle.footerAction}>
+            <MaterialIcons
+              name={Platform.OS === "ios" ? "ios-share" : "share"}
+              size={themedStyle.footer.iconSize}
+              color={themedStyle.footer.iconColor}
+            />
+          </View>
+          <View style={themedStyle.footerAction}>
+            <MaterialIcons
+              name="keyboard-arrow-up"
+              size={themedStyle.footer.iconSize}
+              color={themedStyle.footer.iconColor}
+            />
+            <ThemedText variant="label">{post.counts.upvotes}</ThemedText>
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={themedStyle.footer.iconSize}
+              color={themedStyle.footer.iconColor}
+            />
+            <ThemedText variant="label">{post.counts.downvotes}</ThemedText>
+          </View>
+        </View>
       </View>
     </Pressable>
   );
@@ -91,10 +132,24 @@ const styles = (theme: Theme) =>
       borderColor: theme.colors.border,
       borderWidth: 1,
       margin: 5,
-      padding: 5,
+      padding: 10,
       borderRadius: 5,
       flexDirection: "row",
+    },
+    rightContent: {
+      flex: 1,
+      flexDirection: "column",
+    },
+    footer: {
+      flexDirection: "row",
+      iconColor: theme.colors.icon,
+      iconSize: 20,
+      justifyContent: "space-between",
+    },
+    footerAction: {
+      flexDirection: "row",
       alignItems: "center",
+      gap: 5,
     },
     image: {
       width: 60,
@@ -105,6 +160,7 @@ const styles = (theme: Theme) =>
     title: {
       flex: 1,
     },
+    creator: {},
     icon: {
       size: 50,
       color: theme.colors.text,

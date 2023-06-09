@@ -58,7 +58,7 @@ export const PostScreen = ({ route }) => {
   return (
     <IOScrollView
       contentInsetAdjustmentBehavior="automatic"
-      style={{ height: "100%", padding: 10 }}
+      style={{ height: "100%", paddingHorizontal: 10 }}
     >
       {post && (
         <PostDetail
@@ -68,6 +68,9 @@ export const PostScreen = ({ route }) => {
             body: post.post.body,
             thumbnail_url: post.post.thumbnail_url,
             url: post.post.url,
+            counts: post.counts,
+            community: post.community,
+            creator: post.creator,
           }}
         />
       )}

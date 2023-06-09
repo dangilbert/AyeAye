@@ -1,12 +1,13 @@
 import { Fragment, useState } from "react";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Theme, useTheme } from "@rn-app/theme";
-import { Pressable, Image, StyleSheet, View } from "react-native";
+import { Pressable, Image, StyleSheet, View, Platform } from "react-native";
 import { markdownStyles } from "./styles";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText } from "@rn-app/components/ThemedText";
 import { useNavigation } from "@react-navigation/native";
+import { Community, Person, PostAggregates } from "lemmy-js-client";
 
 export interface PostDetailProps {
   post: {
@@ -14,12 +15,15 @@ export interface PostDetailProps {
     name: string;
     body?: string;
     url?: string;
+    counts: PostAggregates;
     thumbnail_url?: string;
+    community: Community;
+    creator: Person;
   };
 }
 
 export const PostDetail = ({
-  post: { id, name, body, url, thumbnail_url },
+  post: { id, name, body, url, thumbnail_url, counts, community, creator },
 }: PostDetailProps) => {
   const theme = useTheme();
   const themedMarkdownStyle = markdownStyles(theme);
@@ -88,6 +92,14 @@ export const PostDetail = ({
             </Pressable>
           );
         })}
+      {/* TODO convert this into a component*/}
+      <View style={themedStyle.creator}>
+        <ThemedText variant="label">
+          {creator.name}
+          {"@<instance name...> to "}
+          {community.name}
+        </ThemedText>
+      </View>
       {!thumbnail_url && url && (
         <LinkPreview
           text={url}
@@ -107,6 +119,37 @@ export const PostDetail = ({
             </Pressable>
           );
         })}
+      <View style={themedStyle.footer}>
+        <View style={themedStyle.footerAction}>
+          <MaterialIcons
+            name="comment"
+            size={themedStyle.footer.iconSize}
+            color={themedStyle.footer.iconColor}
+          />
+          <ThemedText variant="label">{counts.comments}</ThemedText>
+        </View>
+        <View style={themedStyle.footerAction}>
+          <MaterialIcons
+            name={Platform.OS === "ios" ? "ios-share" : "share"}
+            size={themedStyle.footer.iconSize}
+            color={themedStyle.footer.iconColor}
+          />
+        </View>
+        <View style={themedStyle.footerAction}>
+          <MaterialIcons
+            name="keyboard-arrow-up"
+            size={themedStyle.footer.iconSize}
+            color={themedStyle.footer.iconColor}
+          />
+          <ThemedText variant="label">{counts.upvotes}</ThemedText>
+          <MaterialIcons
+            name="keyboard-arrow-down"
+            size={themedStyle.footer.iconSize}
+            color={themedStyle.footer.iconColor}
+          />
+          <ThemedText variant="label">{counts.downvotes}</ThemedText>
+        </View>
+      </View>
     </Fragment>
   );
 };
@@ -146,5 +189,18 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.colors.border,
       justifyContent: "center",
       alignItems: "center",
+    },
+    creator: {},
+    footer: {
+      flexDirection: "row",
+      iconColor: theme.colors.icon,
+      iconSize: 20,
+      justifyContent: "space-between",
+      margin: 10,
+    },
+    footerAction: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
     },
   });
