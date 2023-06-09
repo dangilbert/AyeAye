@@ -1,10 +1,5 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import {
-  CommentView,
-  GetPostResponse,
-  LemmyHttp,
-  PostView,
-} from "lemmy-js-client";
+import { CommentView, LemmyHttp, PostView } from "lemmy-js-client";
 
 const getCommunitiesForUser = async (
   userId?: string,
@@ -13,6 +8,8 @@ const getCommunitiesForUser = async (
   const client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
   return await client.listCommunities({
     type_: communityType,
+    limit: 25,
+    sort: "Active",
     // TODO get the auth to list the communities for a user
     // auth: auth
   });
@@ -38,7 +35,6 @@ const getCommentsForPost = async (
   userId?: string
 ) => {
   const client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
-  console.log("getCommentsForPost", page, postId);
   return await client.getComments({
     // type_: "All",
     // community_id: communityId,
