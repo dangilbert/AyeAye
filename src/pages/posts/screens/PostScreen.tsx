@@ -71,6 +71,7 @@ export const PostScreen = ({ route }) => {
             counts: post.counts,
             community: post.community,
             creator: post.creator,
+            published: post.post.published,
           }}
         />
       )}

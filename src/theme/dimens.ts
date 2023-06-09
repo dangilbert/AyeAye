@@ -6,8 +6,8 @@ export const ThemeSizes = {
     tabBar: 20,
   },
   text: {
-    heading: 24,
-    subheading: 20,
+    heading: 20,
+    subheading: 16,
     body: 14,
     label: 12,
   },

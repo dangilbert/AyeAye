@@ -1,8 +1,7 @@
 import { CommentView } from "lemmy-js-client";
-import { ThemedText } from "../ThemedText";
+import { ThemedText, CreatorLine } from "@rn-app/components";
 import { StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
-import TimeAgo from "../TimeAgo";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export const CommentItem = ({ comment }: { comment: CommentView }) => {
@@ -28,13 +27,10 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         gap: 5,
       }}
     >
-      <View style={themedStyle.creatorLine}>
-        <ThemedText variant="label">
-          {comment.creator.name}
-          {"@<instance name...>"}
-        </ThemedText>
-        <TimeAgo date={new Date(comment.comment.published)} />
-      </View>
+      <CreatorLine
+        creator={comment.creator}
+        published={new Date(comment.comment.published)}
+      />
       <ThemedText variant="label">{comment.comment.content}</ThemedText>
       <View style={themedStyle.footer}>
         <View style={themedStyle.footerAction}>
@@ -58,11 +54,6 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
 
 const styles = (theme: Theme) =>
   StyleSheet.create({
-    creatorLine: {
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
     footer: {
       flexDirection: "row",
       iconColor: theme.colors.icon,

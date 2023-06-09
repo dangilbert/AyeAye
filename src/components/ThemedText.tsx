@@ -8,12 +8,20 @@ export interface ThemedTextProps {
   children: string | React.ReactNode;
 }
 
-export const ThemedText = ({ variant = "body", children }: ThemedTextProps) => {
+export const ThemedText = ({
+  variant = "body",
+  children,
+  ...rest
+}: ThemedTextProps) => {
   const theme = useTheme();
   const themedStyles = textStyles(theme);
   const variantStyle = themedStyles[variant];
 
-  return <Text style={variantStyle}>{children}</Text>;
+  return (
+    <Text style={variantStyle} {...rest}>
+      {children}
+    </Text>
+  );
 };
 
 const textStyles = (theme: Theme) =>

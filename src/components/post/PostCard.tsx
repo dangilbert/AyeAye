@@ -7,8 +7,7 @@ import { Pressable, StyleSheet, View, Image, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ThemedText } from "../ThemedText";
-import TimeAgo from "../TimeAgo";
+import { ThemedText, CreatorLine } from "@rn-app/components";
 
 export interface PostCardProps {
   post: PostView;
@@ -77,14 +76,11 @@ export const PostCard = ({ post }: PostCardProps) => {
         </View>
       )}
       <View style={themedStyle.rightContent}>
-        <View style={themedStyle.creatorLine}>
-          <ThemedText variant="label">
-            {post.creator.name}
-            {"@<instance name...> to "}
-            {post.community.name}
-          </ThemedText>
-          <TimeAgo date={new Date(post.post.published)} />
-        </View>
+        <CreatorLine
+          creator={post.creator}
+          community={post.community.name}
+          published={new Date(post.post.published)}
+        />
         <View style={themedStyle.title}>
           {postTitle &&
             postTitle.map((element, index) => {
@@ -161,11 +157,6 @@ const styles = (theme: Theme) =>
     },
     title: {
       flex: 1,
-    },
-    creatorLine: {
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "space-between",
     },
     icon: {
       size: 50,

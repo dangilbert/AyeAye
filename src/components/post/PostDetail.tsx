@@ -5,7 +5,7 @@ import { Pressable, Image, StyleSheet, View, Platform } from "react-native";
 import { markdownStyles } from "./styles";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ThemedText } from "@rn-app/components/ThemedText";
+import { ThemedText, CreatorLine } from "@rn-app/components";
 import { useNavigation } from "@react-navigation/native";
 import { Community, Person, PostAggregates } from "lemmy-js-client";
 
@@ -19,11 +19,22 @@ export interface PostDetailProps {
     thumbnail_url?: string;
     community: Community;
     creator: Person;
+    published: string;
   };
 }
 
 export const PostDetail = ({
-  post: { id, name, body, url, thumbnail_url, counts, community, creator },
+  post: {
+    id,
+    name,
+    body,
+    url,
+    thumbnail_url,
+    counts,
+    community,
+    creator,
+    published,
+  },
 }: PostDetailProps) => {
   const theme = useTheme();
   const themedMarkdownStyle = markdownStyles(theme);
@@ -92,14 +103,11 @@ export const PostDetail = ({
             </Pressable>
           );
         })}
-      {/* TODO convert this into a component*/}
-      <View style={themedStyle.creator}>
-        <ThemedText variant="label">
-          {creator.name}
-          {"@<instance name...> to "}
-          {community.name}
-        </ThemedText>
-      </View>
+      <CreatorLine
+        creator={creator}
+        community={community.name}
+        published={new Date(published)}
+      />
       {!thumbnail_url && url && (
         <LinkPreview
           text={url}
