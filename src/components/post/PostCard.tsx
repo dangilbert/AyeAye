@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText } from "../ThemedText";
+import TimeAgo from "../TimeAgo";
 
 export interface PostCardProps {
   post: PostView;
@@ -76,12 +77,13 @@ export const PostCard = ({ post }: PostCardProps) => {
         </View>
       )}
       <View style={themedStyle.rightContent}>
-        <View style={themedStyle.creator}>
+        <View style={themedStyle.creatorLine}>
           <ThemedText variant="label">
             {post.creator.name}
             {"@<instance name...> to "}
             {post.community.name}
           </ThemedText>
+          <TimeAgo date={new Date(post.post.published)} />
         </View>
         <View style={themedStyle.title}>
           {postTitle &&
@@ -160,7 +162,11 @@ const styles = (theme: Theme) =>
     title: {
       flex: 1,
     },
-    creator: {},
+    creatorLine: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
     icon: {
       size: 50,
       color: theme.colors.text,

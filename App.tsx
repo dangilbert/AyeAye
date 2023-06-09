@@ -24,6 +24,12 @@ import { HomeRoot } from "./src/pages/home/root";
 import { ThemeProvider } from "./src/theme";
 import { MediaModalScreen } from "./src/components/media/MediaModalScreen";
 
+import TimeAgo from "javascript-time-ago";
+
+import en from "javascript-time-ago/locale/en.json";
+
+TimeAgo.addDefaultLocale(en);
+
 function onAppStateChange(status: any) {
   // React Query already supports in web browser refetch on window focus by default
   if (Platform.OS !== "web") {
