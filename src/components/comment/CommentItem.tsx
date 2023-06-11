@@ -40,6 +40,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
     >
       <CreatorLine
         creator={comment.creator}
+        actorId={comment.creator.actor_id}
         published={new Date(comment.comment.published)}
       />
       {commentBody &&

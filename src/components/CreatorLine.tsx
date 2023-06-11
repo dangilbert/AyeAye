@@ -9,6 +9,7 @@ interface CreatorLineProps {
   creator: Person;
   community?: string;
   actorId?: string;
+  communityActorId?: string;
   published: Date;
 }
 
@@ -16,6 +17,7 @@ export const CreatorLine = ({
   creator,
   community,
   actorId,
+  communityActorId,
   published,
 }: CreatorLineProps) => {
   const themedStyle = styles(useTheme());
@@ -26,7 +28,12 @@ export const CreatorLine = ({
           {creator.name}
           {actorId && `@${getShortActorId(actorId)}`}
         </ThemedText>
-        {community && <ThemedText variant="label">to {community}</ThemedText>}
+        {community && (
+          <ThemedText variant="label">
+            to {community}
+            {communityActorId && `@${getShortActorId(communityActorId)}`}
+          </ThemedText>
+        )}
       </View>
       <TimeAgo date={published} />
     </View>

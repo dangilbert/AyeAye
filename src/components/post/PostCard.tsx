@@ -79,6 +79,8 @@ export const PostCard = ({ post }: PostCardProps) => {
         <CreatorLine
           creator={post.creator}
           community={post.community.name}
+          actorId={post.creator.actor_id}
+          communityActorId={post.community.actor_id}
           published={new Date(post.post.published)}
         />
         <View style={themedStyle.title}>

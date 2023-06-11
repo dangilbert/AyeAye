@@ -105,7 +105,9 @@ export const PostDetail = ({
         })}
       <CreatorLine
         creator={creator}
+        actorId={creator.actor_id}
         community={community.name}
+        communityActorId={community.actor_id}
         published={new Date(published)}
       />
       {!thumbnail_url && url && (
