@@ -7,6 +7,7 @@ interface CommunityListItemProps {
   name: string;
   icon?: string;
   customIcon?: "menu";
+  instanceName?: string;
   onPress: () => void;
 }
 
@@ -14,6 +15,7 @@ export const CommunityListItem = ({
   name,
   icon,
   customIcon,
+  instanceName,
   onPress,
 }: CommunityListItemProps) => {
   const themedStyles = styles(useTheme());
@@ -31,7 +33,10 @@ export const CommunityListItem = ({
           />
         </View>
       )}
-      <ThemedText variant="subheading">{name}</ThemedText>
+      <ThemedText variant="body">
+        {name}
+        {instanceName && `@${instanceName}`}
+      </ThemedText>
     </Pressable>
   );
 };

@@ -3,16 +3,19 @@ import { StyleSheet, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 import TimeAgo from "./TimeAgo";
 import { Person } from "lemmy-js-client";
+import { getShortActorId } from "@rn-app/utils/actorUtils";
 
 interface CreatorLineProps {
   creator: Person;
   community?: string;
+  actorId?: string;
   published: Date;
 }
 
 export const CreatorLine = ({
   creator,
   community,
+  actorId,
   published,
 }: CreatorLineProps) => {
   const themedStyle = styles(useTheme());
@@ -21,7 +24,7 @@ export const CreatorLine = ({
       <View style={{ flexDirection: "column" }}>
         <ThemedText variant="label">
           {creator.name}
-          {"@<instance name...>"}
+          {actorId && `@${getShortActorId(actorId)}`}
         </ThemedText>
         {community && <ThemedText variant="label">to {community}</ThemedText>}
       </View>

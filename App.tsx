@@ -24,6 +24,7 @@ import { HomeRoot } from "./src/pages/home/root";
 import { ThemeProvider } from "./src/theme";
 import { MediaModalScreen } from "./src/components/media/MediaModalScreen";
 
+import "react-native-url-polyfill/auto";
 import TimeAgo from "javascript-time-ago";
 
 import en from "javascript-time-ago/locale/en.json";

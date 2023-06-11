@@ -2,6 +2,18 @@ import { communityQueries } from "@rn-app/pods/communities/queries";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { CommunityView, ListCommunitiesResponse } from "lemmy-js-client";
 
+export const useInstances = () => {
+  const { data, isLoading } = useQuery({
+    ...communityQueries.instances(),
+    select: (data) => data.federated_instances,
+  });
+
+  return {
+    isLoading,
+    data,
+  };
+};
+
 export const useCommunities = (userId?: string) => {
   const { data, isLoading } = useQuery({
     ...communityQueries.communities(userId),
