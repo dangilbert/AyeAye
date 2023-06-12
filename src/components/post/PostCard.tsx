@@ -5,9 +5,9 @@ import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Fragment } from "react";
 import { Pressable, StyleSheet, View, Image, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
+import { getPostType } from "@rn-app/utils/postUtils";
 
 export interface PostCardProps {
   post: PostView;
@@ -29,6 +29,8 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const postTitle = useMarkdown(post.post.name, titleOptions);
 
+  const postType = getPostType(post.post);
+
   return (
     <Pressable
       key={`post_${post.post.id}`}
@@ -39,13 +41,11 @@ export const PostCard = ({ post }: PostCardProps) => {
         })
       }
     >
-      {post.post.thumbnail_url && (
+      {postType === "Image" && (
         <Pressable
-          onPress={() =>
-            navigation.navigate("MediaModal", {
-              imageUri: post.post.url ?? post.post.thumbnail_url,
-            })
-          }
+          onPress={() => {
+            navigation.navigate("MediaModal", { imageUri: post.post.url });
+          }}
         >
           <Image
             style={themedStyle.image}
@@ -53,20 +53,30 @@ export const PostCard = ({ post }: PostCardProps) => {
           />
         </Pressable>
       )}
-      {!post.post.thumbnail_url && post.post.url && (
-        <LinkPreview
-          text={post.post.url}
-          renderLinkPreview={(previewData) => {
-            return (
-              <Image
-                style={themedStyle.image}
-                source={{ uri: previewData.previewData?.image?.url }}
-              />
-            );
+      {postType === "Video" && (
+        <Pressable
+          onPress={() => {
+            navigation.navigate("MediaModal", {
+              imageUri: post.post.embed_video_url,
+            });
           }}
-        />
+        >
+          <Image
+            style={themedStyle.image}
+            source={{ uri: post.post.thumbnail_url }}
+          />
+        </Pressable>
       )}
-      {!post.post.thumbnail_url && !post.post.url && (
+      {(postType === "Link" || postType === "SimpleLink") && (
+        <View style={themedStyle.iconContainer}>
+          <MaterialIcons
+            name={"link"}
+            size={themedStyle.icon.size}
+            color={themedStyle.icon.color}
+          />
+        </View>
+      )}
+      {postType === "Text" && (
         <View style={themedStyle.iconContainer}>
           <MaterialIcons
             name={"text-snippet"}

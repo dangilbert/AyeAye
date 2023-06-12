@@ -9,6 +9,8 @@ import { ThemedText, CreatorLine } from "@rn-app/components";
 import { useNavigation } from "@react-navigation/native";
 import { isImage } from "@rn-app/utils/urlUtils";
 import * as WebBrowser from "expo-web-browser";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { getPostType } from "@rn-app/utils/postUtils";
 
 interface PostPreviewProps {
   post: PostView;
@@ -29,14 +31,15 @@ export const PostPreview = ({
     creator,
     community,
   },
+  post,
 }: PostPreviewProps) => {
-  if (
-    !thumbnail_url &&
-    !url &&
-    !embed_title &&
-    !embed_description &&
-    !embed_video_url
-  ) {
+  console.log("Post", {
+    post: post.post,
+  });
+
+  const postType = getPostType(post.post);
+
+  if (postType === "Text") {
     return (
       <TextPost
         name={name}
@@ -48,13 +51,7 @@ export const PostPreview = ({
     );
   }
 
-  if (
-    thumbnail_url &&
-    url &&
-    !embed_title &&
-    !embed_description &&
-    !embed_video_url
-  ) {
+  if (postType === "Image") {
     // This is probably an image post
     return (
       <ImagePost
@@ -63,27 +60,13 @@ export const PostPreview = ({
         creator={creator}
         community={community}
         published={published}
-        url={url}
-      />
-    );
-  }
-
-  // Check if it has an image extension
-  if (url && isImage(url)) {
-    return (
-      <ImagePost
-        name={name}
-        body={body}
-        creator={creator}
-        community={community}
-        published={published}
-        url={url}
+        url={url!!}
       />
     );
   }
 
   // This is a link post with embed information
-  if (embed_title && embed_description && url) {
+  if (postType === "Link" || postType === "SimpleLink") {
     return (
       <LinkPost
         name={name}
@@ -91,22 +74,28 @@ export const PostPreview = ({
         creator={creator}
         community={community}
         published={published}
-        url={url}
-        embed_title={embed_title}
+        url={url!!}
+        embed_title={embed_title ?? url!!}
         embed_description={embed_description}
         thumbnail_url={thumbnail_url}
       />
     );
   }
 
-  console.log("Post", {
-    name,
-    url,
-    thumbnail_url,
-    embed_video_url,
-    embed_title,
-    embed_description,
-  });
+  if (postType === "Video") {
+    <VideoPost
+      name={name}
+      body={body}
+      creator={creator}
+      community={community}
+      published={published}
+      url={url!!}
+      embed_title={embed_title ?? url!!}
+      embed_description={embed_description}
+      thumbnail_url={thumbnail_url}
+      embed_video_url={embed_video_url}
+    />;
+  }
 
   return (
     <>
@@ -123,7 +112,7 @@ interface LinkPostProps {
   published: string;
   url: string;
   embed_title: string;
-  embed_description: string;
+  embed_description?: string;
   thumbnail_url?: string;
 }
 
@@ -165,9 +154,17 @@ const LinkPost = ({
             />
           </View>
         )}
-        <View style={{ flexDirection: "column", flex: 1 }}>
+        <View
+          style={{
+            flexDirection: "column",
+            flex: 1,
+            justifyContent: "center",
+          }}
+        >
           <ThemedText variant={"label"}>{embed_title}</ThemedText>
-          <ThemedText variant={"caption"}>{embed_description}</ThemedText>
+          {embed_description && (
+            <ThemedText variant={"caption"}>{embed_description}</ThemedText>
+          )}
         </View>
       </Pressable>
       <View style={themedStyle.titleLine}>
@@ -245,8 +242,84 @@ const ImagePost = ({
   );
 };
 
-const VideoPost = () => {
-  return <></>;
+interface VideoPostProps {
+  name: string;
+  body?: string;
+  creator: Person;
+  community: Community;
+  published: string;
+  url: string;
+  embed_title: string;
+  embed_description?: string;
+  thumbnail_url?: string;
+  embed_video_url: string;
+}
+
+const VideoPost = ({
+  name,
+  body,
+  creator,
+  community,
+  published,
+  url,
+  embed_title,
+  embed_description,
+  thumbnail_url,
+  embed_video_url,
+}: VideoPostProps) => {
+  const themedStyle = styles(useTheme());
+  const navigator = useNavigation();
+
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  return (
+    <>
+      <Pressable
+        onPress={() =>
+          navigator.navigate("MediaModal", { embed_video_url, thumbnail_url })
+        }
+      >
+        {thumbnail_url ? (
+          <Image
+            style={themedStyle.imageThumb}
+            source={{ uri: thumbnail_url }}
+          />
+        ) : (
+          <View style={themedStyle.iconContainer}>
+            <MaterialIcons
+              name={"link"}
+              size={themedStyle.icon.size}
+              color={themedStyle.icon.color}
+            />
+          </View>
+        )}
+
+        <ThemedText variant={"label"}>{embed_title}</ThemedText>
+        {embed_description && (
+          <ThemedText variant={"caption"}>{embed_description}</ThemedText>
+        )}
+      </Pressable>
+      <View style={themedStyle.titleLine}>
+        <View style={themedStyle.titleAndCreator}>
+          <Pressable onPress={() => setCollapsed(!collapsed)}>
+            <PostTitle text={name} />
+          </Pressable>
+          <CreatorLine
+            creator={creator}
+            actorId={creator.actor_id}
+            community={community.name}
+            communityActorId={community.actor_id}
+            published={new Date(published)}
+          />
+        </View>
+      </View>
+      {!collapsed && (
+        <Pressable onPress={() => setCollapsed(!collapsed)}>
+          <PostBody text={body} />
+        </Pressable>
+      )}
+    </>
+  );
 };
 
 interface TextPostProps {
@@ -364,6 +437,7 @@ const styles = (theme: Theme) =>
     titleAndCreator: {
       flexDirection: "column",
       flex: 1,
+      justifyContent: "center",
     },
     image: {
       flex: 1,

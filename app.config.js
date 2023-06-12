@@ -14,6 +14,7 @@ export default {
       resizeMode: "contain",
       backgroundColor: "#ffffff",
     },
+    plugins: ["./plugins/withAnimatedWebPSupport"],
     assetBundlePatterns: ["**/*"],
     ios: {
       supportsTablet: true,
