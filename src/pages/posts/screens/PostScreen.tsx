@@ -22,7 +22,7 @@ export const PostScreen = ({ route }) => {
     isFetchingNextPage,
     hasNextPage,
     invalidate: invalidateComments,
-  } = useComments(postId, post?.community.id);
+  } = useComments(postId, communityId);
 
   const invalidate = () => {
     invalidatePost();
@@ -52,18 +52,20 @@ export const PostScreen = ({ route }) => {
 
   return (
     <FlashList
-      data={commentList}
+      data={post ? commentList : []}
       onRefresh={() => {
         invalidate();
       }}
-      refreshing={isLoadingPost}
+      refreshing={isLoadingPost && !!post}
       estimatedItemSize={100}
       renderItem={({ item }) => {
         return (
           <CommentItem key={`commentitem_${item.comment.id}`} comment={item} />
         );
       }}
-      ListHeaderComponent={() => <>{post && <PostDetail post={post} />}</>}
+      ListHeaderComponent={() =>
+        post ? <PostDetail post={post} /> : <ActivityIndicator />
+      }
       onEndReached={() => {
         if (hasNextPage) {
           fetchNextPage();

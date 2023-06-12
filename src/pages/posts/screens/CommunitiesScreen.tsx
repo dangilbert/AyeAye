@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { useCommunities } from "../hooks/useCommunities";
 import { CommunityListItem } from "@rn-app/components/community/CommunityListItem";
 import { Theme } from "@rn-app/theme";
@@ -20,12 +20,15 @@ export const CommunitiesScreen = ({ navigation }) => {
 
   return (
     <FlashList
-      data={[allItem, ...(communities ?? [])]}
+      data={communities && [allItem, ...(communities ?? [])]}
       onRefresh={() => {
         invalidate();
       }}
-      refreshing={isLoading}
+      refreshing={isLoading && !!communities}
       estimatedItemSize={60}
+      ListHeaderComponent={() =>
+        isLoading && !communities ? <ActivityIndicator /> : null
+      }
       renderItem={({ item }) => {
         return (
           <CommunityListItem

@@ -29,7 +29,7 @@ export const CommunityScreen = ({ navigation, route }) => {
       onRefresh={() => {
         invalidate();
       }}
-      refreshing={isLoading}
+      refreshing={isLoading && !!posts}
       estimatedItemSize={60}
       renderItem={({ item }) => {
         return <PostCard key={`postcard_${item.post.id}`} post={item} />;
@@ -40,6 +40,9 @@ export const CommunityScreen = ({ navigation, route }) => {
         }
       }}
       onEndReachedThreshold={0.5}
+      ListHeaderComponent={() =>
+        isLoading && !posts ? <ActivityIndicator /> : null
+      }
       ListFooterComponent={isFetchingNextPage ? ActivityIndicator : null}
     />
   );
