@@ -1,8 +1,8 @@
 import { PostCard } from "@rn-app/components/post/PostCard";
 import { useCommunity, usePosts } from "../hooks/useCommunities";
 import { useEffect } from "react";
-import { IOScrollView, InView } from "react-native-intersection-observer";
 import { ActivityIndicator } from "react-native-paper";
+import { FlashList } from "@shopify/flash-list";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
@@ -14,6 +14,7 @@ export const CommunityScreen = ({ navigation, route }) => {
     isLoading,
     isFetchingNextPage,
     hasNextPage,
+    invalidate,
   } = usePosts(communityId);
 
   useEffect(() => {
@@ -23,25 +24,23 @@ export const CommunityScreen = ({ navigation, route }) => {
   }, [community]);
 
   return (
-    // TODO replace with a flashlist and onEndReachedThreshold for infinite loading
-    <IOScrollView>
-      {posts &&
-        posts.pages.flatMap((page) => {
-          return page.posts.map((post) => {
-            return <PostCard key={`postcard_${post.post.id}`} post={post} />;
-          });
-        })}
-      {!isLoading && !isFetchingNextPage && hasNextPage && (
-        <InView
-          style={{ height: 50 }}
-          onChange={(inView: boolean) => {
-            inView && fetchNextPage();
-          }}
-        />
-      )}
-      {(isLoading || isFetchingNextPage) && (
-        <ActivityIndicator style={{ height: 50 }} />
-      )}
-    </IOScrollView>
+    <FlashList
+      data={posts?.pages.flatMap((page) => page.posts)}
+      onRefresh={() => {
+        invalidate();
+      }}
+      refreshing={isLoading}
+      estimatedItemSize={60}
+      renderItem={({ item }) => {
+        return <PostCard key={`postcard_${item.post.id}`} post={item} />;
+      }}
+      onEndReached={() => {
+        if (hasNextPage) {
+          fetchNextPage();
+        }
+      }}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={isFetchingNextPage ? ActivityIndicator : null}
+    />
   );
 };

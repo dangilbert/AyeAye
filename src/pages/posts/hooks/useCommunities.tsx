@@ -48,12 +48,19 @@ export const usePosts = (communityId: number) => {
       getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
     });
 
+  const queryClient = useQueryClient();
+
   return {
     isLoading,
     data,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
+    invalidate: () => {
+      queryClient.invalidateQueries({
+        queryKey: communityQueries.posts(communityId).queryKey,
+      });
+    },
   };
 };
 
