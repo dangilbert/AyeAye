@@ -1,5 +1,6 @@
+import { useNavigation } from "@react-navigation/native";
 import { ThemedText } from "@rn-app/components";
-import { setLemmyInstance, useLemmyHttp } from "@rn-app/pods/host/useLemmyHttp";
+import { useQueryClient } from "@tanstack/react-query";
 import { LemmyHttp } from "lemmy-js-client";
 import { useEffect, useState } from "react";
 import {
@@ -12,13 +13,17 @@ import {
   View,
 } from "react-native";
 import Snackbar from "react-native-snackbar";
+import { saveAccount, setActiveLemmySession } from "../hooks/useAccount";
 
 export const LoginScreen = () => {
-  const [serverName, setServerName] = useState("lemmy.dangilbert.eu");
-  const [username, setUsername] = useState("perketel");
-  const [password, setPassword] = useState("AC@wjYD!4__VMebY");
+  const [serverName, setServerName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoginDisabled, setIsLoginDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigator = useNavigation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const isDisabled =
@@ -28,11 +33,21 @@ export const LoginScreen = () => {
     setIsLoginDisabled(isDisabled);
   }, [serverName, username, password]);
 
-  //   const showLoginError = () => {
-  //     Snackbar.show({
-  //       text: "Login failed",
-  //     });
-  //   };
+  const showLoginError = () => {
+    Snackbar.show({
+      text: "Login failed",
+    });
+  };
+
+  const handleLoginSuccess = () => {
+    console.log("Before error");
+    Snackbar.show({
+      text: "Login successful",
+    });
+
+    navigator.goBack();
+    console.log("After error");
+  };
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -54,14 +69,33 @@ export const LoginScreen = () => {
         username_or_email: username,
         password,
       });
+
       if (!res.jwt) {
-        // showLoginError();
-        console.log("Login failed");
+        showLoginError();
         return;
       }
-      setLemmyInstance(serverUrl.toString(), res.jwt);
+
+      const person = await lemmyClient.getPersonDetails({
+        auth: res.jwt,
+        username: username,
+      });
+
+      saveAccount({
+        id: person.person_view.person.id,
+        username: username,
+        jwt: res.jwt,
+        instance: serverUrl,
+        actorId: person.person_view.person.actor_id,
+      });
+
+      setActiveLemmySession(person.person_view.person.actor_id);
+
+      // Invalidate all the queries after account switch
+      queryClient.invalidateQueries();
+
+      handleLoginSuccess();
     } catch (error) {
-      //   showLoginError();
+      showLoginError();
       console.log(error);
     } finally {
       setIsLoading(false);

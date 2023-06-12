@@ -1,6 +1,7 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { CommentView, LemmyHttp, PostView } from "lemmy-js-client";
-import { getCurrentAuthToken, useLemmyHttp } from "../host/useLemmyHttp";
+import { CommentView, PostView } from "lemmy-js-client";
+import { useLemmyHttp } from "../host/useLemmyHttp";
+import { getCurrentUserSessionToken } from "../auth/queries";
 
 const getCommunitiesForUser = async (
   userId?: string,
@@ -10,7 +11,7 @@ const getCommunitiesForUser = async (
     type_: communityType,
     limit: 25,
     sort: "Active",
-    auth: getCurrentAuthToken(),
+    auth: await getCurrentUserSessionToken(),
   });
 };
 
@@ -24,7 +25,7 @@ const getPostsForCommunity = async (
     community_id: communityId,
     page: page,
     limit: 25,
-    auth: getCurrentAuthToken(),
+    auth: await getCurrentUserSessionToken(),
   });
 };
 
@@ -41,7 +42,7 @@ const getCommentsForPost = async (
     page: page,
     max_depth: 10,
     limit: 1,
-    auth: getCurrentAuthToken(),
+    auth: await getCurrentUserSessionToken(),
     // sort: "Hot",
   });
 };
@@ -57,7 +58,7 @@ export const communityQueries = createQueryKeys("communities", {
       const res = (
         await useLemmyHttp().getPost({
           id: postId,
-          auth: getCurrentAuthToken(),
+          auth: await getCurrentUserSessionToken(),
         })
       ).post_view;
       return res;
