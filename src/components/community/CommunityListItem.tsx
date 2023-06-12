@@ -1,7 +1,8 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
+import FastImage from "react-native-fast-image";
 
 interface CommunityListItemProps {
   name: string;
@@ -23,7 +24,7 @@ export const CommunityListItem = ({
   return (
     <Pressable onPress={onPress} style={themedStyles.container}>
       {icon ? (
-        <Image source={{ uri: icon }} style={themedStyles.image} />
+        <FastImage source={{ uri: icon }} style={themedStyles.image} />
       ) : (
         <View style={themedStyles.materialIcon}>
           <MaterialIcons

@@ -3,12 +3,20 @@ import { Theme, useTheme } from "@rn-app/theme";
 import { markdownStyles } from "./styles";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Fragment } from "react";
-import { Pressable, StyleSheet, View, Image, Platform } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Image,
+  Platform,
+  Share,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
-import { getPostType } from "@rn-app/utils/postUtils";
+import { getPostType, getShareContent } from "@rn-app/utils/postUtils";
 import FastImage from "react-native-fast-image";
+import Snackbar from "react-native-snackbar";
 
 export interface PostCardProps {
   post: PostView;
@@ -31,6 +39,16 @@ export const PostCard = ({ post }: PostCardProps) => {
   const postTitle = useMarkdown(post.post.name, titleOptions);
 
   const postType = getPostType(post.post);
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message: getShareContent(post.post),
+      });
+    } catch (error: any) {
+      Snackbar.show({ text: error.message });
+    }
+  };
 
   return (
     <Pressable
@@ -62,7 +80,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             });
           }}
         >
-          <Image
+          <FastImage
             style={themedStyle.image}
             source={{ uri: post.post.thumbnail_url }}
           />
@@ -109,13 +127,13 @@ export const PostCard = ({ post }: PostCardProps) => {
             />
             <ThemedText variant="label">{post.counts.comments}</ThemedText>
           </View>
-          <View style={themedStyle.footerAction}>
+          <Pressable style={themedStyle.footerAction} onPress={onShare}>
             <MaterialIcons
               name={Platform.OS === "ios" ? "ios-share" : "share"}
               size={themedStyle.footer.iconSize}
               color={themedStyle.footer.iconColor}
             />
-          </View>
+          </Pressable>
           <View style={themedStyle.footerAction}>
             <MaterialIcons
               name="arrow-upward"
