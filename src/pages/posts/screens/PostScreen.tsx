@@ -7,8 +7,10 @@ import { CommentItem } from "@rn-app/components/comment/CommentItem";
 import { FlashList } from "@shopify/flash-list";
 
 export const PostScreen = ({ route }) => {
-  const postId = route.params.postId;
-  const communityId = route.params.communityId;
+  const originalPost = route.params.originalPost;
+
+  const postId = originalPost.post.id;
+  const communityId = originalPost.community.id;
 
   const {
     data: post,
@@ -64,7 +66,13 @@ export const PostScreen = ({ route }) => {
         );
       }}
       ListHeaderComponent={() =>
-        post ? <PostDetail post={post} /> : <ActivityIndicator />
+        post ? (
+          <PostDetail post={post} />
+        ) : originalPost ? (
+          <PostDetail post={originalPost} />
+        ) : (
+          <ActivityIndicator />
+        )
       }
       onEndReached={() => {
         if (hasNextPage) {
@@ -73,37 +81,8 @@ export const PostScreen = ({ route }) => {
       }}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
-        !isLoadingPost && (isLoadingComments || isFetchingNextPage)
-          ? ActivityIndicator
-          : null
+        isLoadingComments || isFetchingNextPage ? ActivityIndicator : null
       }
     />
-    // <IOScrollView
-    //   contentInsetAdjustmentBehavior="automatic"
-    //   style={{ height: "100%", paddingHorizontal: 10 }}
-    // >
-    //   {post && <PostDetail post={post} />}
-    //   {post &&
-    //     commentList &&
-    //     commentList.map((comment) => {
-    //       return (
-    //         <CommentItem
-    //           key={`commentitem_${comment.comment.id}`}
-    //           comment={comment}
-    //         />
-    //       );
-    //     })}
-    //   {!isLoading && !isFetchingNextPage && hasNextPage && (
-    //     <InView
-    //       style={{ height: 50 }}
-    //       onChange={(inView: boolean) => {
-    //         inView && fetchNextPage();
-    //       }}
-    //     />
-    //   )}
-    //   {(isLoading || isFetchingNextPage) && (
-    //     <ActivityIndicator style={{ height: 50 }} />
-    //   )}
-    // </IOScrollView>
   );
 };

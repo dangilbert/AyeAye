@@ -37,8 +37,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       style={themedStyle.container}
       onPress={() =>
         navigation.navigate("Post", {
-          postId: post.post.id,
-          communityId: post.community.id,
+          originalPost: post,
         })
       }
     >
