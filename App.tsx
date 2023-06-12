@@ -31,6 +31,10 @@ import en from "javascript-time-ago/locale/en.json";
 
 TimeAgo.addDefaultLocale(en);
 
+import { MMKV } from "react-native-mmkv";
+
+export const storage = new MMKV();
+
 function onAppStateChange(status: any) {
   // React Query already supports in web browser refetch on window focus by default
   if (Platform.OS !== "web") {

@@ -1,14 +1,16 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemedText } from "@rn-app/components/ThemedText";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SettingsRootScreen } from "./screens/SettingsRootScreen";
+
+const Stack = createNativeStackNavigator();
 
 export const SettingsNavigator = () => {
   return (
-    <SafeAreaView>
-      <ThemedText>Settings screen</ThemedText>
-      <ThemedText>Dark/Light toggle (eventually theme)</ThemedText>
-      <ThemedText>Card layout</ThemedText>
-      <ThemedText>Face ID/Passcode</ThemedText>
-      <ThemedText>About (Libraries used)</ThemedText>
-    </SafeAreaView>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="SettingsRoot"
+        component={SettingsRootScreen}
+        options={{ title: "Settings" }}
+      />
+    </Stack.Navigator>
   );
 };
