@@ -2,13 +2,14 @@ import { Community, Person, PostView } from "lemmy-js-client";
 import { Fragment, useState } from "react";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Theme, useTheme } from "@rn-app/theme";
-import { Pressable, Image, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { markdownStyles } from "./styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
 import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
 import { getPostType } from "@rn-app/utils/postUtils";
+import FastImage from "react-native-fast-image";
 
 interface PostPreviewProps {
   post: PostView;
@@ -135,7 +136,7 @@ const LinkPost = ({
         onPress={() => handleOpenBrowserAsync()}
       >
         {thumbnail_url ? (
-          <Image
+          <FastImage
             style={themedStyle.imageThumb}
             source={{ uri: thumbnail_url }}
           />
@@ -211,7 +212,7 @@ const ImagePost = ({
       <Pressable
         onPress={() => navigator.navigate("MediaModal", { imageUri: url })}
       >
-        <Image style={themedStyle.image} source={{ uri: url }} />
+        <FastImage style={themedStyle.image} source={{ uri: url }} />
       </Pressable>
       <View style={themedStyle.titleLine}>
         <View style={themedStyle.titleAndCreator}>
@@ -274,7 +275,7 @@ const VideoPost = ({
         }
       >
         {thumbnail_url ? (
-          <Image
+          <FastImage
             style={themedStyle.imageThumb}
             source={{ uri: thumbnail_url }}
           />

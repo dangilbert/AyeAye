@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
 import { getPostType } from "@rn-app/utils/postUtils";
+import FastImage from "react-native-fast-image";
 
 export interface PostCardProps {
   post: PostView;
@@ -47,7 +48,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             navigation.navigate("MediaModal", { imageUri: post.post.url });
           }}
         >
-          <Image
+          <FastImage
             style={themedStyle.image}
             source={{ uri: post.post.thumbnail_url }}
           />

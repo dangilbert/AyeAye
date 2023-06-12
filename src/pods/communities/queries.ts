@@ -25,6 +25,7 @@ const getPostsForCommunity = async (
     type_: "All",
     community_id: communityId,
     page: page,
+    limit: 25,
   });
 };
 
@@ -39,7 +40,7 @@ const getCommentsForPost = async (
     community_id: communityId,
     post_id: postId,
     page: page,
-    max_depth: 3,
+    max_depth: 10,
     limit: 1,
     // sort: "Hot",
   });

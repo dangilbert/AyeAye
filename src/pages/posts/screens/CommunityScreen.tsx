@@ -3,6 +3,7 @@ import { useCommunity, usePosts } from "../hooks/useCommunities";
 import { useEffect } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
+import FastImage, { Source } from "react-native-fast-image";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
@@ -16,6 +17,16 @@ export const CommunityScreen = ({ navigation, route }) => {
     hasNextPage,
     invalidate,
   } = usePosts(communityId);
+
+  posts &&
+    FastImage.preload(
+      posts.pages
+        .flatMap((page) => page.posts)
+        .map((post) =>
+          post.post.thumbnail_url ? { uri: post.post.thumbnail_url } : undefined
+        )
+        .filter((x) => !!x) as Source[]
+    );
 
   useEffect(() => {
     navigation.setOptions({
