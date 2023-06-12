@@ -10,8 +10,10 @@
     "web": "expo start --web",
     "publish:dev:ios": "eas build --profile development --platform ios",
     "publish:dev:android": "eas build --profile development --platform android",
+    "publish:dev:all": "eas build --profile development",
     "publish:preview:ios": "eas build --profile preview --platform ios",
     "publish:preview:android": "eas build --profile preview --platform android",
+    "publish:preview:all": "eas build --profile preview",
     "update:preview": "eas update --channel preview",
     "update:production": "eas update --channel production"
   },
