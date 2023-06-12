@@ -54,17 +54,16 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
       <View style={themedStyle.footer}>
         <View style={themedStyle.footerAction}>
           <MaterialIcons
-            name="keyboard-arrow-up"
+            name="arrow-upward"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
           />
-          <ThemedText variant="label">{comment.counts.upvotes}</ThemedText>
+          <ThemedText variant="label">{comment.counts.score}</ThemedText>
           <MaterialIcons
-            name="keyboard-arrow-down"
+            name="arrow-downward"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
           />
-          <ThemedText variant="label">{comment.counts.downvotes}</ThemedText>
         </View>
       </View>
     </View>

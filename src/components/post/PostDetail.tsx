@@ -1,134 +1,23 @@
-import { Fragment, useState } from "react";
-import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
+import { Fragment } from "react";
 import { Theme, useTheme } from "@rn-app/theme";
-import { Pressable, Image, StyleSheet, View, Platform } from "react-native";
-import { markdownStyles } from "./styles";
-import { LinkPreview } from "@flyerhq/react-native-link-preview";
+import { StyleSheet, View, Platform } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ThemedText, CreatorLine } from "@rn-app/components";
-import { useNavigation } from "@react-navigation/native";
-import { Community, Person, PostAggregates } from "lemmy-js-client";
+import { ThemedText } from "@rn-app/components";
+import { PostView } from "lemmy-js-client";
+import { PostPreview } from "./PostPreview";
 
 export interface PostDetailProps {
-  post: {
-    id: number;
-    name: string;
-    body?: string;
-    url?: string;
-    counts: PostAggregates;
-    thumbnail_url?: string;
-    community: Community;
-    creator: Person;
-    published: string;
-  };
+  post: PostView;
 }
 
-export const PostDetail = ({
-  post: {
-    id,
-    name,
-    body,
-    url,
-    thumbnail_url,
-    counts,
-    community,
-    creator,
-    published,
-  },
-}: PostDetailProps) => {
+export const PostDetail = ({ post }: PostDetailProps) => {
   const theme = useTheme();
-  const themedMarkdownStyle = markdownStyles(theme);
   const themedStyle = styles(theme);
-  const navigator = useNavigation();
-
-  const [collapsed, setCollapsed] = useState<boolean>(false);
-
-  const titleOptions: useMarkdownHookOptions = {
-    styles: {
-      ...themedMarkdownStyle,
-      text: themedMarkdownStyle.h1,
-    },
-  };
-
-  const bodyOptions: useMarkdownHookOptions = {
-    styles: {
-      ...themedMarkdownStyle,
-    },
-  };
-
-  const postTitle = useMarkdown(name, titleOptions);
-  const postBody = useMarkdown(body ?? "", bodyOptions);
 
   return (
-    <Fragment key={`post_${id}`}>
-      {thumbnail_url && url && (
-        <Pressable
-          onPress={() =>
-            navigator.navigate("MediaModal", { imageUri: url ?? thumbnail_url })
-          }
-        >
-          <Image style={themedStyle.image} source={{ uri: url }} />
-        </Pressable>
-      )}
-      {!thumbnail_url && url && (
-        <LinkPreview
-          text={url}
-          renderLinkPreview={(previewData) => {
-            return (
-              <Image
-                style={themedStyle.image}
-                source={{ uri: previewData.previewData?.image?.url }}
-              />
-            );
-          }}
-        />
-      )}
-      {!thumbnail_url && !url && (
-        <View style={themedStyle.iconContainer}>
-          <MaterialIcons
-            name={"text-snippet"}
-            size={themedStyle.icon.size}
-            color={themedStyle.icon.color}
-          />
-        </View>
-      )}
-      {postTitle &&
-        postTitle.map((element, index) => {
-          return (
-            <Pressable
-              key={`title_${index}`}
-              onPress={() => setCollapsed(!collapsed)}
-            >
-              <Fragment>{element}</Fragment>
-            </Pressable>
-          );
-        })}
-      <CreatorLine
-        creator={creator}
-        actorId={creator.actor_id}
-        community={community.name}
-        communityActorId={community.actor_id}
-        published={new Date(published)}
-      />
-      {!thumbnail_url && url && (
-        <LinkPreview
-          text={url}
-          renderLinkPreview={(previewData) => {
-            return (
-              <ThemedText>{previewData.previewData?.link ?? ""}</ThemedText>
-            );
-          }}
-        />
-      )}
-      {postBody &&
-        !collapsed &&
-        postBody.map((element, index) => {
-          return (
-            <Pressable key={`body_${index}`} onPress={() => setCollapsed(true)}>
-              <Fragment>{element}</Fragment>
-            </Pressable>
-          );
-        })}
+    <Fragment key={`post_${post.post.id}`}>
+      <PostPreview post={post} />
+
       <View style={themedStyle.footer}>
         <View style={themedStyle.footerAction}>
           <MaterialIcons
@@ -136,7 +25,7 @@ export const PostDetail = ({
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
           />
-          <ThemedText variant="label">{counts.comments}</ThemedText>
+          <ThemedText variant="label">{post.counts.comments}</ThemedText>
         </View>
         <View style={themedStyle.footerAction}>
           <MaterialIcons
@@ -151,13 +40,12 @@ export const PostDetail = ({
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
           />
-          <ThemedText variant="label">{counts.upvotes}</ThemedText>
+          <ThemedText variant="label">{post.counts.score}</ThemedText>
           <MaterialIcons
             name="keyboard-arrow-down"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
           />
-          <ThemedText variant="label">{counts.downvotes}</ThemedText>
         </View>
       </View>
     </Fragment>
@@ -175,6 +63,14 @@ const styles = (theme: Theme) =>
       borderRadius: 5,
       flexDirection: "row",
       alignItems: "center",
+    },
+    titleLine: {
+      flexDirection: "row",
+      marginVertical: 5,
+    },
+    titleAndCreator: {
+      flexDirection: "column",
+      flex: 1,
     },
     image: {
       flex: 1,
@@ -195,6 +91,7 @@ const styles = (theme: Theme) =>
       width: 60,
       height: 50,
       marginEnd: 10,
+      marginTop: 10,
       borderRadius: 5,
       backgroundColor: theme.colors.border,
       justifyContent: "center",

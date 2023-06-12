@@ -32,6 +32,7 @@
     "expo-status-bar": "~1.4.4",
     "expo-system-ui": "~2.2.1",
     "expo-updates": "~0.16.4",
+    "expo-web-browser": "~12.1.1",
     "javascript-time-ago": "^2.5.9",
     "lemmy-js-client": "^0.17.2-rc.24",
     "punycode": "^2.3.0",

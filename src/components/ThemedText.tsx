@@ -1,7 +1,12 @@
 import { StyleSheet, Text } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 
-export type TextVariant = "heading" | "subheading" | "body" | "label";
+export type TextVariant =
+  | "heading"
+  | "subheading"
+  | "body"
+  | "label"
+  | "caption";
 
 export interface ThemedTextProps {
   variant?: TextVariant;
@@ -45,6 +50,11 @@ const textStyles = (theme: Theme) =>
     label: {
       fontSize: 12,
       fontWeight: "400",
+      color: theme.colors.text,
+    },
+    caption: {
+      fontSize: 10,
+      fontWeight: "300",
       color: theme.colors.text,
     },
   });

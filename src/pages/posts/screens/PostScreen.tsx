@@ -19,6 +19,19 @@ export const PostScreen = ({ route }) => {
     hasNextPage,
   } = useComments(postId, post?.community.id);
 
+  console.log(
+    "Post",
+    post && {
+      id: post.post.id,
+      embed_title: post.post.embed_title,
+      embed_description: post.post.embed_description,
+      embed_video_url: post.post.embed_video_url,
+      thumbnail_url: post.post.thumbnail_url,
+      url: post.post.url,
+      ap_id: post.post.ap_id,
+    }
+  );
+
   useEffect(() => {
     (async () => {
       try {
@@ -60,22 +73,9 @@ export const PostScreen = ({ route }) => {
       contentInsetAdjustmentBehavior="automatic"
       style={{ height: "100%", paddingHorizontal: 10 }}
     >
-      {post && (
-        <PostDetail
-          post={{
-            id: post.post.id,
-            name: post.post.name,
-            body: post.post.body,
-            thumbnail_url: post.post.thumbnail_url,
-            url: post.post.url,
-            counts: post.counts,
-            community: post.community,
-            creator: post.creator,
-            published: post.post.published,
-          }}
-        />
-      )}
-      {commentList &&
+      {post && <PostDetail post={post} />}
+      {post &&
+        commentList &&
         commentList.map((comment) => {
           return (
             <CommentItem
