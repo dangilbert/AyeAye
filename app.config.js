@@ -14,7 +14,11 @@ export default {
       resizeMode: "contain",
       backgroundColor: "#ffffff",
     },
-    plugins: ["./plugins/withAnimatedWebPSupport"],
+    plugins: [
+      ["./plugins/withAnimatedWebPSupport"],
+      ["./plugins/withFastImageWebPSupportIOS.js"],
+      ["./plugins/withFastImageWebPSupportAndroid.js"],
+    ],
     assetBundlePatterns: ["**/*"],
     ios: {
       supportsTablet: true,
