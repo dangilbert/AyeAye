@@ -64,6 +64,24 @@ export const usePosts = (communityId: number) => {
   };
 };
 
+export const usePost = (communityId: number, postId: number) => {
+  const { data, isLoading } = useQuery({
+    ...communityQueries.post(postId, communityId),
+  });
+
+  const queryClient = useQueryClient();
+
+  return {
+    isLoading,
+    data,
+    invalidate: () => {
+      queryClient.invalidateQueries({
+        queryKey: communityQueries.post(communityId, postId).queryKey,
+      });
+    },
+  };
+};
+
 export const useComments = (postId: number, communityId?: number) => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
@@ -71,11 +89,17 @@ export const useComments = (postId: number, communityId?: number) => {
       getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
     });
 
+  const queryClient = useQueryClient();
+
   return {
     isLoading,
     data,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
+    invalidate: () =>
+      queryClient.invalidateQueries({
+        queryKey: communityQueries.comments(postId, communityId).queryKey,
+      }),
   };
 };

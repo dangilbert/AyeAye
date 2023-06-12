@@ -7,9 +7,7 @@ import { markdownStyles } from "./styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
 import { useNavigation } from "@react-navigation/native";
-import { isImage } from "@rn-app/utils/urlUtils";
 import * as WebBrowser from "expo-web-browser";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { getPostType } from "@rn-app/utils/postUtils";
 
 interface PostPreviewProps {
@@ -33,10 +31,6 @@ export const PostPreview = ({
   },
   post,
 }: PostPreviewProps) => {
-  console.log("Post", {
-    post: post.post,
-  });
-
   const postType = getPostType(post.post);
 
   if (postType === "Text") {

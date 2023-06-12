@@ -38,6 +38,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       onPress={() =>
         navigation.navigate("Post", {
           postId: post.post.id,
+          communityId: post.community.id,
         })
       }
     >

@@ -50,6 +50,13 @@ export const communityQueries = createQueryKeys("communities", {
     queryKey: [{ userId, entity: "communities" }],
     queryFn: () => getCommunitiesForUser(userId),
   }),
+  post: (postId: number, communityId?: number, userId?: string) => ({
+    queryKey: [{ communityId, postId, userId, entity: "post" }],
+    queryFn: async () => {
+      const res = (await client.getPost({ id: postId })).post_view;
+      return res;
+    },
+  }),
   posts: (
     communityId?: number,
     communityType?: "All" | "Subscribed" | "Local",
