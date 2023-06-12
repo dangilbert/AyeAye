@@ -1,47 +1,49 @@
-import { ScrollView, StyleSheet, View } from "react-native";
-import { ThemedText } from "@rn-app/components/ThemedText";
-import { useCommunities, useInstances } from "../hooks/useCommunities";
+import { StyleSheet } from "react-native";
+import { useCommunities } from "../hooks/useCommunities";
 import { CommunityListItem } from "@rn-app/components/community/CommunityListItem";
-import { Theme, useTheme } from "@rn-app/theme";
+import { Theme } from "@rn-app/theme";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
+import { FlashList } from "@shopify/flash-list";
 
 export const CommunitiesScreen = ({ navigation }) => {
-  const { data: communities } = useCommunities();
-  const themedStyles = styles(useTheme());
+  const { data: communities, isLoading, invalidate } = useCommunities();
+
+  const allItem = {
+    community: {
+      id: undefined,
+      name: "All",
+      customIcon: "menu",
+      communityType: "All",
+      actor_id: "https://lemmy.ml",
+    },
+  };
 
   return (
-    <ScrollView>
-      <View style={themedStyles.sectionHeader}>
-        <ThemedText variant="subheading">Communities@lemmy.ml</ThemedText>
-      </View>
-      <CommunityListItem
-        key={"all@lemmy.ml"}
-        name={`All@lemmy.ml`}
-        customIcon="menu"
-        onPress={() => {
-          navigation.navigate("CommunityFeed", {
-            communityId: undefined,
-            communityType: "All",
-          });
-        }}
-      />
-      {communities &&
-        communities.map((community) => {
-          return (
-            <CommunityListItem
-              key={`community_${community.community.id}`}
-              name={community.community.name}
-              icon={community.community.icon}
-              instanceName={getShortActorId(community.community.actor_id)}
-              onPress={() => {
-                navigation.navigate("CommunityFeed", {
-                  communityId: community.community.id,
-                });
-              }}
-            />
-          );
-        })}
-    </ScrollView>
+    <FlashList
+      data={[allItem, ...(communities ?? [])]}
+      onRefresh={() => {
+        invalidate();
+      }}
+      refreshing={isLoading}
+      estimatedItemSize={60}
+      renderItem={({ item }) => {
+        return (
+          <CommunityListItem
+            key={`community_${item.community.id}`}
+            name={item.community.name}
+            customIcon={item.community.customIcon}
+            icon={item.community.icon}
+            instanceName={getShortActorId(item.community.actor_id)}
+            onPress={() => {
+              navigation.navigate("CommunityFeed", {
+                communityId: item.community.id,
+                communityType: item.community.communityType,
+              });
+            }}
+          />
+        );
+      }}
+    />
   );
 };
 

@@ -117,17 +117,16 @@ export const PostCard = ({ post }: PostCardProps) => {
           </View>
           <View style={themedStyle.footerAction}>
             <MaterialIcons
-              name="keyboard-arrow-up"
+              name="arrow-upward"
               size={themedStyle.footer.iconSize}
               color={themedStyle.footer.iconColor}
             />
-            <ThemedText variant="label">{post.counts.upvotes}</ThemedText>
+            <ThemedText variant="label">{post.counts.score}</ThemedText>
             <MaterialIcons
-              name="keyboard-arrow-down"
+              name="arrow-downward"
               size={themedStyle.footer.iconSize}
               color={themedStyle.footer.iconColor}
             />
-            <ThemedText variant="label">{post.counts.downvotes}</ThemedText>
           </View>
         </View>
       </View>

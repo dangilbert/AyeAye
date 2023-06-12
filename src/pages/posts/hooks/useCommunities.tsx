@@ -1,18 +1,10 @@
 import { communityQueries } from "@rn-app/pods/communities/queries";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { CommunityView, ListCommunitiesResponse } from "lemmy-js-client";
-
-export const useInstances = () => {
-  const { data, isLoading } = useQuery({
-    ...communityQueries.instances(),
-    select: (data) => data.federated_instances,
-  });
-
-  return {
-    isLoading,
-    data,
-  };
-};
 
 export const useCommunities = (userId?: string) => {
   const { data, isLoading } = useQuery({
@@ -20,9 +12,16 @@ export const useCommunities = (userId?: string) => {
     select: (data) => data.communities,
   });
 
+  const queryClient = useQueryClient();
+
   return {
     isLoading,
     data,
+    invalidate: () => {
+      queryClient.invalidateQueries({
+        queryKey: communityQueries.communities(userId).queryKey,
+      });
+    },
   };
 };
 
