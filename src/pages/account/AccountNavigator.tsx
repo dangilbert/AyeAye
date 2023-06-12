@@ -1,12 +1,14 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemedText } from "@rn-app/components/ThemedText";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LoginScreen } from "./screens/LoginScreen";
+
+const Stack = createNativeStackNavigator();
 
 export const AccountNavigator = () => {
   return (
-    <SafeAreaView>
-      <ThemedText>Account view</ThemedText>
-      <ThemedText>Username</ThemedText>
-      <ThemedText>Host Server</ThemedText>
-    </SafeAreaView>
+    <Stack.Navigator>
+      <Stack.Group>
+        <Stack.Screen name="Login" component={LoginScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
   );
 };

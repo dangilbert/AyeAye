@@ -1,18 +1,16 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { CommentView, LemmyHttp, PostView } from "lemmy-js-client";
-
-const client: LemmyHttp = new LemmyHttp("https://lemmy.ml");
+import { getCurrentAuthToken, useLemmyHttp } from "../host/useLemmyHttp";
 
 const getCommunitiesForUser = async (
   userId?: string,
   communityType: "All" | "Subscribed" = "All"
 ) => {
-  return await client.listCommunities({
+  return await useLemmyHttp().listCommunities({
     type_: communityType,
     limit: 25,
     sort: "Active",
-    // TODO get the auth to list the communities for a user
-    // auth: auth
+    auth: getCurrentAuthToken(),
   });
 };
 
@@ -21,11 +19,12 @@ const getPostsForCommunity = async (
   communityId?: number,
   userId?: string
 ) => {
-  return await client.getPosts({
+  return await useLemmyHttp().getPosts({
     type_: "All",
     community_id: communityId,
     page: page,
     limit: 25,
+    auth: getCurrentAuthToken(),
   });
 };
 
@@ -35,13 +34,14 @@ const getCommentsForPost = async (
   communityId?: number,
   userId?: string
 ) => {
-  return await client.getComments({
+  return await useLemmyHttp().getComments({
     // type_: "All",
     community_id: communityId,
     post_id: postId,
     page: page,
     max_depth: 10,
     limit: 1,
+    auth: getCurrentAuthToken(),
     // sort: "Hot",
   });
 };
@@ -54,7 +54,12 @@ export const communityQueries = createQueryKeys("communities", {
   post: (postId: number, communityId?: number, userId?: string) => ({
     queryKey: [{ communityId, postId, userId, entity: "post" }],
     queryFn: async () => {
-      const res = (await client.getPost({ id: postId })).post_view;
+      const res = (
+        await useLemmyHttp().getPost({
+          id: postId,
+          auth: getCurrentAuthToken(),
+        })
+      ).post_view;
       return res;
     },
   }),

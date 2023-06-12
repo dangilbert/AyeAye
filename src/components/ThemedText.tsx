@@ -6,7 +6,8 @@ export type TextVariant =
   | "subheading"
   | "body"
   | "label"
-  | "caption";
+  | "caption"
+  | "link";
 
 export interface ThemedTextProps {
   variant?: TextVariant;
@@ -56,5 +57,10 @@ const textStyles = (theme: Theme) =>
       fontSize: 10,
       fontWeight: "300",
       color: theme.colors.text,
+    },
+    link: {
+      fontSize: 16,
+      fontWeight: "400",
+      color: theme.colors.link,
     },
   });
