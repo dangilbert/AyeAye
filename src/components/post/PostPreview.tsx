@@ -78,19 +78,23 @@ export const PostPreview = ({
   }
 
   if (postType === "Video") {
-    <VideoPost
-      name={name}
-      body={body}
-      creator={creator}
-      community={community}
-      published={published}
-      url={url!!}
-      embed_title={embed_title ?? url!!}
-      embed_description={embed_description}
-      thumbnail_url={thumbnail_url}
-      embed_video_url={embed_video_url}
-    />;
+    return (
+      <VideoPost
+        name={name}
+        body={body}
+        creator={creator}
+        community={community}
+        published={published}
+        url={url!!}
+        embed_title={embed_title ?? url!!}
+        embed_description={embed_description}
+        thumbnail_url={thumbnail_url}
+        embed_video_url={embed_video_url!!}
+      />
+    );
   }
+
+  // console.log("Post type not built", post.post);
 
   return (
     <>
