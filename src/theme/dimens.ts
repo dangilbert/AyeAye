@@ -11,4 +11,5 @@ export const ThemeSizes = {
     body: 14,
     label: 12,
   },
+  borderRadius: 8,
 };

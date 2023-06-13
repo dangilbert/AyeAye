@@ -11,6 +11,14 @@ export const useCurrentUser = () => {
   return data;
 };
 
+export const useUserSessions = () => {
+  const { data } = useQuery({
+    ...authQueries.users(),
+  });
+
+  return data;
+};
+
 export const saveAccount = (user: User) => {
   const users = JSON.parse(
     storage.getString(KEYS.STORAGE.AUTH.LEMMY_USERS) || "{}"

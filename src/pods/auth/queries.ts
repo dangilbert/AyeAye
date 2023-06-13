@@ -36,7 +36,7 @@ export const getCurrentUserSessionToken = async (): Promise<string> => {
   return (await getCurrentUserSession())?.jwt;
 };
 
-const getUsers = async (): Promise<Record<string, User>> => {
+const getUsers = async (): Promise<Map<string, User>> => {
   return JSON.parse(storage.getString(KEYS.STORAGE.AUTH.LEMMY_USERS) || "{}");
 };
 

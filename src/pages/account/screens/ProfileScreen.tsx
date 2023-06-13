@@ -17,24 +17,27 @@ export const ProfileScreen = () => {
 
 const LoggedInProfileScreen = () => {
   const { data: currentUser } = useCurrentUserProfile();
-  const queryClient = useQueryClient();
+  const userSession = useCurrentUser();
+  const navigator = useNavigation();
 
-  return currentUser ? (
+  return (
     <>
-      <ThemedText>
-        Fetching the user profile: {currentUser.person_view.person.name}
-      </ThemedText>
+      {currentUser ? (
+        <ThemedText>
+          Fetching the user profile: {currentUser.person_view.person.name}@
+          {userSession?.instance}
+        </ThemedText>
+      ) : (
+        <ActivityIndicator />
+      )}
       <Button
         onPress={() => {
-          deleteAccount(currentUser.person_view.person.actor_id);
-          queryClient.invalidateQueries();
+          navigator.navigate("AccountSelector");
         }}
       >
-        Log out
+        Manage accounts
       </Button>
     </>
-  ) : (
-    <ActivityIndicator />
   );
 };
 

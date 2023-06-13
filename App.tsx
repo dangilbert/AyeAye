@@ -29,6 +29,9 @@ import TimeAgo from "javascript-time-ago";
 
 import en from "javascript-time-ago/locale/en.json";
 
+import "@rn-app/components/sheets/sheets.tsx";
+import { SheetProvider } from "react-native-actions-sheet";
+
 TimeAgo.addDefaultLocale(en);
 
 function onAppStateChange(status: any) {
@@ -60,22 +63,24 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <PaperProvider theme={theme === "dark" ? MD3DarkTheme : MD3LightTheme}>
-          <NavigationContainer
-            theme={theme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <RootStack.Navigator screenOptions={{ headerShown: false }}>
-              <RootStack.Group>
-                <RootStack.Screen name={"HOME"} component={HomeRoot} />
-              </RootStack.Group>
-              <RootStack.Group screenOptions={{ presentation: "modal" }}>
-                <RootStack.Screen
-                  name={"MediaModal"}
-                  component={MediaModalScreen}
-                />
-              </RootStack.Group>
-            </RootStack.Navigator>
-            <StatusBar style="auto" />
-          </NavigationContainer>
+          <SheetProvider>
+            <NavigationContainer
+              theme={theme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <RootStack.Navigator screenOptions={{ headerShown: false }}>
+                <RootStack.Group>
+                  <RootStack.Screen name={"HOME"} component={HomeRoot} />
+                </RootStack.Group>
+                <RootStack.Group screenOptions={{ presentation: "modal" }}>
+                  <RootStack.Screen
+                    name={"MediaModal"}
+                    component={MediaModalScreen}
+                  />
+                </RootStack.Group>
+              </RootStack.Navigator>
+              <StatusBar style="auto" />
+            </NavigationContainer>
+          </SheetProvider>
         </PaperProvider>
       </ThemeProvider>
     </QueryClientProvider>
