@@ -5,10 +5,13 @@ import { AccountNavigator } from "@pages/account/AccountNavigator";
 import { SearchNavigator } from "@pages/search/SearchNavigator";
 import { SettingsNavigator } from "@pages/settings/SettingsNavigator";
 import { TabBarIcon } from "@rn-app/components/TabBarIcon";
+import { useCurrentUser } from "../account/hooks/useAccount";
 
 const Tab = createMaterialBottomTabNavigator();
 
 export const HomeRoot = () => {
+  const currentSession = useCurrentUser();
+
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -30,7 +33,7 @@ export const HomeRoot = () => {
         }}
       />
       <Tab.Screen
-        name="Account"
+        name={currentSession ? currentSession.username : "Account"}
         component={AccountNavigator}
         options={{
           tabBarIcon: ({ focused }) => (

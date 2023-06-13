@@ -6,8 +6,10 @@ import ActionSheet, {
   SheetProps,
 } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { deleteAccount } from "../hooks/useAccount";
+import { deleteAccount, setActiveLemmySession } from "../hooks/useAccount";
 import { useQueryClient } from "@tanstack/react-query";
+import { ThemedText } from "@rn-app/components";
+import { getShortActorId } from "@rn-app/utils/actorUtils";
 
 interface AccountManageActionSheetProps {
   account: User;
@@ -33,11 +35,8 @@ export const AccountManageActionSheet = ({
   };
 
   const setCurrentAccount = () => {
-    if (isCurrentAccount) {
-      queryClient.invalidateQueries();
-    } else {
-      queryClient.invalidateQueries(authQueries.users().queryKey);
-    }
+    setActiveLemmySession(account.actorId);
+    queryClient.invalidateQueries();
     SheetManager.hide(sheetId);
   };
 
@@ -49,6 +48,9 @@ export const AccountManageActionSheet = ({
       }}
     >
       <View style={themedStyles.bottomSheetContent}>
+        <ThemedText>{`${account.username}@${getShortActorId(
+          account.instance
+        )}`}</ThemedText>
         <Button
           title={`Set as current account${isCurrentAccount ? ": active" : ""}`}
           disabled={isCurrentAccount}
