@@ -6,8 +6,8 @@ import { getCurrentUserSessionToken } from "../auth/queries";
 export type CommunityType = "All" | "Subscribed" | "Local";
 
 const getCommunitiesForUser = async (
-  userId?: string,
-  communityType: "All" | "Subscribed" = "All"
+  communityType: CommunityType = "All",
+  userId?: string
 ) => {
   return await useLemmyHttp().listCommunities({
     type_: communityType,
@@ -52,9 +52,9 @@ const getCommentsForPost = async (
 };
 
 export const communityQueries = createQueryKeys("communities", {
-  communities: (userId?: string) => ({
-    queryKey: [{ userId, entity: "communities" }],
-    queryFn: () => getCommunitiesForUser(userId),
+  communities: (communityType: CommunityType, userId?: string) => ({
+    queryKey: [{ communityType, userId, entity: "communities" }],
+    queryFn: () => getCommunitiesForUser(communityType, userId),
   }),
   post: (postId: number, communityId?: number, userId?: string) => ({
     queryKey: [{ communityId, postId, userId, entity: "post" }],
