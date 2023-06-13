@@ -3,6 +3,8 @@ import { CommentView, PostView } from "lemmy-js-client";
 import { useLemmyHttp } from "../host/useLemmyHttp";
 import { getCurrentUserSessionToken } from "../auth/queries";
 
+export type CommunityType = "All" | "Subscribed" | "Local";
+
 const getCommunitiesForUser = async (
   userId?: string,
   communityType: "All" | "Subscribed" = "All"
@@ -18,10 +20,12 @@ const getCommunitiesForUser = async (
 const getPostsForCommunity = async (
   page: number,
   communityId?: number,
+  communityType?: CommunityType,
   userId?: string
 ) => {
+  console.log("getPostsForCommunity", communityId, communityType);
   return await useLemmyHttp().getPosts({
-    type_: "All",
+    type_: communityType ?? "All",
     community_id: communityId,
     page: page,
     limit: 25,
@@ -66,7 +70,7 @@ export const communityQueries = createQueryKeys("communities", {
   }),
   posts: (
     communityId?: number,
-    communityType?: "All" | "Subscribed" | "Local",
+    communityType?: CommunityType,
     userId?: string
   ) => ({
     queryKey: [{ communityId, communityType, userId, entity: "posts" }],
@@ -77,7 +81,12 @@ export const communityQueries = createQueryKeys("communities", {
       hasNextPage: Boolean;
       posts: PostView[];
     }> => {
-      const res = await getPostsForCommunity(pageParam, communityId, userId);
+      const res = await getPostsForCommunity(
+        pageParam,
+        communityId,
+        communityType,
+        userId
+      );
       return {
         ...res,
         nextPage: pageParam + 1,

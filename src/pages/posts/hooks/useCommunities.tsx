@@ -1,4 +1,7 @@
-import { communityQueries } from "@rn-app/pods/communities/queries";
+import {
+  CommunityType,
+  communityQueries,
+} from "@rn-app/pods/communities/queries";
 import {
   useInfiniteQuery,
   useQuery,
@@ -41,10 +44,13 @@ export const useCommunity = (communityId: number, userId?: string) => {
   };
 };
 
-export const usePosts = (communityId: number) => {
+export const usePosts = (
+  communityId: number,
+  communityType?: CommunityType
+) => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      ...communityQueries.posts(communityId),
+      ...communityQueries.posts(communityId, communityType),
       getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
     });
 

@@ -4,9 +4,14 @@ import { CommunityListItem } from "@rn-app/components/community/CommunityListIte
 import { Theme } from "@rn-app/theme";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { FlashList } from "@shopify/flash-list";
+import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
 
 export const CommunitiesScreen = ({ navigation }) => {
   const { data: communities, isLoading, invalidate } = useCommunities();
+
+  const currentUser = useCurrentUser();
+
+  const builtInCommunities = [];
 
   const allItem = {
     community: {
@@ -14,13 +19,27 @@ export const CommunitiesScreen = ({ navigation }) => {
       name: "All",
       customIcon: "menu",
       communityType: "All",
-      actor_id: "https://lemmy.ml",
+      actor_id: currentUser?.instance ?? "https://lemmy.ml",
     },
   };
+  builtInCommunities.push(allItem);
+
+  if (currentUser) {
+    const subscribedItem = {
+      community: {
+        id: undefined,
+        name: "Subscribed",
+        customIcon: "multitrack-audio",
+        communityType: "Subscribed",
+        actor_id: currentUser.instance,
+      },
+    };
+    builtInCommunities.push(subscribedItem);
+  }
 
   return (
     <FlashList
-      data={communities && [allItem, ...(communities ?? [])]}
+      data={communities && [...builtInCommunities, ...(communities ?? [])]}
       onRefresh={() => {
         invalidate();
       }}

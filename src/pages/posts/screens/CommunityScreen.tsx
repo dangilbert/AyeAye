@@ -7,6 +7,7 @@ import FastImage, { Source } from "react-native-fast-image";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
+  const communityType = route.params.communityType;
 
   const { data: community } = useCommunity(communityId);
   const {
@@ -16,7 +17,7 @@ export const CommunityScreen = ({ navigation, route }) => {
     isFetchingNextPage,
     hasNextPage,
     invalidate,
-  } = usePosts(communityId);
+  } = usePosts(communityId, communityType);
 
   posts &&
     FastImage.preload(
@@ -30,7 +31,7 @@ export const CommunityScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: community?.community.name ?? "<Community>",
+      title: community?.community.name ?? communityType,
     });
   }, [community]);
 
