@@ -23,7 +23,6 @@ const getPostsForCommunity = async (
   communityType?: CommunityType,
   userId?: string
 ) => {
-  console.log("getPostsForCommunity", communityId, communityType);
   return await useLemmyHttp().getPosts({
     type_: communityType ?? "All",
     community_id: communityId,
