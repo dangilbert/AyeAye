@@ -1,11 +1,12 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { useCurrentUser, useUserSessions } from "../hooks/useAccount";
-import { ThemedText } from "@rn-app/components";
+import { Avatar, ThemedText } from "@rn-app/components";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { User } from "@rn-app/pods/auth/queries";
 import { Theme, useTheme } from "@rn-app/theme";
 import { SheetManager, SheetProvider } from "react-native-actions-sheet";
+import { PlaceholderAvatar } from "@rn-app/components/user/PlaceholderAvatar";
 
 export const AccountSelectorScreen = () => {
   const accounts = useUserSessions();
@@ -33,6 +34,8 @@ export const AccountSelectorScreen = () => {
           })
         }
       >
+        {/* TODO: Store the profile picture of the user in the DB */}
+        <Avatar name={item.account.username} avatarUrl={undefined} />
         <View style={{ flexDirection: "column", flex: 1 }}>
           <ThemedText>{item.account.username}</ThemedText>
           <ThemedText>{`@${getShortActorId(
@@ -75,6 +78,11 @@ const styles = (theme: Theme) =>
       flexDirection: "row",
       borderRadius: theme.sizes.borderRadius,
       borderColor: theme.colors.border,
+      borderWidth: 1,
+      margin: 8,
+      padding: 8,
+      alignItems: "center",
+      gap: 10,
     },
     bottomSheetContent: {
       backgroundColor: theme.colors.secondaryBackground,

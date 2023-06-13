@@ -2,8 +2,10 @@ import { useNavigation } from "@react-navigation/native";
 import { ThemedText } from "@rn-app/components";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { useCurrentUserProfile } from "../hooks/useCurrentUserProfile";
-import { useQueryClient } from "@tanstack/react-query";
-import { deleteAccount, useCurrentUser } from "../hooks/useAccount";
+import { useCurrentUser } from "../hooks/useAccount";
+import { View } from "react-native";
+import { getShortActorId } from "@rn-app/utils/actorUtils";
+import { Avatar } from "@rn-app/components";
 
 export const ProfileScreen = () => {
   const currentSession = useCurrentUser();
@@ -18,25 +20,28 @@ export const ProfileScreen = () => {
 const LoggedInProfileScreen = () => {
   const { data: currentUser } = useCurrentUserProfile();
   const userSession = useCurrentUser();
-  const navigator = useNavigation();
 
   return (
     <>
       {currentUser ? (
-        <ThemedText>
-          Fetching the user profile: {currentUser.person_view.person.name}@
-          {userSession?.instance}
-        </ThemedText>
+        <View
+          style={{
+            alignItems: "center",
+            padding: 16,
+          }}
+        >
+          <Avatar
+            name={currentUser.person_view.person.name}
+            avatarUrl={currentUser.person_view.person.avatar}
+          />
+          <ThemedText variant={"subheading"}>
+            {currentUser.person_view.person.name}
+          </ThemedText>
+          <ThemedText>@{getShortActorId(userSession?.instance)}</ThemedText>
+        </View>
       ) : (
         <ActivityIndicator />
       )}
-      <Button
-        onPress={() => {
-          navigator.navigate("AccountSelector");
-        }}
-      >
-        Manage accounts
-      </Button>
     </>
   );
 };

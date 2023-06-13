@@ -4,6 +4,7 @@ import { ProfileScreen } from "./screens/ProfileScreen";
 import { AccountSelectorScreen } from "./screens/AccountSelectorScreen";
 import { AddIconButton } from "./components/AddIconButton";
 import { BackButton } from "./components/BackButton";
+import { ManageAccountsButton } from "./components/ManageAccountsButton";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,7 +12,13 @@ export const AccountNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Profile">
       <Stack.Group>
-        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            headerRight: () => <ManageAccountsButton />,
+          }}
+        />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen

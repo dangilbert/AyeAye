@@ -12,4 +12,8 @@ export const ThemeSizes = {
     label: 12,
   },
   borderRadius: 8,
+  avatar: {
+    size: 50,
+    borderRadius: 25,
+  },
 };
