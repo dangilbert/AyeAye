@@ -29,6 +29,7 @@ const getPostsForCommunity = async (
     page: page,
     limit: 25,
     auth: await getCurrentUserSessionToken(),
+    sort: "Active",
   });
 };
 
