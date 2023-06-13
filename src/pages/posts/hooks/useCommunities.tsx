@@ -9,9 +9,12 @@ import {
 } from "@tanstack/react-query";
 import { CommunityView, ListCommunitiesResponse } from "lemmy-js-client";
 
-export const useCommunities = (userId?: string) => {
+export const useCommunities = (
+  communityType: CommunityType,
+  userId?: string
+) => {
   const { data, isLoading } = useQuery({
-    ...communityQueries.communities(userId),
+    ...communityQueries.communities(communityType, userId),
     select: (data) => data.communities,
   });
 
@@ -22,15 +25,19 @@ export const useCommunities = (userId?: string) => {
     data,
     invalidate: () => {
       queryClient.invalidateQueries({
-        queryKey: communityQueries.communities(userId).queryKey,
+        queryKey: communityQueries.communities(communityType, userId).queryKey,
       });
     },
   };
 };
 
-export const useCommunity = (communityId: number, userId?: string) => {
+export const useCommunity = (
+  communityId: number,
+  communityType: CommunityType,
+  userId?: string
+) => {
   const { data, isLoading } = useQuery({
-    ...communityQueries.communities(userId),
+    ...communityQueries.communities(communityType, userId),
 
     select: (data: ListCommunitiesResponse) =>
       data.communities.find(

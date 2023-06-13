@@ -21,7 +21,7 @@ export const lightColors = {
   button: "black",
   buttonText: "#e68a00",
   linkText: "#e68a00",
-  border: "#e68a00",
+  border: "#cccccc",
   // List of bright, not gray, colors for comment indent highlight
   commentIndentHighlight: ["#f2f200", "#e600e6", "#00d9d9", "#c0c0ff"],
 };
@@ -36,6 +36,6 @@ export const darkColors = {
   button: "orange",
   buttonText: "black",
   linkText: "#e68a00",
-  border: "#e68a00",
+  border: "#555555",
   commentIndentHighlight: ["#f2f200", "#e600e6", "#00d9d9", "#c0c0ff"],
 };

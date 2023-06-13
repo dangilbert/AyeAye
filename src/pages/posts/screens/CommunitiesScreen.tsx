@@ -12,7 +12,10 @@ import { useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { CommunityType } from "@rn-app/pods/communities/queries";
 
-type CommunityListItemType = CommunityItem | "Server" | "CommunityTypeSelector";
+type CommunityListItemType =
+  | CommunityItem
+  | SectionHeader
+  | "CommunityTypeSelector";
 type CommunityItem = {
   community: {
     id?: string;
@@ -24,8 +27,13 @@ type CommunityItem = {
     instanceName?: string;
   };
 };
+type SectionHeader = {
+  sectionTitle: string;
+};
 
 export const CommunitiesScreen = () => {
+  const themedStyles = styles(useTheme());
+
   const [communityTypeSelector, setCommunityTypeSelector] =
     useState<CommunityType>(
       (storage.getString("communityTypeSelector") as CommunityType) ?? "All"
@@ -40,7 +48,7 @@ export const CommunitiesScreen = () => {
 
   const builtInCommunities: CommunityListItemType[] = [];
 
-  builtInCommunities.push("Server");
+  builtInCommunities.push({ sectionTitle: "Feeds" });
 
   const allItem = {
     community: {
@@ -77,6 +85,9 @@ export const CommunitiesScreen = () => {
     builtInCommunities.push(subscribedItem);
   }
 
+  // builtInCommunities.push({ sectionTitle: "Favorites (coming soon)" });
+
+  builtInCommunities.push({ sectionTitle: "Communities" });
   builtInCommunities.push("CommunityTypeSelector");
 
   const updateCommunityTypeSelector = (value: CommunityType) => {
@@ -95,9 +106,14 @@ export const CommunitiesScreen = () => {
         isLoading && !communities ? <ActivityIndicator /> : null
       }
       renderItem={({ item }) => {
+        if (Object.keys(item).includes("sectionTitle")) {
+          return (
+            <View style={themedStyles.sectionHeader}>
+              <ThemedText>{(item as unknown as any).sectionTitle}</ThemedText>
+            </View>
+          );
+        }
         switch (item) {
-          case "Server":
-            return <ThemedText>Server</ThemedText>;
           case "CommunityTypeSelector":
             return (
               <CommunityTypeSelectorRenderItem
