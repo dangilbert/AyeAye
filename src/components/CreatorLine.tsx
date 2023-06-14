@@ -4,6 +4,7 @@ import { ThemedText } from "./ThemedText";
 import TimeAgo from "./TimeAgo";
 import { Person } from "lemmy-js-client";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface CreatorLineProps {
   creator: Person;
@@ -11,6 +12,7 @@ interface CreatorLineProps {
   actorId?: string;
   communityActorId?: string;
   published: Date;
+  updated?: Date;
 }
 
 export const CreatorLine = ({
@@ -19,8 +21,10 @@ export const CreatorLine = ({
   actorId,
   communityActorId,
   published,
+  updated,
 }: CreatorLineProps) => {
-  const themedStyle = styles(useTheme());
+  const theme = useTheme();
+  const themedStyle = styles(theme);
   return (
     <View style={themedStyle.creatorLine}>
       <View style={{ flexDirection: "column" }}>
@@ -35,7 +39,18 @@ export const CreatorLine = ({
           </ThemedText>
         )}
       </View>
-      <TimeAgo date={published} />
+      {updated && (
+        <View style={{ marginHorizontal: 5 }}>
+          <MaterialIcons
+            name="edit"
+            color={theme.colors.text}
+            size={theme.sizes.text.label}
+          />
+        </View>
+      )}
+      <View style={{ flex: 1, alignItems: "flex-end" }}>
+        <TimeAgo date={published} />
+      </View>
     </View>
   );
 };
@@ -45,6 +60,5 @@ const styles = (theme: Theme) =>
     creatorLine: {
       flex: 1,
       flexDirection: "row",
-      justifyContent: "space-between",
     },
   });

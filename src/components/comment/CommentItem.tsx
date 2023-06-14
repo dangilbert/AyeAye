@@ -42,6 +42,11 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         creator={comment.creator}
         actorId={comment.creator.actor_id}
         published={new Date(comment.comment.published)}
+        updated={
+          comment.comment.updated
+            ? new Date(comment.comment.updated)
+            : undefined
+        }
       />
       {commentBody &&
         commentBody.map((element, index) => {
