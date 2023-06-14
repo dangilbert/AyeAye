@@ -17,6 +17,8 @@ import { ThemedText, CreatorLine } from "@rn-app/components";
 import { getPostType, getShareContent } from "@rn-app/utils/postUtils";
 import FastImage from "react-native-fast-image";
 import Snackbar from "react-native-snackbar";
+import { useBooleanSetting, useStringSetting } from "@rn-app/hooks/useSetting";
+import { BlurView } from "@react-native-community/blur";
 
 export interface PostCardProps {
   post: PostView;
@@ -40,9 +42,12 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const postType = getPostType(post.post);
 
-  if (post.post.name.includes("George Russell reckons")) {
-    console.log("Published", JSON.stringify(post.post.published, null, 2));
-  }
+  // if (post.post.name.includes("George Russell reckons")) {
+  //   console.log("Published", JSON.stringify(post.post.published, null, 2));
+  // }
+
+  const { value: blurNSFW } = useBooleanSetting("blur_nsfw", true);
+  console.log("blurNSFW", blurNSFW);
 
   const onShare = async () => {
     try {
@@ -66,14 +71,22 @@ export const PostCard = ({ post }: PostCardProps) => {
     >
       {postType === "Image" && (
         <Pressable
+          style={themedStyle.imageContainer}
           onPress={() => {
             navigation.navigate("MediaModal", { imageUri: post.post.url });
           }}
         >
           <FastImage
-            style={themedStyle.image}
+            style={[themedStyle.imageBox, themedStyle.image]}
             source={{ uri: post.post.thumbnail_url ?? post.post.url }}
           />
+          {post.post.nsfw && blurNSFW && (
+            <BlurView
+              blurType="light"
+              style={[themedStyle.imageBox, themedStyle.imageBlur]}
+              blurAmount={50}
+            />
+          )}
         </Pressable>
       )}
       {postType === "Video" && (
@@ -87,6 +100,11 @@ export const PostCard = ({ post }: PostCardProps) => {
           <FastImage
             style={themedStyle.image}
             source={{ uri: post.post.thumbnail_url }}
+          />
+          <BlurView
+            blurType="dark"
+            style={themedStyle.imageBlur}
+            blurAmount={10}
           />
         </Pressable>
       )}
@@ -183,11 +201,25 @@ const styles = (theme: Theme) =>
       alignItems: "center",
       gap: 5,
     },
-    image: {
+    imageContainer: {
+      position: "relative",
       width: 60,
-      height: 50,
+      height: 60,
       marginEnd: 10,
+    },
+    imageBox: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
       borderRadius: 5,
+    },
+    image: {
+      zIndex: 1,
+    },
+    imageBlur: {
+      zIndex: 2,
     },
     title: {
       flex: 1,
