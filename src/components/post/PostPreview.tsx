@@ -94,7 +94,7 @@ export const PostPreview = ({
     );
   }
 
-  // console.log("Post type not built", post.post);
+  console.log("Post type not built", JSON.stringify(post.post, null, 2));
 
   return (
     <>

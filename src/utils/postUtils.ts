@@ -45,7 +45,7 @@ const isLinkPost = (post: Post): boolean => {
 };
 
 const isSimpleLinkPost = (post: Post): boolean => {
-  return !!post.url && !isImage(post.url) && !!post.embed_title;
+  return !!post.url && !isImage(post.url);
 };
 
 const isTextPost = (post: Post): boolean => {
