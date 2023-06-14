@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import ReactTimeAgo from "react-time-ago";
 import { ThemedText } from "./ThemedText";
+// import { timezoneOffset } from "./time/timeSetup";
 
 export default function TimeAgo(props) {
-  return <ReactTimeAgo {...props} component={Time} />;
+  // TODO fix the timezone offset
+  return (
+    <ReactTimeAgo
+      {...props}
+      component={Time}
+      // timeOffset={timezoneOffset}
+      timeStyle={"twitter"}
+      updateInterval={1000 * 60}
+    />
+  );
 }
 
 function Time({ children }) {

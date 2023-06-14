@@ -40,6 +40,10 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const postType = getPostType(post.post);
 
+  if (post.post.name.includes("George Russell reckons")) {
+    console.log("Published", JSON.stringify(post.post.published, null, 2));
+  }
+
   const onShare = async () => {
     try {
       await Share.share({
@@ -110,7 +114,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           community={post.community.name}
           actorId={post.creator.actor_id}
           communityActorId={post.community.actor_id}
-          published={new Date(post.post.published)}
+          published={post.post.published}
         />
         <View style={themedStyle.title}>
           {postTitle &&

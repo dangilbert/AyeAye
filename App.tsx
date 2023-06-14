@@ -25,14 +25,10 @@ import { ThemeProvider } from "./src/theme";
 import { MediaModalScreen } from "./src/components/media/MediaModalScreen";
 
 import "react-native-url-polyfill/auto";
-import TimeAgo from "javascript-time-ago";
-
-import en from "javascript-time-ago/locale/en.json";
 
 import "@rn-app/components/sheets/sheets.tsx";
+import "@rn-app/components/time/timeSetup.ts";
 import { SheetProvider } from "react-native-actions-sheet";
-
-TimeAgo.addDefaultLocale(en);
 
 function onAppStateChange(status: any) {
   // React Query already supports in web browser refetch on window focus by default

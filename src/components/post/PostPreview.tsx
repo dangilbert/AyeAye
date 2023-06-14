@@ -176,7 +176,7 @@ const LinkPost = ({
             actorId={creator.actor_id}
             community={community.name}
             communityActorId={community.actor_id}
-            published={new Date(published)}
+            published={published}
           />
         </View>
       </View>
@@ -228,7 +228,7 @@ const ImagePost = ({
             actorId={creator.actor_id}
             community={community.name}
             communityActorId={community.actor_id}
-            published={new Date(published)}
+            published={published}
           />
         </View>
       </View>
@@ -308,7 +308,7 @@ const VideoPost = ({
             actorId={creator.actor_id}
             community={community.name}
             communityActorId={community.actor_id}
-            published={new Date(published)}
+            published={published}
           />
         </View>
       </View>
@@ -359,7 +359,7 @@ const TextPost = ({
             actorId={creator.actor_id}
             community={community.name}
             communityActorId={community.actor_id}
-            published={new Date(published)}
+            published={published}
           />
         </View>
       </View>

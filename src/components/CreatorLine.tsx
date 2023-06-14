@@ -11,8 +11,8 @@ interface CreatorLineProps {
   community?: string;
   actorId?: string;
   communityActorId?: string;
-  published: Date;
-  updated?: Date;
+  published: string;
+  updated?: string;
 }
 
 export const CreatorLine = ({
@@ -25,6 +25,10 @@ export const CreatorLine = ({
 }: CreatorLineProps) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
+
+  const fixedPublished = new Date(
+    published.endsWith("Z") == true ? published : `${published}Z`
+  );
   return (
     <View style={themedStyle.creatorLine}>
       <View style={{ flexDirection: "column" }}>
@@ -49,7 +53,7 @@ export const CreatorLine = ({
         </View>
       )}
       <View style={{ flex: 1, alignItems: "flex-end" }}>
-        <TimeAgo date={published} />
+        <TimeAgo date={fixedPublished} />
       </View>
     </View>
   );
