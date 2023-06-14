@@ -9,11 +9,6 @@ export default {
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
-    splash: {
-      image: "./assets/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#ffffff",
-    },
     plugins: [
       ["./plugins/withAnimatedWebPSupport"],
       ["./plugins/withFastImageWebPSupportIOS.js"],
@@ -25,9 +20,33 @@ export default {
       bundleIdentifier: IS_DEV
         ? "eu.dangilbert.ayeaye.dev"
         : "eu.dangilbert.ayeaye",
+      splash: {
+        image: "./assets/splash-light.png",
+        resizeMode: "cover",
+        backgroundColor: "#ffffff",
+        dark: {
+          image: "./assets/splash-dark.png",
+          resizeMode: "cover",
+          backgroundColor: "#1d2433",
+        },
+      },
     },
     android: {
       package: IS_DEV ? "eu.dangilbert.ayeaye.dev" : "eu.dangilbert.ayeaye",
+      splash: {
+        image: "./assets/splash-light.png",
+        resizeMode: "cover",
+        backgroundColor: "#ffffff",
+        dark: {
+          image: "./assets/splash-dark.png",
+          resizeMode: "cover",
+          backgroundColor: "#1d2433",
+        },
+      },
+      adaptiveIcon: {
+        foregroundImage: "./assets/adaptive-icon-foreground.png",
+        backgroundColor: "#1d2433",
+      },
     },
     extra: {
       eas: {
