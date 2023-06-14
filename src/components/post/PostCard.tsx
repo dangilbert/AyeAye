@@ -68,7 +68,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         >
           <FastImage
             style={themedStyle.image}
-            source={{ uri: post.post.thumbnail_url }}
+            source={{ uri: post.post.thumbnail_url ?? post.post.url }}
           />
         </Pressable>
       )}
