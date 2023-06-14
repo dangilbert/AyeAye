@@ -26,4 +26,8 @@ export const markdownStyles = (theme: Theme) =>
       color: theme.colors.text,
       paddingVertical: 4,
     },
+    em: {
+      color: theme.colors.text,
+      fontStyle: "italic",
+    },
   });
