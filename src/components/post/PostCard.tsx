@@ -47,7 +47,6 @@ export const PostCard = ({ post }: PostCardProps) => {
   // }
 
   const { value: blurNSFW } = useBooleanSetting("blur_nsfw", true);
-  console.log("blurNSFW", blurNSFW);
 
   const onShare = async () => {
     try {
