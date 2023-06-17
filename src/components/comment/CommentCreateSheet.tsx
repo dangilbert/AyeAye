@@ -5,10 +5,11 @@ import ActionSheet, {
 import { ThemedText } from "../ThemedText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Theme, useTheme } from "@rn-app/theme";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { usePostComment } from "@rn-app/pages/posts/hooks/useCommunities";
 import Snackbar from "react-native-snackbar";
 import { Button } from "react-native-paper";
+import { useState } from "react";
 
 interface CommentCreateSheetProps {
   postId: string;
@@ -23,6 +24,8 @@ export const CommentCreateSheet = ({
   const themedStyles = styles(useTheme());
   const insets = useSafeAreaInsets();
 
+  const [commentContent, onChangeText] = useState("");
+
   const { mutate: postComment } = usePostComment(
     postId,
     commentId,
@@ -30,7 +33,7 @@ export const CommentCreateSheet = ({
   );
 
   const handlePostComment = async () => {
-    postComment("test", {
+    postComment(commentContent, {
       onSuccess: () => {
         closeSheet();
       },
@@ -55,7 +58,18 @@ export const CommentCreateSheet = ({
     >
       <View style={themedStyles.bottomSheetContent}>
         <ThemedText>{`Replying to post ${postId}, comment: ${commentId}`}</ThemedText>
-        <Button onPress={handlePostComment}>Post comment</Button>
+        <TextInput
+          editable
+          multiline
+          numberOfLines={4}
+          maxLength={40}
+          onChangeText={(text) => onChangeText(text)}
+          value={commentContent}
+          style={themedStyles.commentBox}
+        />
+        <Button onPress={handlePostComment} disabled={!commentContent.length}>
+          Post comment
+        </Button>
       </View>
     </ActionSheet>
   );
@@ -77,5 +91,15 @@ const styles = (theme: Theme) =>
     bottomSheetContent: {
       backgroundColor: theme.colors.secondaryBackground,
       padding: 16,
+    },
+    commentBox: {
+      height: 200,
+      backgroundColor: theme.colors.secondaryBackground,
+      borderColor: theme.colors.border,
+      borderWidth: 1,
+      borderRadius: theme.sizes.borderRadius,
+      padding: 8,
+      marginVertical: 8,
+      color: theme.colors.text,
     },
   });
