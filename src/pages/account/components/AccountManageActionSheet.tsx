@@ -48,7 +48,10 @@ export const AccountManageActionSheet = ({
       }}
     >
       <View style={themedStyles.bottomSheetContent}>
-        <ThemedText>{`${account.username}@${getShortActorId(
+        <ThemedText
+          style={{ textAlign: "center", marginBottom: 10 }}
+          variant="subheading"
+        >{`${account.username}@${getShortActorId(
           account.instance
         )}`}</ThemedText>
         <Button
