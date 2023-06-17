@@ -7,6 +7,7 @@ import { PostView } from "lemmy-js-client";
 import { PostPreview } from "./PostPreview";
 import { getShareContent } from "@rn-app/utils/postUtils";
 import Snackbar from "react-native-snackbar";
+import { SheetManager } from "react-native-actions-sheet";
 
 export interface PostDetailProps {
   post: PostView;
@@ -27,8 +28,11 @@ export const PostDetail = ({ post }: PostDetailProps) => {
   };
 
   const onPostReply = () => {
-    Snackbar.show({
-      text: "Not implemented yet",
+    SheetManager.show("comment-reply-sheet", {
+      payload: {
+        postId: post.post.id,
+        communityId: post.post.community_id,
+      },
     });
   };
 
