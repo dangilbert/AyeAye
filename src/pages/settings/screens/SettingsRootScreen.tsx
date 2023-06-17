@@ -1,6 +1,6 @@
 import { ThemedText } from "@rn-app/components";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Switch, ToggleButton } from "react-native-paper";
 
 export const SettingsRootScreen = () => {
@@ -10,7 +10,8 @@ export const SettingsRootScreen = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
+      <ThemedText variant="subheading">Appearance</ThemedText>
       <View
         style={{
           flexDirection: "row",
@@ -22,6 +23,6 @@ export const SettingsRootScreen = () => {
         <ThemedText>Blur NSFW in feed</ThemedText>
         <Switch onValueChange={() => setBlurNSFW(!blurNSFW)} value={blurNSFW} />
       </View>
-    </View>
+    </ScrollView>
   );
 };

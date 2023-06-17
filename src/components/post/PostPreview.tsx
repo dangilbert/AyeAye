@@ -2,7 +2,7 @@ import { Community, Person, PostView } from "lemmy-js-client";
 import { Fragment, useState } from "react";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Theme, useTheme } from "@rn-app/theme";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 import { markdownStyles } from "./styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
@@ -378,16 +378,17 @@ interface MarkdownTextProps {
 }
 const MarkdownText = ({ text, type, options }: MarkdownTextProps) => {
   const postBody = useMarkdown(text ?? "", options);
+  const itemWidth = Dimensions.get("window").width - 32;
 
   return (
-    <>
+    <View style={{ width: itemWidth }}>
       {postBody &&
         postBody.map((element, index) => {
           return (
             <Fragment key={`paragraph_${type}_${index}`}>{element}</Fragment>
           );
         })}
-    </>
+    </View>
   );
 };
 const PostTitle = ({ text }: PostTextProps) => {
