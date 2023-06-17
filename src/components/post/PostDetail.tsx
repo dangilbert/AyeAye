@@ -26,6 +26,12 @@ export const PostDetail = ({ post }: PostDetailProps) => {
     }
   };
 
+  const onPostReply = () => {
+    Snackbar.show({
+      text: "Not implemented yet",
+    });
+  };
+
   return (
     <Fragment key={`post_${post.post.id}`}>
       <PostPreview post={post} />
@@ -39,6 +45,13 @@ export const PostDetail = ({ post }: PostDetailProps) => {
           />
           <ThemedText variant="label">{post.counts.comments}</ThemedText>
         </View>
+        <Pressable style={themedStyle.footerAction} onPress={onPostReply}>
+          <MaterialIcons
+            name={"reply"}
+            size={themedStyle.footer.iconSize}
+            color={themedStyle.footer.iconColor}
+          />
+        </Pressable>
         <Pressable style={themedStyle.footerAction} onPress={onShare}>
           <MaterialIcons
             name={Platform.OS === "ios" ? "ios-share" : "share"}

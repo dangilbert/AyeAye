@@ -1,9 +1,12 @@
+import { getCurrentUserSessionToken } from "@rn-app/pods/auth/queries";
 import {
   CommunityType,
   communityQueries,
 } from "@rn-app/pods/communities/queries";
+import { useLemmyHttp } from "@rn-app/pods/host/useLemmyHttp";
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -114,5 +117,59 @@ export const useComments = (postId: number, communityId?: number) => {
       queryClient.invalidateQueries({
         queryKey: communityQueries.comments(postId, communityId).queryKey,
       }),
+  };
+};
+
+export const usePostComment = (
+  postId: number,
+  commentId?: number,
+  communityId?: number
+) => {
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, mutate } = useMutation({
+    mutationFn: async (content: string) => {
+      const client = useLemmyHttp();
+      const res = await client.createComment({
+        post_id: postId,
+        content,
+        parent_id: commentId,
+        auth: await getCurrentUserSessionToken(),
+      });
+
+      console.log("res", res);
+
+      return res;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        [...communityQueries.comments(postId, communityId).queryKey],
+        (oldData) => {
+          console.log(oldData.pages);
+
+          const lastCommentPage = {
+            comments: [
+              data.comment_view,
+              ...oldData.pages[oldData.pages.length - 1].comments,
+            ],
+          };
+          const otherCommentPages = oldData.pages.slice(
+            0,
+            oldData.pages.length - 1
+          );
+
+          return {
+            ...oldData,
+            pages: [...otherCommentPages, lastCommentPage],
+          };
+        }
+      );
+    },
+  });
+
+  return {
+    isLoading,
+    data,
+    mutate,
   };
 };
