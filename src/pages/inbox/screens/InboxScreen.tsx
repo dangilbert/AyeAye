@@ -5,6 +5,7 @@ import { InboxItem } from "@rn-app/components/messaging/InboxItem";
 import { SegmentedButtons } from "react-native-paper";
 import { useState } from "react";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
+import { LoggedOutEmptyView } from "@rn-app/components/LoggedOutEmptyView";
 
 export const InboxScreen = () => {
   const [inboxType, setInboxType] = useState("inbox");
@@ -24,6 +25,10 @@ export const InboxScreen = () => {
         ? m.creator.id !== currentUser?.id
         : m.creator.id === currentUser?.id
     );
+
+  if (!currentUser) {
+    return <LoggedOutEmptyView />;
+  }
 
   return (
     <>
