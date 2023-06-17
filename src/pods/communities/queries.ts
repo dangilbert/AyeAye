@@ -1,5 +1,5 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { CommentView, PostView } from "lemmy-js-client";
+import { CommentView, PostView, SortType } from "lemmy-js-client";
 import { useLemmyHttp } from "../host/useLemmyHttp";
 import { getCurrentUserSessionToken } from "../auth/queries";
 
@@ -11,25 +11,33 @@ const getCommunitiesForUser = async (
 ) => {
   return await useLemmyHttp().listCommunities({
     type_: communityType,
-    limit: 25,
+    limit: 100,
     sort: "Active",
     auth: await getCurrentUserSessionToken(),
   });
 };
 
-const getPostsForCommunity = async (
-  page: number,
-  communityId?: number,
-  communityType?: CommunityType,
-  userId?: string
-) => {
+const getPostsForCommunity = async ({
+  page,
+  sortType,
+  communityId,
+  communityType,
+  userId,
+}: {
+  page: number;
+  sortType: SortType;
+  communityId?: number;
+  communityType?: CommunityType;
+  userId?: string;
+}) => {
+  console.log("Sort type: ", sortType);
   return await useLemmyHttp().getPosts({
     type_: communityType ?? "All",
     community_id: communityId,
     page: page,
     limit: 25,
     auth: await getCurrentUserSessionToken(),
-    sort: "Active",
+    sort: sortType,
   });
 };
 
@@ -68,12 +76,20 @@ export const communityQueries = createQueryKeys("communities", {
       return res;
     },
   }),
-  posts: (
-    communityId?: number,
-    communityType?: CommunityType,
-    userId?: string
-  ) => ({
-    queryKey: [{ communityId, communityType, userId, entity: "posts" }],
+  posts: ({
+    communityId,
+    communityType,
+    userId,
+    sortType,
+  }: {
+    communityId?: number;
+    communityType?: CommunityType;
+    userId?: string;
+    sortType: SortType;
+  }) => ({
+    queryKey: [
+      { communityId, communityType, userId, sortType, entity: "posts" },
+    ],
     queryFn: async ({
       pageParam = 1,
     }): Promise<{
@@ -81,12 +97,13 @@ export const communityQueries = createQueryKeys("communities", {
       hasNextPage: Boolean;
       posts: PostView[];
     }> => {
-      const res = await getPostsForCommunity(
+      const res = await getPostsForCommunity({
         pageParam,
+        sortType,
         communityId,
         communityType,
-        userId
-      );
+        userId,
+      });
       return {
         ...res,
         nextPage: pageParam + 1,

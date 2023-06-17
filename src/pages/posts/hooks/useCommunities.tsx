@@ -4,13 +4,19 @@ import {
   communityQueries,
 } from "@rn-app/pods/communities/queries";
 import { useLemmyHttp } from "@rn-app/pods/host/useLemmyHttp";
+import { storage } from "@rn-app/utils/storage";
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { CommunityView, ListCommunitiesResponse } from "lemmy-js-client";
+import {
+  CommunityView,
+  ListCommunitiesResponse,
+  SortType,
+} from "lemmy-js-client";
+import { useMMKVString } from "react-native-mmkv";
 
 export const useCommunities = (
   communityType: CommunityType,
@@ -58,9 +64,14 @@ export const usePosts = (
   communityId: number,
   communityType?: CommunityType
 ) => {
+  const [sortType] = useMMKVString("settings.post-sort-type", storage);
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      ...communityQueries.posts(communityId, communityType),
+      ...communityQueries.posts({
+        communityId,
+        communityType,
+        sortType: (sortType ?? "Hot") as SortType,
+      }),
       getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
     });
 
@@ -74,7 +85,11 @@ export const usePosts = (
     hasNextPage,
     invalidate: () => {
       queryClient.invalidateQueries({
-        queryKey: communityQueries.posts(communityId).queryKey,
+        queryKey: communityQueries.posts({
+          communityId,
+          communityType,
+          sortType: (sortType ?? "Hot") as SortType,
+        }).queryKey,
       });
     },
   };
