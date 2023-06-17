@@ -454,12 +454,12 @@ const styles = (theme: Theme) =>
       flex: 1,
     },
     icon: {
-      size: 50,
+      size: 20,
       color: theme.colors.text,
       margin: 10,
     },
     iconContainer: {
-      width: 60,
+      width: 50,
       height: 50,
       marginEnd: 10,
       marginTop: 10,

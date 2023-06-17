@@ -48,6 +48,8 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const { value: blurNSFW } = useBooleanSetting("blur_nsfw", true);
 
+  console.log("Post", post.post.name, post.post.nsfw);
+
   const onShare = async () => {
     try {
       await Share.share({
@@ -113,6 +115,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             name={"link"}
             size={themedStyle.icon.size}
             color={themedStyle.icon.color}
+            style={themedStyle.icon}
           />
         </View>
       )}
@@ -224,12 +227,12 @@ const styles = (theme: Theme) =>
       flex: 1,
     },
     icon: {
-      size: 50,
+      size: 20,
       color: theme.colors.text,
       margin: 10,
     },
     iconContainer: {
-      width: 60,
+      width: 50,
       height: 50,
       marginEnd: 10,
       borderRadius: 5,
