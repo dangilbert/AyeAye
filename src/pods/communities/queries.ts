@@ -9,12 +9,16 @@ const getCommunitiesForUser = async (
   communityType: CommunityType = "All",
   userId?: string
 ) => {
-  return await useLemmyHttp().listCommunities({
+  // TODO fetch all the subscribed communities of a user with the pagination
+  const res = await useLemmyHttp().listCommunities({
     type_: communityType,
-    limit: 100,
+    limit: 49,
     sort: "Active",
     auth: await getCurrentUserSessionToken(),
   });
+
+  console.log("Fetched communities");
+  return res;
 };
 
 const getPostsForCommunity = async ({
@@ -98,7 +102,7 @@ export const communityQueries = createQueryKeys("communities", {
       posts: PostView[];
     }> => {
       const res = await getPostsForCommunity({
-        pageParam,
+        page: pageParam,
         sortType,
         communityId,
         communityType,

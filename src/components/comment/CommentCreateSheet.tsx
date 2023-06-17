@@ -10,6 +10,7 @@ import { usePostComment } from "@rn-app/pages/posts/hooks/useCommunities";
 import Snackbar from "react-native-snackbar";
 import { Button } from "react-native-paper";
 import { useState } from "react";
+import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
 
 interface CommentCreateSheetProps {
   postId: string;
@@ -25,6 +26,7 @@ export const CommentCreateSheet = ({
   const insets = useSafeAreaInsets();
 
   const [commentContent, onChangeText] = useState("");
+  const currentUser = useCurrentUser();
 
   const { mutate: postComment, isLoading: isPostingComment } = usePostComment(
     postId,
@@ -57,22 +59,27 @@ export const CommentCreateSheet = ({
       }}
     >
       <View style={themedStyles.bottomSheetContent}>
-        <ThemedText>{`Replying to post ${postId}, comment: ${commentId}`}</ThemedText>
+        <ThemedText>Response:</ThemedText>
         <TextInput
           editable
           multiline
           numberOfLines={4}
-          maxLength={40}
           onChangeText={(text) => onChangeText(text)}
           value={commentContent}
           style={themedStyles.commentBox}
         />
-        <Button
-          onPress={handlePostComment}
-          disabled={!commentContent.length || isPostingComment}
-        >
-          Post comment
-        </Button>
+        {currentUser ? (
+          <Button
+            onPress={handlePostComment}
+            disabled={!commentContent.length || isPostingComment}
+          >
+            Post comment
+          </Button>
+        ) : (
+          <ThemedText style={{ textAlign: "center" }}>
+            You must be signed in to comment
+          </ThemedText>
+        )}
       </View>
     </ActionSheet>
   );

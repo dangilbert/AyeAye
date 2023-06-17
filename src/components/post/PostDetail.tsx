@@ -9,6 +9,7 @@ import { getShareContent } from "@rn-app/utils/postUtils";
 import Snackbar from "react-native-snackbar";
 import { SheetManager } from "react-native-actions-sheet";
 import { usePostVote } from "@rn-app/pages/posts/hooks/useCommunities";
+import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
 
 export interface PostDetailProps {
   post: PostView;
@@ -17,6 +18,7 @@ export interface PostDetailProps {
 export const PostDetail = ({ post }: PostDetailProps) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
+  const currentUser = useCurrentUser();
 
   const onShare = async () => {
     try {
@@ -43,6 +45,7 @@ export const PostDetail = ({ post }: PostDetailProps) => {
   );
 
   const onUpvote = () => {
+    if (!currentUser) return;
     if (post.my_vote !== 1) {
       castVote("up");
     } else {
@@ -50,6 +53,7 @@ export const PostDetail = ({ post }: PostDetailProps) => {
     }
   };
   const onDownvote = () => {
+    if (!currentUser) return;
     if (post.my_vote !== -1) {
       console.log("downvote");
       castVote("down");

@@ -1,10 +1,21 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemedText } from "@rn-app/components/ThemedText";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { InboxScreen } from "./screens/InboxScreen";
+
+const Stack = createNativeStackNavigator();
 
 export const InboxNavigator = () => {
   return (
     <SafeAreaView>
-      <ThemedText>Inbox</ThemedText>
+      <Stack.Navigator initialRouteName="InboxScreen">
+        <Stack.Group>
+          <Stack.Screen
+            name="InboxScreen"
+            options={{ title: "Inbox" }}
+            component={InboxScreen}
+          />
+        </Stack.Group>
+      </Stack.Navigator>
     </SafeAreaView>
   );
 };

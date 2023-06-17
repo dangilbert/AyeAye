@@ -8,6 +8,7 @@ import { markdownStyles } from "../post/styles";
 import { Fragment } from "react";
 import { SheetManager } from "react-native-actions-sheet";
 import { useCommentVote } from "@rn-app/pages/posts/hooks/useCommunities";
+import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
 
 export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const theme = useTheme();
@@ -23,6 +24,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
     },
   };
   const commentBody = useMarkdown(comment.comment.content, bodyOptions);
+  const currentUser = useCurrentUser();
 
   const onCommentReply = () => {
     SheetManager.show("comment-reply-sheet", {
@@ -41,6 +43,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
   });
 
   const onUpvote = () => {
+    if (!currentUser) return;
     if (comment.my_vote !== 1) {
       castVote("up");
     } else {
@@ -48,6 +51,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
     }
   };
   const onDownvote = () => {
+    if (!currentUser) return;
     if (comment.my_vote !== -1) {
       console.log("downvote");
       castVote("down");
