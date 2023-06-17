@@ -46,9 +46,9 @@ export const CommunitiesScreen = () => {
 
   const currentUser = useCurrentUser();
 
-  const builtInCommunities: CommunityListItemType[] = [];
+  const communitiesList: CommunityListItemType[] = [];
 
-  builtInCommunities.push({ sectionTitle: "Feeds" });
+  communitiesList.push({ sectionTitle: "Feeds" });
 
   const allItem = {
     community: {
@@ -59,7 +59,7 @@ export const CommunitiesScreen = () => {
       actor_id: currentUser?.instance ?? "https://lemmy.ml",
     },
   };
-  builtInCommunities.push(allItem);
+  communitiesList.push(allItem);
 
   const localItem = {
     community: {
@@ -70,7 +70,7 @@ export const CommunitiesScreen = () => {
       actor_id: currentUser?.instance ?? "https://lemmy.ml",
     },
   };
-  builtInCommunities.push(localItem);
+  communitiesList.push(localItem);
 
   if (currentUser) {
     const subscribedItem = {
@@ -82,13 +82,35 @@ export const CommunitiesScreen = () => {
         actor_id: currentUser.instance,
       },
     };
-    builtInCommunities.push(subscribedItem);
+    communitiesList.push(subscribedItem);
   }
 
   // builtInCommunities.push({ sectionTitle: "Favorites (coming soon)" });
 
-  builtInCommunities.push({ sectionTitle: "Communities" });
-  builtInCommunities.push("CommunityTypeSelector");
+  communitiesList.push({ sectionTitle: "Communities" });
+  communitiesList.push("CommunityTypeSelector");
+
+  communities?.sort((a, b) => {
+    if (a.community.name < b.community.name) {
+      return -1;
+    }
+    if (a.community.name > b.community.name) {
+      return 1;
+    }
+    return 0;
+  });
+
+  const firstLetters = new Set<string>();
+
+  communities?.forEach((community) => {
+    if (!firstLetters.has(community.community.name[0].toUpperCase())) {
+      firstLetters.add(community.community.name[0].toUpperCase());
+      communitiesList.push({
+        sectionTitle: community.community.name[0].toUpperCase(),
+      });
+    }
+    communitiesList.push(community);
+  });
 
   const updateCommunityTypeSelector = (value: CommunityType) => {
     setCommunityTypeSelector(value);
@@ -96,7 +118,7 @@ export const CommunitiesScreen = () => {
 
   return (
     <FlashList
-      data={communities && [...builtInCommunities, ...(communities ?? [])]}
+      data={communities && [...communitiesList]}
       onRefresh={() => {
         invalidate();
       }}
