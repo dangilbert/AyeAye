@@ -8,6 +8,7 @@ import { PostPreview } from "./PostPreview";
 import { getShareContent } from "@rn-app/utils/postUtils";
 import Snackbar from "react-native-snackbar";
 import { SheetManager } from "react-native-actions-sheet";
+import { usePostVote } from "@rn-app/pages/posts/hooks/useCommunities";
 
 export interface PostDetailProps {
   post: PostView;
@@ -34,6 +35,28 @@ export const PostDetail = ({ post }: PostDetailProps) => {
         communityId: post.post.community_id,
       },
     });
+  };
+
+  const { mutate: castVote } = usePostVote(
+    post?.post?.id,
+    post?.post?.community_id
+  );
+
+  const onUpvote = () => {
+    if (post.my_vote !== 1) {
+      castVote("up");
+    } else {
+      castVote("unvote");
+    }
+  };
+  const onDownvote = () => {
+    if (post.my_vote !== -1) {
+      console.log("downvote");
+      castVote("down");
+    } else {
+      console.log("unvote");
+      castVote("unvote");
+    }
   };
 
   return (
@@ -65,15 +88,25 @@ export const PostDetail = ({ post }: PostDetailProps) => {
         </Pressable>
         <View style={themedStyle.footerAction}>
           <MaterialIcons
+            onPress={onUpvote}
             name="keyboard-arrow-up"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
+            style={{
+              backgroundColor:
+                post.my_vote === 1 ? theme.colors.iconActive : undefined,
+            }}
           />
           <ThemedText variant="label">{post.counts.score}</ThemedText>
           <MaterialIcons
+            onPress={onDownvote}
             name="keyboard-arrow-down"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
+            style={{
+              backgroundColor:
+                post.my_vote === -1 ? theme.colors.iconActive : undefined,
+            }}
           />
         </View>
       </View>

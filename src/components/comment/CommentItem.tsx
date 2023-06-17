@@ -7,6 +7,7 @@ import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { markdownStyles } from "../post/styles";
 import { Fragment } from "react";
 import { SheetManager } from "react-native-actions-sheet";
+import { useCommentVote } from "@rn-app/pages/posts/hooks/useCommunities";
 
 export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const theme = useTheme();
@@ -31,6 +32,29 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         communityId: comment.post.community_id,
       },
     });
+  };
+
+  const { mutate: castVote } = useCommentVote({
+    postId: comment.post.id,
+    commentId: comment.comment.id,
+    communityId: comment.post.community_id,
+  });
+
+  const onUpvote = () => {
+    if (comment.my_vote !== 1) {
+      castVote("up");
+    } else {
+      castVote("unvote");
+    }
+  };
+  const onDownvote = () => {
+    if (comment.my_vote !== -1) {
+      console.log("downvote");
+      castVote("down");
+    } else {
+      console.log("unvote");
+      castVote("unvote");
+    }
   };
 
   return (
@@ -73,15 +97,25 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         </Pressable>
         <View style={themedStyle.footerAction}>
           <MaterialIcons
+            onPress={onUpvote}
             name="arrow-upward"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
+            style={{
+              backgroundColor:
+                comment.my_vote === 1 ? theme.colors.iconActive : undefined,
+            }}
           />
           <ThemedText variant="label">{comment.counts.score}</ThemedText>
           <MaterialIcons
+            onPress={onDownvote}
             name="arrow-downward"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
+            style={{
+              backgroundColor:
+                comment.my_vote === -1 ? theme.colors.iconActive : undefined,
+            }}
           />
         </View>
       </View>

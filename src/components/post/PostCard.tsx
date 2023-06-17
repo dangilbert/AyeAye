@@ -111,12 +111,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       )}
       {(postType === "Link" || postType === "SimpleLink") && (
         <View style={themedStyle.iconContainer}>
-          <MaterialIcons
-            name={"link"}
-            size={themedStyle.icon.size}
-            color={themedStyle.icon.color}
-            style={themedStyle.icon}
-          />
+          <MaterialIcons name={"link"} style={themedStyle.icon} />
         </View>
       )}
       {postType === "Text" && (
@@ -227,9 +222,9 @@ const styles = (theme: Theme) =>
       flex: 1,
     },
     icon: {
-      size: 20,
       color: theme.colors.text,
       margin: 10,
+      fontSize: 20,
     },
     iconContainer: {
       width: 50,

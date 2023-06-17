@@ -26,7 +26,7 @@ export const CommentCreateSheet = ({
 
   const [commentContent, onChangeText] = useState("");
 
-  const { mutate: postComment } = usePostComment(
+  const { mutate: postComment, isLoading: isPostingComment } = usePostComment(
     postId,
     commentId,
     communityId
@@ -67,7 +67,10 @@ export const CommentCreateSheet = ({
           value={commentContent}
           style={themedStyles.commentBox}
         />
-        <Button onPress={handlePostComment} disabled={!commentContent.length}>
+        <Button
+          onPress={handlePostComment}
+          disabled={!commentContent.length || isPostingComment}
+        >
           Post comment
         </Button>
       </View>
