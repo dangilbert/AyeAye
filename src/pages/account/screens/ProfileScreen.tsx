@@ -3,9 +3,10 @@ import { ThemedText } from "@rn-app/components";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { useCurrentUserProfile } from "../hooks/useCurrentUserProfile";
 import { useCurrentUser } from "../hooks/useAccount";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { Avatar } from "@rn-app/components";
+import { Theme, useTheme } from "@rn-app/theme";
 
 export const ProfileScreen = () => {
   const currentSession = useCurrentUser();
@@ -20,6 +21,8 @@ export const ProfileScreen = () => {
 const LoggedInProfileScreen = () => {
   const { data: currentUser } = useCurrentUserProfile();
   const userSession = useCurrentUser();
+
+  const themedStyles = styles(useTheme());
 
   return (
     <>
@@ -38,6 +41,35 @@ const LoggedInProfileScreen = () => {
             {currentUser.person_view.person.name}
           </ThemedText>
           <ThemedText>@{getShortActorId(userSession?.instance)}</ThemedText>
+
+          <View style={themedStyles.statItem}>
+            <ThemedText style={themedStyles.statItemTitle}>
+              Comment count
+            </ThemedText>
+            <ThemedText>
+              {currentUser.person_view.counts.comment_count}
+            </ThemedText>
+          </View>
+          <View style={themedStyles.statItem}>
+            <ThemedText style={themedStyles.statItemTitle}>
+              Comment score
+            </ThemedText>
+            <ThemedText>
+              {currentUser.person_view.counts.comment_score}
+            </ThemedText>
+          </View>
+          <View style={themedStyles.statItem}>
+            <ThemedText style={themedStyles.statItemTitle}>
+              Post count
+            </ThemedText>
+            <ThemedText>{currentUser.person_view.counts.post_count}</ThemedText>
+          </View>
+          <View style={themedStyles.statItem}>
+            <ThemedText style={themedStyles.statItemTitle}>
+              Post score
+            </ThemedText>
+            <ThemedText>{currentUser.person_view.counts.post_score}</ThemedText>
+          </View>
         </View>
       ) : (
         <ActivityIndicator />
@@ -56,3 +88,16 @@ const LoggedOutProfileScreen = () => {
     </>
   );
 };
+
+const styles = (theme: Theme) =>
+  StyleSheet.create({
+    statItem: {
+      flexDirection: "row",
+      maxWidth: 400,
+      justifyContent: "space-between",
+      padding: 10,
+    },
+    statItemTitle: {
+      flex: 1,
+    },
+  });

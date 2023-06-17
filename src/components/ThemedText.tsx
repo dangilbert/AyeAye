@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TextStyle } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 
 export type TextVariant =
@@ -11,11 +11,13 @@ export type TextVariant =
 
 export interface ThemedTextProps {
   variant?: TextVariant;
+  style?: TextStyle;
   children: string | React.ReactNode;
 }
 
 export const ThemedText = ({
   variant = "body",
+  style,
   children,
   ...rest
 }: ThemedTextProps) => {
@@ -24,7 +26,7 @@ export const ThemedText = ({
   const variantStyle = themedStyles[variant];
 
   return (
-    <Text style={variantStyle} {...rest}>
+    <Text style={[variantStyle, style]} {...rest}>
       {children}
     </Text>
   );
