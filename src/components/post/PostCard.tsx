@@ -48,8 +48,6 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const { value: blurNSFW } = useBooleanSetting("blur_nsfw", true);
 
-  console.log("Post", post.post.name, post.post.nsfw);
-
   const onShare = async () => {
     try {
       await Share.share({
@@ -59,6 +57,11 @@ export const PostCard = ({ post }: PostCardProps) => {
       Snackbar.show({ text: error.message });
     }
   };
+
+  if (post.post.name.includes("Qualifying Highlights")) {
+    console.log(JSON.stringify(post.post, null, 2));
+    console.log("Post type", postType);
+  }
 
   return (
     <Pressable
@@ -92,21 +95,22 @@ export const PostCard = ({ post }: PostCardProps) => {
       )}
       {postType === "Video" && (
         <Pressable
+          style={themedStyle.imageContainer}
           onPress={() => {
-            navigation.navigate("MediaModal", {
-              imageUri: post.post.embed_video_url,
-            });
+            navigation.navigate("MediaModal", { videoUri: post.post.url });
           }}
         >
           <FastImage
-            style={themedStyle.image}
-            source={{ uri: post.post.thumbnail_url }}
+            style={[themedStyle.imageBox, themedStyle.image]}
+            source={{ uri: post.post.thumbnail_url ?? post.post.url }}
           />
-          <BlurView
-            blurType="dark"
-            style={themedStyle.imageBlur}
-            blurAmount={10}
-          />
+          {post.post.nsfw && blurNSFW && (
+            <BlurView
+              blurType="light"
+              style={[themedStyle.imageBox, themedStyle.imageBlur]}
+              blurAmount={50}
+            />
+          )}
         </Pressable>
       )}
       {(postType === "Link" || postType === "SimpleLink") && (

@@ -39,6 +39,10 @@
     "resolveJsonModule": true /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
   },
   "extends": "expo/tsconfig.base",
+  "include": [
+    "./src",
+    "./src/types"
+  ],
   "exclude": [
     "node_modules",
     "babel.config.js",
