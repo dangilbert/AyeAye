@@ -5,6 +5,8 @@ import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
 import Video from "react-native-video";
 import YoutubeIframePlayer from "react-native-youtube-iframe-player";
+import { WebView } from "react-native-webview";
+import { ThemedText } from "../ThemedText";
 
 export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
   const imageUri = route.params?.imageUri;
@@ -14,7 +16,17 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
   const isYoutubeVideo =
     videoUri && youtubeDomains.some((uri) => videoUri.includes(uri));
 
+  const convertUrlToEmbed = (url: string): string => {
+    if (url.includes("tilvids.com") && url.includes("/videos/watch/")) {
+      return url.replace("/videos/watch/", "/videos/embed/");
+    }
+
+    return url;
+  };
+
   console.log("isYoutubeVideo", isYoutubeVideo);
+  console.log("videoUri", videoUri);
+  console.log("convertedUrl", convertUrlToEmbed(videoUri));
 
   return (
     <View style={themedStyle.container}>
@@ -30,13 +42,23 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
       )}
       {videoUri && isYoutubeVideo && (
         <YoutubeIframePlayer
-          videoUrl="https://www.youtube.com/watch?v=f7OPcDX_LyI&t=3s"
-          height={210}
+          videoUrl={videoUri}
+          height={230}
           width="100%"
           durationFontSize={15}
         />
       )}
-      {videoUri && !isYoutubeVideo && <Video source={{ uri: videoUri }} />}
+      {videoUri && !isYoutubeVideo && (
+        <>
+          <WebView
+            source={{ uri: convertUrlToEmbed(videoUri) }}
+            style={{
+              flex: 1,
+            }}
+            renderLoading={() => <ActivityIndicator />}
+          />
+        </>
+      )}
     </View>
   );
 });
@@ -46,6 +68,8 @@ const styles = (theme: Theme) =>
     container: {
       backgroundColor: theme.colors.background,
       flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
     },
   });
 
