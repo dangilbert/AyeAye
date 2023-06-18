@@ -1,10 +1,18 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemedText } from "@rn-app/components/ThemedText";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SearchScreen } from "./screens/SearchScreen";
+
+const Stack = createNativeStackNavigator();
 
 export const SearchNavigator = () => {
   return (
-    <SafeAreaView>
-      <ThemedText>Search view</ThemedText>
-    </SafeAreaView>
+    <Stack.Navigator initialRouteName="SearchScreen">
+      <Stack.Group>
+        <Stack.Screen
+          name="SearchScreen"
+          component={SearchScreen}
+          options={{ title: "Discover" }}
+        />
+      </Stack.Group>
+    </Stack.Navigator>
   );
 };

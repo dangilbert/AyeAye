@@ -22,16 +22,20 @@ export const useCommunities = (
   communityType: CommunityType,
   userId?: string
 ) => {
-  const { data, isLoading } = useQuery({
-    ...communityQueries.communities(communityType, userId),
-    select: (data) => data.communities,
-  });
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      ...communityQueries.communities(communityType, userId),
+      getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
+    });
 
   const queryClient = useQueryClient();
 
   return {
     isLoading,
-    data,
+    data: data?.pages?.flatMap((page) => page.communities),
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
     invalidate: () => {
       queryClient.invalidateQueries({
         queryKey: communityQueries.communities(communityType, userId).queryKey,

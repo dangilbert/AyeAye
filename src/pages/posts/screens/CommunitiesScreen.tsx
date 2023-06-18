@@ -1,50 +1,32 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useCommunities } from "../hooks/useCommunities";
-import { CommunityListItem } from "@rn-app/components/community/CommunityListItem";
 import { Theme, useTheme } from "@rn-app/theme";
-import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { FlashList } from "@shopify/flash-list";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
 import { ThemedText } from "@rn-app/components";
-import { useNavigation } from "@react-navigation/native";
-import { storage } from "@rn-app/utils/storage";
-import { useState } from "react";
-import { Dropdown } from "react-native-element-dropdown";
-import { CommunityType } from "@rn-app/pods/communities/queries";
-
-type CommunityListItemType =
-  | CommunityItem
-  | SectionHeader
-  | "CommunityTypeSelector";
-type CommunityItem = {
-  community: {
-    id?: string;
-    name: string;
-    customIcon?: string;
-    icon?: string;
-    communityType: string;
-    actor_id?: string;
-    instanceName?: string;
-  };
-};
-type SectionHeader = {
-  sectionTitle: string;
-};
+import {
+  CommunityItem,
+  CommunityListItemType,
+  CommunityRenderItem,
+} from "@rn-app/components/community/CommunityRenderItem";
 
 export const CommunitiesScreen = () => {
   const themedStyles = styles(useTheme());
+  const currentUser = useCurrentUser();
 
-  const [communityTypeSelector, setCommunityTypeSelector] =
-    useState<CommunityType>(
-      (storage.getString("communityTypeSelector") as CommunityType) ?? "All"
-    );
   const {
     data: communities,
     isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
     invalidate,
-  } = useCommunities(communityTypeSelector);
+  } = useCommunities(!!currentUser ? "Subscribed" : "All");
 
-  const currentUser = useCurrentUser();
+  // Fetch all the user's subscribed communities
+  if (!!currentUser && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage();
+  }
 
   const communitiesList: CommunityListItemType[] = [];
 
@@ -85,10 +67,11 @@ export const CommunitiesScreen = () => {
     communitiesList.push(subscribedItem);
   }
 
-  // builtInCommunities.push({ sectionTitle: "Favorites (coming soon)" });
-
-  communitiesList.push({ sectionTitle: "Communities" });
-  communitiesList.push("CommunityTypeSelector");
+  if (!!currentUser) {
+    communitiesList.push({ sectionTitle: "Subscribed Communities" });
+  } else {
+    communitiesList.push({ sectionTitle: "Top Communities" });
+  }
 
   communities?.sort((a, b) => {
     if (a.community.name < b.community.name) {
@@ -112,10 +95,6 @@ export const CommunitiesScreen = () => {
     communitiesList.push(community);
   });
 
-  const updateCommunityTypeSelector = (value: CommunityType) => {
-    setCommunityTypeSelector(value);
-  };
-
   return (
     <FlashList
       data={communities && [...communitiesList]}
@@ -136,75 +115,20 @@ export const CommunitiesScreen = () => {
           );
         }
         switch (item) {
-          case "CommunityTypeSelector":
-            return (
-              <CommunityTypeSelectorRenderItem
-                updateCommunityTypeSelector={updateCommunityTypeSelector}
-              />
-            );
           default:
-            return <CommunityRenderItem item={item} />;
+            return (
+              <CommunityRenderItem item={item as unknown as CommunityItem} />
+            );
         }
       }}
-    />
-  );
-};
-
-const CommunityRenderItem = ({ item }: { item: CommunityItem }) => {
-  const navigation = useNavigation();
-  return (
-    <CommunityListItem
-      key={`community_${item.community.id}`}
-      name={item.community.name}
-      customIcon={item.community.customIcon}
-      icon={item.community.icon}
-      instanceName={getShortActorId(item.community.actor_id)}
-      onPress={() => {
-        navigation.navigate("CommunityFeed", {
-          communityId: item.community.id,
-          communityType: item.community.communityType,
-        });
+      onEndReached={() => {
+        if (!!currentUser && hasNextPage) {
+          fetchNextPage();
+        }
       }}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={isFetchingNextPage ? ActivityIndicator : null}
     />
-  );
-};
-
-const CommunityTypeSelectorRenderItem = ({
-  updateCommunityTypeSelector,
-}: {
-  updateCommunityTypeSelector: (type: CommunityType) => void;
-}) => {
-  const data = [
-    { label: "All", value: "All" },
-    { label: "Subscribed", value: "Subscribed" },
-    { label: "Local", value: "Local" },
-  ];
-
-  const [value, setValue] = useState(
-    storage.getString("communityTypeSelector") ?? "All"
-  );
-
-  const themedStyles = styles(useTheme());
-
-  return (
-    <View style={themedStyles.container}>
-      <Dropdown
-        style={themedStyles.dropdown}
-        selectedTextStyle={themedStyles.selectedTextStyle}
-        itemContainerStyle={themedStyles.dropdownItemContainer}
-        itemTextStyle={themedStyles.selectedTextStyle}
-        activeColor={themedStyles.selectedTextStyle.backgroundColor}
-        data={data}
-        labelField="label"
-        valueField="value"
-        value={value}
-        onChange={(item) => {
-          storage.set("communityTypeSelector", item.value);
-          setValue(item.value);
-          updateCommunityTypeSelector(item.value as CommunityType);
-        }}
-      />
-    </View>
   );
 };
 

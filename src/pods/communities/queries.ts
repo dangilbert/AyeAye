@@ -1,23 +1,32 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { CommentView, PostView, SortType } from "lemmy-js-client";
+import {
+  CommentView,
+  CommunityView,
+  PostView,
+  SortType,
+} from "lemmy-js-client";
 import { useLemmyHttp } from "../host/useLemmyHttp";
 import { getCurrentUserSessionToken } from "../auth/queries";
 
 export type CommunityType = "All" | "Subscribed" | "Local";
 
-const getCommunitiesForUser = async (
-  communityType: CommunityType = "All",
-  userId?: string
-) => {
-  // TODO fetch all the subscribed communities of a user with the pagination
+const getCommunitiesForUser = async ({
+  communityType = "All",
+  page,
+  userId,
+}: {
+  communityType: CommunityType;
+  page: number;
+  userId?: string;
+}) => {
   const res = await useLemmyHttp().listCommunities({
     type_: communityType,
     limit: 49,
+    page: page,
     sort: "Active",
     auth: await getCurrentUserSessionToken(),
   });
 
-  console.log("Fetched communities");
   return res;
 };
 
@@ -66,7 +75,24 @@ const getCommentsForPost = async (
 export const communityQueries = createQueryKeys("communities", {
   communities: (communityType: CommunityType, userId?: string) => ({
     queryKey: [{ communityType, userId, entity: "communities" }],
-    queryFn: () => getCommunitiesForUser(communityType, userId),
+    queryFn: async ({
+      pageParam = 1,
+    }): Promise<{
+      nextPage: number;
+      hasNextPage: Boolean;
+      communities: CommunityView[];
+    }> => {
+      const res = await getCommunitiesForUser({
+        communityType,
+        userId,
+        page: pageParam,
+      });
+      return {
+        ...res,
+        nextPage: pageParam + 1,
+        hasNextPage: res.communities.length > 0,
+      };
+    },
   }),
   post: (postId: number, communityId?: number, userId?: string) => ({
     queryKey: [{ communityId, postId, userId, entity: "post" }],
