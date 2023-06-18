@@ -42,10 +42,6 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const postType = getPostType(post.post);
 
-  // if (post.post.name.includes("George Russell reckons")) {
-  //   console.log("Published", JSON.stringify(post.post.published, null, 2));
-  // }
-
   const { value: blurNSFW } = useBooleanSetting("blur_nsfw", true);
 
   const onShare = async () => {
@@ -58,10 +54,10 @@ export const PostCard = ({ post }: PostCardProps) => {
     }
   };
 
-  if (post.post.name.includes("Qualifying Highlights")) {
-    console.log(JSON.stringify(post.post, null, 2));
-    console.log("Post type", postType);
-  }
+  // if (post.post.name.includes("Qualifying Highlights")) {
+  console.log(JSON.stringify(post.post, null, 2));
+  console.log("Post type", postType);
+  // }
 
   return (
     <Pressable
@@ -97,13 +93,24 @@ export const PostCard = ({ post }: PostCardProps) => {
         <Pressable
           style={themedStyle.imageContainer}
           onPress={() => {
-            navigation.navigate("MediaModal", { videoUri: post.post.url });
+            navigation.navigate("MediaModal", {
+              videoUri: post.post.embed_video_url ?? post.post.url,
+            });
           }}
         >
-          <FastImage
-            style={[themedStyle.imageBox, themedStyle.image]}
-            source={{ uri: post.post.thumbnail_url ?? post.post.url }}
-          />
+          {post.post.thumbnail_url ? (
+            <FastImage
+              style={[themedStyle.imageBox, themedStyle.image]}
+              source={{ uri: post.post.thumbnail_url }}
+            />
+          ) : (
+            <View style={themedStyle.iconContainer}>
+              <MaterialIcons
+                name={"play-circle-outline"}
+                style={themedStyle.icon}
+              />
+            </View>
+          )}
           {post.post.nsfw && blurNSFW && (
             <BlurView
               blurType="light"
@@ -120,11 +127,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       )}
       {postType === "Text" && (
         <View style={themedStyle.iconContainer}>
-          <MaterialIcons
-            name={"text-snippet"}
-            size={themedStyle.icon.size}
-            color={themedStyle.icon.color}
-          />
+          <MaterialIcons name={"text-snippet"} style={themedStyle.icon} />
         </View>
       )}
       <View style={themedStyle.rightContent}>
