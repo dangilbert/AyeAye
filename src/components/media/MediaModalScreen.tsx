@@ -1,8 +1,8 @@
 import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 import { Theme, useTheme } from "@rn-app/theme";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, Linking, StyleSheet, View } from "react-native";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
-import { ActivityIndicator, Appbar } from "react-native-paper";
+import { ActivityIndicator, Appbar, Button } from "react-native-paper";
 import YoutubeIframePlayer from "react-native-youtube-iframe-player";
 import { WebView } from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
@@ -37,12 +37,17 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
         />
       )}
       {videoUri && isYoutubeVideo && (
-        <YoutubeIframePlayer
-          videoUrl={videoUri}
-          height={(Dimensions.get("window").width * 9) / 16}
-          width="100%"
-          durationFontSize={15}
-        />
+        <>
+          <YoutubeIframePlayer
+            videoUrl={videoUri}
+            height={(Dimensions.get("window").width * 9) / 16}
+            width="100%"
+            durationFontSize={15}
+          />
+          <Button onPress={() => Linking.openURL(videoUri)}>
+            Open in YouTube
+          </Button>
+        </>
       )}
       {videoUri && !isYoutubeVideo && (
         <WebView
