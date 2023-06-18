@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Button,
   Modal,
+  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -110,44 +111,50 @@ export const LoginScreen = () => {
   useEffect(() => {});
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="lemmy.ml"
-        value={serverName}
-        placeholderTextColor={"gray"}
-        onChangeText={setServerName}
-        inputMode="url"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor={"gray"}
-        value={username}
-        autoCapitalize="none"
-        autoCorrect={false}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        placeholderTextColor={"gray"}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Login" onPress={handleLogin} disabled={isLoginDisabled} />
-      <TouchableOpacity onPress={handleForgotPassword}>
-        <ThemedText variant={"link"}>Forgot Password?</ThemedText>
-      </TouchableOpacity>
-      <Modal transparent={true} visible={isLoading}>
-        <View style={styles.modalContainer}>
-          <ActivityIndicator size="large" color="gray" />
-        </View>
-      </Modal>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="lemmy.ml"
+          value={serverName}
+          placeholderTextColor={"gray"}
+          onChangeText={setServerName}
+          inputMode="url"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          placeholderTextColor={"gray"}
+          value={username}
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          placeholderTextColor={"gray"}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Button
+          title="Login"
+          onPress={handleLogin}
+          disabled={isLoginDisabled}
+        />
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <ThemedText variant={"link"}>Forgot Password?</ThemedText>
+        </TouchableOpacity>
+        <Modal transparent={true} visible={isLoading}>
+          <View style={styles.modalContainer}>
+            <ActivityIndicator size="large" color="gray" />
+          </View>
+        </Modal>
+      </View>
+    </ScrollView>
   );
 };
 
