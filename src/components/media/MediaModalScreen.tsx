@@ -1,12 +1,11 @@
 import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 import { Theme, useTheme } from "@rn-app/theme";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
-import { ActivityIndicator } from "react-native-paper";
-import Video from "react-native-video";
+import { ActivityIndicator, Appbar } from "react-native-paper";
 import YoutubeIframePlayer from "react-native-youtube-iframe-player";
 import { WebView } from "react-native-webview";
-import { ThemedText } from "../ThemedText";
+import { useNavigation } from "@react-navigation/native";
 
 export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
   const imageUri = route.params?.imageUri;
@@ -24,12 +23,9 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
     return url;
   };
 
-  console.log("isYoutubeVideo", isYoutubeVideo);
-  console.log("videoUri", videoUri);
-  console.log("convertedUrl", convertUrlToEmbed(videoUri));
-
   return (
     <View style={themedStyle.container}>
+      <View style={{ flex: 1 }} />
       {imageUri && (
         <ImageZoom
           uri={imageUri}
@@ -43,22 +39,23 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
       {videoUri && isYoutubeVideo && (
         <YoutubeIframePlayer
           videoUrl={videoUri}
-          height={230}
+          height={(Dimensions.get("window").width * 9) / 16}
           width="100%"
           durationFontSize={15}
         />
       )}
       {videoUri && !isYoutubeVideo && (
-        <>
-          <WebView
-            source={{ uri: convertUrlToEmbed(videoUri) }}
-            style={{
-              flex: 1,
-            }}
-            renderLoading={() => <ActivityIndicator />}
-          />
-        </>
+        <WebView
+          source={{ uri: convertUrlToEmbed(videoUri) }}
+          style={{
+            flex: 1,
+            height: (Dimensions.get("window").width * 9) / 16,
+            width: Dimensions.get("window").width,
+          }}
+          renderLoading={() => <ActivityIndicator />}
+        />
       )}
+      <View style={{ flex: 1 }} />
     </View>
   );
 });
