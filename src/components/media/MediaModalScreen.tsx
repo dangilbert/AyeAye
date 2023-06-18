@@ -5,12 +5,13 @@ import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { ActivityIndicator, Appbar, Button } from "react-native-paper";
 import YoutubeIframePlayer from "react-native-youtube-iframe-player";
 import { WebView } from "react-native-webview";
-import { useNavigation } from "@react-navigation/native";
 
 export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
   const imageUri = route.params?.imageUri;
   const videoUri = route.params?.videoUri;
   const themedStyle = styles(useTheme());
+
+  console.log("imageUri", imageUri);
 
   const isYoutubeVideo =
     videoUri && youtubeDomains.some((uri) => videoUri.includes(uri));
@@ -25,7 +26,6 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
 
   return (
     <View style={themedStyle.container}>
-      <View style={{ flex: 1 }} />
       {imageUri && (
         <ImageZoom
           uri={imageUri}
@@ -38,6 +38,7 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
       )}
       {videoUri && isYoutubeVideo && (
         <>
+          <View style={{ flex: 1 }} />
           <YoutubeIframePlayer
             videoUrl={videoUri}
             height={(Dimensions.get("window").width * 9) / 16}
@@ -47,20 +48,24 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
           <Button onPress={() => Linking.openURL(videoUri)}>
             Open in YouTube
           </Button>
+          <View style={{ flex: 1 }} />
         </>
       )}
       {videoUri && !isYoutubeVideo && (
-        <WebView
-          source={{ uri: convertUrlToEmbed(videoUri) }}
-          style={{
-            flex: 1,
-            height: (Dimensions.get("window").width * 9) / 16,
-            width: Dimensions.get("window").width,
-          }}
-          renderLoading={() => <ActivityIndicator />}
-        />
+        <>
+          <View style={{ flex: 1 }} />
+          <WebView
+            source={{ uri: convertUrlToEmbed(videoUri) }}
+            style={{
+              flex: 1,
+              height: (Dimensions.get("window").width * 9) / 16,
+              width: Dimensions.get("window").width,
+            }}
+            renderLoading={() => <ActivityIndicator />}
+          />
+          <View style={{ flex: 1 }} />
+        </>
       )}
-      <View style={{ flex: 1 }} />
     </View>
   );
 });
@@ -70,8 +75,6 @@ const styles = (theme: Theme) =>
     container: {
       backgroundColor: theme.colors.background,
       flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
     },
   });
 
