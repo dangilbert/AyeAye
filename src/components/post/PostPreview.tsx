@@ -161,6 +161,9 @@ const LinkPost = ({
           }}
         >
           <ThemedText variant={"label"}>{embed_title}</ThemedText>
+          <ThemedText variant={"label"} style={{ fontStyle: "italic" }}>
+            {new URL(url).host}
+          </ThemedText>
           {embed_description && (
             <ThemedText variant={"caption"}>{embed_description}</ThemedText>
           )}

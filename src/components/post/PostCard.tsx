@@ -3,14 +3,7 @@ import { Theme, useTheme } from "@rn-app/theme";
 import { markdownStyles } from "./styles";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Fragment } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  View,
-  Image,
-  Platform,
-  Share,
-} from "react-native";
+import { Pressable, StyleSheet, View, Platform, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
@@ -19,6 +12,7 @@ import FastImage from "react-native-fast-image";
 import Snackbar from "react-native-snackbar";
 import { useBooleanSetting, useStringSetting } from "@rn-app/hooks/useSetting";
 import { BlurView } from "@react-native-community/blur";
+import ImageModal from "@dreamwalk-os/react-native-image-modal";
 
 export interface PostCardProps {
   post: PostView;
@@ -70,13 +64,10 @@ export const PostCard = ({ post }: PostCardProps) => {
       }
     >
       {postType === "Image" && (
-        <Pressable
-          style={themedStyle.imageContainer}
-          onPress={() => {
-            navigation.navigate("MediaModal", { imageUri: post.post.url });
-          }}
-        >
-          <FastImage
+        <View style={themedStyle.imageContainer}>
+          <ImageModal
+            resizeMode="cover"
+            modalImageResizeMode="contain"
             style={[themedStyle.imageBox, themedStyle.image]}
             source={{ uri: post.post.thumbnail_url ?? post.post.url }}
           />
@@ -84,10 +75,10 @@ export const PostCard = ({ post }: PostCardProps) => {
             <BlurView
               blurType="light"
               style={[themedStyle.imageBox, themedStyle.imageBlur]}
-              blurAmount={50}
+              blurAmount={5}
             />
           )}
-        </Pressable>
+        </View>
       )}
       {postType === "Video" && (
         <Pressable
@@ -115,7 +106,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             <BlurView
               blurType="light"
               style={[themedStyle.imageBox, themedStyle.imageBlur]}
-              blurAmount={50}
+              blurAmount={5}
             />
           )}
         </Pressable>
@@ -214,6 +205,8 @@ const styles = (theme: Theme) =>
     imageBox: {
       position: "absolute",
       top: 0,
+      width: 60,
+      height: 60,
       left: 0,
       bottom: 0,
       right: 0,

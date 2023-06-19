@@ -1,6 +1,6 @@
 import { CommentView } from "lemmy-js-client";
 import { ThemedText, CreatorLine } from "@rn-app/components";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
@@ -83,14 +83,20 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         published={comment.comment.published}
         updated={comment.comment.updated}
       />
-      {commentBody &&
-        commentBody.map((element, index) => {
-          return (
-            <Fragment key={`comment_${comment.comment.id}_body_${index}`}>
-              {element}
-            </Fragment>
-          );
-        })}
+      <View style={{ flexDirection: "column", width: "90%" }}>
+        {commentBody &&
+          commentBody.map((element, index) => {
+            console.log(element);
+            return (
+              <View
+                key={`comment_${comment.comment.id}_body_${index}`}
+                style={{ width: "100%" }}
+              >
+                {element}
+              </View>
+            );
+          })}
+      </View>
       <View style={themedStyle.footer}>
         <Pressable style={themedStyle.footerAction} onPress={onCommentReply}>
           <MaterialIcons
