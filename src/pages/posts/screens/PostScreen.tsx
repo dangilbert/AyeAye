@@ -91,6 +91,7 @@ export const PostScreen = ({ route }) => {
         onRefresh={() => {
           invalidate();
         }}
+        contentContainerStyle={{ paddingBottom: 86 }}
         refreshing={isLoadingPost && !!post}
         estimatedItemSize={100}
         renderItem={({ item }) => {
