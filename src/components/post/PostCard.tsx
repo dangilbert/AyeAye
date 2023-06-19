@@ -28,7 +28,7 @@ export const PostCard = ({ post }: PostCardProps) => {
   const titleOptions: useMarkdownHookOptions = {
     styles: {
       ...themedMarkdownStyle,
-      text: themedMarkdownStyle.h1,
+      text: themedMarkdownStyle.h2,
     },
   };
 

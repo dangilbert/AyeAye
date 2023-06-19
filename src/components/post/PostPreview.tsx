@@ -402,7 +402,7 @@ const PostTitle = ({ text }: PostTextProps) => {
   const titleOptions: useMarkdownHookOptions = {
     styles: {
       ...themedMarkdownStyle,
-      text: themedMarkdownStyle.h1,
+      text: themedMarkdownStyle.h2,
     },
   };
   return <MarkdownText text={text} type={"title"} options={titleOptions} />;
