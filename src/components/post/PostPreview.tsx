@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
 import { getPostType } from "@rn-app/utils/postUtils";
 import FastImage from "react-native-fast-image";
+import ImageModal from "@dreamwalk-os/react-native-image-modal";
 
 interface PostPreviewProps {
   post: PostView;
@@ -216,11 +217,12 @@ const ImagePost = ({
 
   return (
     <>
-      <Pressable
-        onPress={() => navigator.navigate("MediaModal", { imageUri: url })}
-      >
-        <FastImage style={themedStyle.image} source={{ uri: url }} />
-      </Pressable>
+      <ImageModal
+        style={themedStyle.image}
+        source={{ uri: url }}
+        resizeMode="cover"
+        modalImageResizeMode="contain"
+      />
       <View style={themedStyle.titleLine}>
         <View style={themedStyle.titleAndCreator}>
           <Pressable onPress={() => setCollapsed(!collapsed)}>
@@ -439,10 +441,9 @@ const styles = (theme: Theme) =>
       justifyContent: "center",
     },
     image: {
-      flex: 1,
       aspectRatio: 4 / 3,
       borderRadius: 5,
-      resizeMode: "cover",
+      width: "100%",
       backgroundColor: theme.colors.secondaryBackground,
     },
     imageThumb: {
