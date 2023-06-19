@@ -76,6 +76,7 @@ export const PostCard = ({ post }: PostCardProps) => {
               blurType="light"
               style={[themedStyle.imageBox, themedStyle.imageBlur]}
               blurAmount={5}
+              pointerEvents="none"
             />
           )}
         </View>
