@@ -86,7 +86,6 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
       <View style={{ flexDirection: "column", width: "90%" }}>
         {commentBody &&
           commentBody.map((element, index) => {
-            console.log(element);
             return (
               <View
                 key={`comment_${comment.comment.id}_body_${index}`}

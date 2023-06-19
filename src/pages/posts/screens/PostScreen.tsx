@@ -2,15 +2,23 @@ import { CommentView } from "lemmy-js-client";
 
 import { PostDetail } from "@rn-app/components/post/PostDetail";
 import { useComments, usePost } from "../hooks/useCommunities";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, FAB } from "react-native-paper";
 import { CommentItem } from "@rn-app/components/comment/CommentItem";
 import { FlashList } from "@shopify/flash-list";
+import { StyleSheet } from "react-native";
+import { Theme, useTheme } from "@rn-app/theme";
+import { RefObject, useCallback, useRef, useState } from "react";
 
 export const PostScreen = ({ route }) => {
   const originalPost = route.params.originalPost;
+  const themedStyles = styles(useTheme());
+
+  const listRef = useRef<FlashList<CommentView>>(null);
 
   const postId = originalPost.post.id;
   const communityId = originalPost.community.id;
+
+  const [currentTopComment, setCurentTopComment] = useState<number>(0);
 
   const {
     data: post,
@@ -29,6 +37,17 @@ export const PostScreen = ({ route }) => {
   const invalidate = () => {
     invalidatePost();
     invalidateComments();
+  };
+
+  const onViewableItemsChanged = useCallback(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurentTopComment(viewableItems[0].index);
+    }
+  }, []);
+
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
+    waitForInteraction: true,
   };
 
   const commentMap: Map<number, CommentView[]> = comments?.pages
@@ -52,37 +71,73 @@ export const PostScreen = ({ route }) => {
 
   commentMap && buildTree(0);
 
+  const scrollToNextComment = () => {
+    const topLevelCommentIndexes = commentList
+      .filter((comment) => comment.comment.path.split(".").length === 2)
+      .map((comment) => commentList.indexOf(comment))
+      .filter((index) => index > currentTopComment);
+
+    listRef.current?.scrollToIndex({
+      index: topLevelCommentIndexes[0] ?? commentList.length,
+      animated: true,
+    });
+  };
+
   return (
-    <FlashList
-      data={post ? commentList : []}
-      onRefresh={() => {
-        invalidate();
-      }}
-      refreshing={isLoadingPost && !!post}
-      estimatedItemSize={100}
-      renderItem={({ item }) => {
-        return (
-          <CommentItem key={`commentitem_${item.comment.id}`} comment={item} />
-        );
-      }}
-      ListHeaderComponent={() =>
-        post ? (
-          <PostDetail post={post} />
-        ) : originalPost ? (
-          <PostDetail post={originalPost} />
-        ) : (
-          <ActivityIndicator />
-        )
-      }
-      onEndReached={() => {
-        if (hasNextPage) {
-          fetchNextPage();
+    <>
+      <FlashList
+        ref={listRef}
+        data={post ? commentList : []}
+        onRefresh={() => {
+          invalidate();
+        }}
+        refreshing={isLoadingPost && !!post}
+        estimatedItemSize={100}
+        renderItem={({ item }) => {
+          return (
+            <CommentItem
+              key={`commentitem_${item.comment.id}`}
+              comment={item}
+            />
+          );
+        }}
+        ListHeaderComponent={() =>
+          post ? (
+            <PostDetail post={post} />
+          ) : originalPost ? (
+            <PostDetail post={originalPost} />
+          ) : (
+            <ActivityIndicator />
+          )
         }
-      }}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={
-        isLoadingComments || isFetchingNextPage ? ActivityIndicator : null
-      }
-    />
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isLoadingComments || isFetchingNextPage ? ActivityIndicator : null
+        }
+        viewabilityConfigCallbackPairs={[
+          { viewabilityConfig, onViewableItemsChanged },
+        ]}
+      />
+      <FAB
+        icon="chevron-down"
+        style={themedStyles.fab}
+        onPress={scrollToNextComment}
+      />
+    </>
   );
 };
+
+const styles = (theme: Theme) =>
+  StyleSheet.create({
+    fab: {
+      position: "absolute",
+      margin: 16,
+      right: 0,
+      bottom: 0,
+    },
+  });
