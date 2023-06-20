@@ -6,6 +6,7 @@ export type TextVariant =
   | "subheading"
   | "body"
   | "label"
+  | "labelBold"
   | "caption"
   | "link";
 
@@ -53,6 +54,11 @@ const textStyles = (theme: Theme) =>
     label: {
       fontSize: 12,
       fontWeight: "400",
+      color: theme.colors.text,
+    },
+    labelBold: {
+      fontSize: 12,
+      fontWeight: "600",
       color: theme.colors.text,
     },
     caption: {

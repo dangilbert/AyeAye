@@ -169,7 +169,9 @@ const styles = (theme: Theme) =>
       iconColor: theme.colors.icon,
       iconSize: 20,
       justifyContent: "space-between",
-      margin: 10,
+      padding: 10,
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.border,
     },
     footerAction: {
       flexDirection: "row",

@@ -5,6 +5,7 @@ import TimeAgo from "./TimeAgo";
 import { Person } from "lemmy-js-client";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 
 interface CreatorLineProps {
   creator: Person;
@@ -26,20 +27,30 @@ export const CreatorLine = ({
   const theme = useTheme();
   const themedStyle = styles(theme);
 
+  const { value: showUserInstanceNames } = useBooleanSetting(
+    "show_user_instance_names"
+  );
+
+  const { value: showCommunityInstanceNames } = useBooleanSetting(
+    "show_community_instance_names"
+  );
+
   const fixedPublished = new Date(
     published.endsWith("Z") == true ? published : `${published}Z`
   );
   return (
     <View style={themedStyle.creatorLine}>
       <View style={{ flexDirection: "column" }}>
-        <ThemedText variant="label">
-          {creator.name}
-          {actorId && `@${getShortActorId(actorId)}`}
+        <ThemedText variant="labelBold">
+          @{creator.name}
+          {actorId && showUserInstanceNames && `@${getShortActorId(actorId)}`}
         </ThemedText>
         {community && (
           <ThemedText variant="label">
             to {community}
-            {communityActorId && `@${getShortActorId(communityActorId)}`}
+            {communityActorId &&
+              showCommunityInstanceNames &&
+              `@${getShortActorId(communityActorId)}`}
           </ThemedText>
         )}
       </View>

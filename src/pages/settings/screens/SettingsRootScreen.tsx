@@ -1,13 +1,22 @@
 import { ThemedText } from "@rn-app/components";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { ScrollView, View } from "react-native";
-import { Switch, ToggleButton } from "react-native-paper";
+import { Switch } from "react-native-paper";
 
 export const SettingsRootScreen = () => {
-  const { value: blurNSFW, setValue: setBlurNSFW } = useBooleanSetting(
-    "blur_nsfw",
-    true
-  );
+  const { value: blurNSFW, setValue: setBlurNSFW } =
+    useBooleanSetting("blur_nsfw");
+
+  const { value: showUserInstanceNames, setValue: setShowUserInstanceNames } =
+    useBooleanSetting("show_user_instance_names");
+
+  const {
+    value: showCommunityInstanceNames,
+    setValue: setShowCommunityInstanceNames,
+  } = useBooleanSetting("show_community_instance_names");
+
+  const { value: showCommunityIcons, setValue: setShowCommunityIcons } =
+    useBooleanSetting("show_community_icons");
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -26,10 +35,6 @@ export const SettingsRootScreen = () => {
         <Switch onValueChange={() => setBlurNSFW(!blurNSFW)} value={blurNSFW} />
       </View>
 
-      <ThemedText variant="subheading" style={{ padding: 10 }}>
-        Coming soon
-      </ThemedText>
-
       <View
         style={{
           flexDirection: "row",
@@ -39,7 +44,10 @@ export const SettingsRootScreen = () => {
         }}
       >
         <ThemedText>Show community icons on posts</ThemedText>
-        <Switch onValueChange={() => {}} value={false} disabled />
+        <Switch
+          onValueChange={() => setShowCommunityIcons(!showCommunityIcons)}
+          value={showCommunityIcons}
+        />
       </View>
 
       <View
@@ -51,7 +59,10 @@ export const SettingsRootScreen = () => {
         }}
       >
         <ThemedText>Show user instance names</ThemedText>
-        <Switch onValueChange={() => {}} value={false} disabled />
+        <Switch
+          onValueChange={() => setShowUserInstanceNames(!showUserInstanceNames)}
+          value={showUserInstanceNames}
+        />
       </View>
 
       <View
@@ -63,8 +74,17 @@ export const SettingsRootScreen = () => {
         }}
       >
         <ThemedText>Show community instance names</ThemedText>
-        <Switch onValueChange={() => {}} value={false} disabled />
+        <Switch
+          onValueChange={() =>
+            setShowCommunityInstanceNames(!showCommunityInstanceNames)
+          }
+          value={showCommunityInstanceNames}
+        />
       </View>
+
+      <ThemedText variant="subheading" style={{ padding: 10 }}>
+        Coming soon
+      </ThemedText>
 
       <View
         style={{

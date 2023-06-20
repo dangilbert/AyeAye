@@ -10,7 +10,7 @@ import { ThemedText, CreatorLine } from "@rn-app/components";
 import { getPostType, getShareContent } from "@rn-app/utils/postUtils";
 import FastImage from "react-native-fast-image";
 import Snackbar from "react-native-snackbar";
-import { useBooleanSetting, useStringSetting } from "@rn-app/hooks/useSetting";
+import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { BlurView } from "@react-native-community/blur";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
 
@@ -36,7 +36,7 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const postType = getPostType(post.post);
 
-  const { value: blurNSFW } = useBooleanSetting("blur_nsfw", true);
+  const { value: blurNSFW } = useBooleanSetting("blur_nsfw");
 
   const onShare = async () => {
     try {
@@ -47,11 +47,6 @@ export const PostCard = ({ post }: PostCardProps) => {
       Snackbar.show({ text: error.message });
     }
   };
-
-  // if (post.post.name.includes("Qualifying Highlights")) {
-  console.log(JSON.stringify(post.post, null, 2));
-  console.log("Post type", postType);
-  // }
 
   return (
     <Pressable
@@ -174,10 +169,8 @@ export const PostCard = ({ post }: PostCardProps) => {
 const styles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      backgroundColor: theme.colors.background,
-      borderColor: theme.colors.border,
-      borderWidth: 1,
-      margin: 5,
+      backgroundColor: theme.colors.secondaryBackground,
+      marginVertical: 5,
       padding: 10,
       borderRadius: 5,
       flexDirection: "row",
