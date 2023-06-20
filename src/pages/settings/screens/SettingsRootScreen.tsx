@@ -43,21 +43,6 @@ export const SettingsRootScreen = () => {
           padding: 10,
         }}
       >
-        <ThemedText>Show community icons on posts</ThemedText>
-        <Switch
-          onValueChange={() => setShowCommunityIcons(!showCommunityIcons)}
-          value={showCommunityIcons}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: 10,
-        }}
-      >
         <ThemedText>Show user instance names</ThemedText>
         <Switch
           onValueChange={() => setShowUserInstanceNames(!showUserInstanceNames)}
@@ -85,6 +70,22 @@ export const SettingsRootScreen = () => {
       <ThemedText variant="subheading" style={{ padding: 10 }}>
         Coming soon
       </ThemedText>
+
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 10,
+        }}
+      >
+        <ThemedText>Show community icons on posts</ThemedText>
+        <Switch
+          onValueChange={() => setShowCommunityIcons(!showCommunityIcons)}
+          value={showCommunityIcons}
+          disabled
+        />
+      </View>
 
       <View
         style={{
