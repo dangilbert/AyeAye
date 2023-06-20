@@ -126,8 +126,6 @@ export const useComments = (postId: number, communityId?: number) => {
 
   const queryClient = useQueryClient();
 
-  console.log("Params for useComments", postId, communityId);
-
   return {
     isLoading,
     data,

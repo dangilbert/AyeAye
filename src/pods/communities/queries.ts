@@ -43,7 +43,6 @@ const getPostsForCommunity = async ({
   communityType?: CommunityType;
   userId?: string;
 }) => {
-  console.log("Sort type: ", sortType);
   return await useLemmyHttp().getPosts({
     type_: communityType ?? "All",
     community_id: communityId,
