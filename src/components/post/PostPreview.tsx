@@ -35,8 +35,9 @@ export const PostPreview = ({
 }: PostPreviewProps) => {
   const postType = getPostType(post.post);
 
+  let content;
   if (postType === "Text") {
-    return (
+    content = (
       <TextPost
         name={name}
         body={body}
@@ -49,7 +50,7 @@ export const PostPreview = ({
 
   if (postType === "Image") {
     // This is probably an image post
-    return (
+    content = (
       <ImagePost
         name={name}
         body={body}
@@ -63,7 +64,7 @@ export const PostPreview = ({
 
   // This is a link post with embed information
   if (postType === "Link" || postType === "SimpleLink") {
-    return (
+    content = (
       <LinkPost
         name={name}
         body={body}
@@ -79,7 +80,7 @@ export const PostPreview = ({
   }
 
   if (postType === "Video") {
-    return (
+    content = (
       <VideoPost
         name={name}
         body={body}
@@ -97,11 +98,9 @@ export const PostPreview = ({
 
   console.log("Post type not built", JSON.stringify(post.post, null, 2));
 
-  return (
-    <>
-      <ThemedText>Post type not built</ThemedText>
-    </>
-  );
+  content = content || <ThemedText>Post type not built</ThemedText>;
+
+  return <View style={{ margin: 10 }}>{content}</View>;
 };
 
 interface LinkPostProps {
