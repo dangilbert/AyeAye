@@ -5,7 +5,6 @@ import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { markdownStyles } from "../post/styles";
-import { Fragment } from "react";
 import { SheetManager } from "react-native-actions-sheet";
 import { useCommentVote } from "@rn-app/pages/posts/hooks/useCommunities";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
@@ -15,7 +14,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const themedStyle = styles(theme);
 
   const commentIndentColors = theme.colors.commentIndentHighlight;
-  const commentIndent = comment.comment.path.split(".").length - 2;
+  const commentIndent = comment.comment.path.split(".").length - 3;
 
   const themedMarkdownStyle = markdownStyles(theme);
   const bodyOptions: useMarkdownHookOptions = {
@@ -66,12 +65,12 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
       style={{
         borderBottomColor: theme.colors.border,
         borderBottomWidth: 1,
-        marginStart: commentIndent * 5,
+        marginStart: commentIndent * 3,
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderStartColor:
           commentIndentColors[commentIndent % commentIndentColors.length],
-        borderStartWidth: 5,
+        borderStartWidth: 3,
         backgroundColor: theme.colors.secondaryBackground,
         flexDirection: "column",
         gap: 5,

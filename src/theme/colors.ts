@@ -23,7 +23,15 @@ export const lightColors = {
   linkText: "#e68a00",
   border: "#cccccc",
   // List of bright, not gray, colors for comment indent highlight
-  commentIndentHighlight: ["#f2f200", "#e600e6", "#00d9d9", "#c0c0ff"],
+  commentIndentHighlight: [
+    "#ed8080",
+    "#edcc80",
+    "#c3ed80",
+    "#80ed89",
+    "#80edd5",
+    "80baed",
+    "#9280ed",
+  ],
 };
 
 // Dark theme colors
@@ -37,5 +45,13 @@ export const darkColors = {
   buttonText: "black",
   linkText: "#e68a00",
   border: "#555555",
-  commentIndentHighlight: ["#f2f200", "#e600e6", "#00d9d9", "#c0c0ff"],
+  commentIndentHighlight: [
+    "#ed8080",
+    "#edcc80",
+    "#c3ed80",
+    "#80ed89",
+    "#80edd5",
+    "80baed",
+    "#9280ed",
+  ],
 };
