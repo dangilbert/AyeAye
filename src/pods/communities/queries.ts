@@ -15,7 +15,7 @@ const getCommunitiesForUser = async ({
   page,
   userId,
 }: {
-  communityType: CommunityType;
+  communityType?: CommunityType;
   page: number;
   userId?: string;
 }) => {
@@ -72,7 +72,7 @@ const getCommentsForPost = async (
 };
 
 export const communityQueries = createQueryKeys("communities", {
-  communities: (communityType: CommunityType, userId?: string) => ({
+  communities: (communityType?: CommunityType, userId?: string) => ({
     queryKey: [{ communityType, userId, entity: "communities" }],
     queryFn: async ({
       pageParam = 1,

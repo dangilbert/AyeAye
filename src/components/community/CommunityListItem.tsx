@@ -6,6 +6,8 @@ import FastImage from "react-native-fast-image";
 
 interface CommunityListItemProps {
   name: string;
+  title?: string;
+  actorId: string;
   icon?: string;
   customIcon?: "menu";
   instanceName?: string;
@@ -14,9 +16,10 @@ interface CommunityListItemProps {
 
 export const CommunityListItem = ({
   name,
+  title,
+  actorId,
   icon,
   customIcon,
-  instanceName,
   onPress,
 }: CommunityListItemProps) => {
   const themedStyles = styles(useTheme());
@@ -34,10 +37,10 @@ export const CommunityListItem = ({
           />
         </View>
       )}
-      <ThemedText variant="body">
-        {name}
-        {instanceName && `@${instanceName}`}
-      </ThemedText>
+      <View>
+        <ThemedText variant="labelBold">{title ?? name}</ThemedText>
+        <ThemedText variant="label">{actorId}</ThemedText>
+      </View>
     </Pressable>
   );
 };

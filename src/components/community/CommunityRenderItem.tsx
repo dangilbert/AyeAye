@@ -28,9 +28,11 @@ export const CommunityRenderItem = ({ item }: { item: CommunityItem }) => {
     <CommunityListItem
       key={`community_${item.community.id}`}
       name={item.community.name}
+      title={item.community.title}
       customIcon={item.community.customIcon}
       icon={item.community.icon}
       instanceName={getShortActorId(item.community.actor_id)}
+      actorId={item.community.actor_id}
       onPress={() => {
         navigation.navigate("CommunityFeed", {
           communityId: item.community.id,

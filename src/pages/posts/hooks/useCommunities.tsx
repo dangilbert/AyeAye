@@ -46,16 +46,19 @@ export const useCommunities = (
 
 export const useCommunity = (
   communityId: number,
-  communityType: CommunityType,
+  communityType?: CommunityType,
   userId?: string
 ) => {
+  console.log("useCommunity", communityId, communityType, userId);
+
   const { data, isLoading } = useQuery({
     ...communityQueries.communities(communityType, userId),
 
     select: (data: ListCommunitiesResponse) =>
-      data.communities.find(
+      data.communities?.find(
         (community: CommunityView) => community.community.id === communityId
       ),
+    enabled: !!communityId,
   });
 
   return {

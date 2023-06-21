@@ -6,34 +6,33 @@ import { Theme, useTheme } from "@rn-app/theme";
 import { Menu } from "react-native-paper";
 import { useState } from "react";
 import { ThemedText } from "../ThemedText";
+import { CommunityView } from "lemmy-js-client";
+import { useNavigation } from "@react-navigation/native";
 
-export const PostSortTypeSelector = () => {
+export const CommunityOverflowMenu = ({
+  community,
+}: {
+  community: CommunityView;
+}) => {
   const [visible, setVisible] = useState(false);
+  const navigation = useNavigation();
 
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
 
-  const [sortType, setSortType] = useMMKVString(
-    "settings.post-sort-type",
-    storage
-  );
   const themedStyles = styles(useTheme());
 
-  const sortTypes = [
-    { label: "Hot", value: "Hot", icon: "whatshot" },
-    { label: "Active", value: "Active", icon: "chat" },
-    { label: "New", value: "New", icon: "fiber-new" },
-    { label: "Old", value: "Old", icon: "access-time" },
-    { label: "Top Day", value: "TopDay", icon: "today" },
-    { label: "Top Week", value: "TopWeek", icon: "view-week" },
-    { label: "Top Month", value: "TopMonth", icon: "date-range" },
-    { label: "Top Year", value: "TopYear", icon: "view-module" },
-    { label: "Top All", value: "TopAll", icon: "view-list" },
+  const menuOptions = [
+    {
+      label: "View Sidebar",
+      icon: "whatshot",
+      action: () => {
+        navigation.navigate("CommunitySidebar", { community });
+      },
+    },
+    { label: "Subscribe/Unsubscribe", icon: "chat" },
   ];
-
-  const selectedType =
-    sortTypes.find((type) => type.value === sortType) ?? sortTypes[0];
 
   return (
     // <PaperProvider>
@@ -43,16 +42,16 @@ export const PostSortTypeSelector = () => {
       anchor={
         <MaterialIcons
           onPress={openMenu}
-          name={selectedType.icon}
-          style={themedStyles.icon}
+          name={"more-vert"}
+          style={themedStyles.headerIcon}
         />
       }
     >
-      {sortTypes.map((type) => (
+      {menuOptions.map((type) => (
         <Menu.Item
-          key={type.value}
+          key={type.label}
           onPress={() => {
-            setSortType(type.value);
+            type.action?.();
             closeMenu();
           }}
           title={
@@ -72,6 +71,12 @@ export const PostSortTypeSelector = () => {
 
 const styles = (theme: Theme) =>
   StyleSheet.create({
+    headerIcon: {
+      color: theme.colors.icon,
+      fontSize: 24,
+      paddingHorizontal: 5,
+      marginStart: 10,
+    },
     icon: {
       color: theme.colors.icon,
       fontSize: 24,

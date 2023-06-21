@@ -4,12 +4,15 @@ import { useEffect } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
 import FastImage, { Source } from "react-native-fast-image";
+import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
+import { View } from "react-native";
+import { CommunityOverflowMenu } from "@rn-app/components/community/CommunityOverflowMenu";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
   const communityType = route.params.communityType;
 
-  const { data: community } = useCommunity(communityId);
+  const { data: community } = useCommunity(communityId, communityType);
   const {
     data: posts,
     fetchNextPage,
@@ -31,31 +34,42 @@ export const CommunityScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: community?.community.name ?? communityType,
+      title:
+        community?.community.title ??
+        community?.community.name ??
+        communityType,
+      headerRight: () => (
+        <View style={{ flexDirection: "row" }}>
+          <PostSortTypeSelector />
+          {community && <CommunityOverflowMenu community={community} />}
+        </View>
+      ),
     });
   }, [community]);
 
   return (
-    <FlashList
-      data={posts?.pages.flatMap((page) => page.posts)}
-      onRefresh={() => {
-        invalidate();
-      }}
-      refreshing={isLoading && !!posts}
-      estimatedItemSize={60}
-      renderItem={({ item }) => {
-        return <PostCard key={`postcard_${item.post.id}`} post={item} />;
-      }}
-      onEndReached={() => {
-        if (hasNextPage) {
-          fetchNextPage();
+    <>
+      <FlashList
+        data={posts?.pages.flatMap((page) => page.posts)}
+        onRefresh={() => {
+          invalidate();
+        }}
+        refreshing={isLoading && !!posts}
+        estimatedItemSize={60}
+        renderItem={({ item }) => {
+          return <PostCard key={`postcard_${item.post.id}`} post={item} />;
+        }}
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListHeaderComponent={() =>
+          isLoading && !posts ? <ActivityIndicator /> : null
         }
-      }}
-      onEndReachedThreshold={0.5}
-      ListHeaderComponent={() =>
-        isLoading && !posts ? <ActivityIndicator /> : null
-      }
-      ListFooterComponent={isFetchingNextPage ? ActivityIndicator : null}
-    />
+        ListFooterComponent={isFetchingNextPage ? ActivityIndicator : null}
+      />
+    </>
   );
 };

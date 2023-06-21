@@ -3,6 +3,7 @@ import { CommunitiesScreen } from "./screens/CommunitiesScreen";
 import { CommunityScreen } from "./screens/CommunityScreen";
 import { PostScreen } from "./screens/PostScreen";
 import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
+import { CommunitySidebarScreen } from "./screens/CommunitySidebarScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,13 @@ export const PostsNavigator = () => {
         options={{
           title: "<Community info>",
           headerRight: () => <PostSortTypeSelector />,
+        }}
+      />
+      <Stack.Screen
+        name="CommunitySidebar"
+        component={CommunitySidebarScreen}
+        options={{
+          presentation: "modal",
         }}
       />
       <Stack.Screen
