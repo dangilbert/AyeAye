@@ -1,6 +1,6 @@
 import { PostView } from "lemmy-js-client";
 import { Theme, useTheme } from "@rn-app/theme";
-import { markdownStyles } from "./styles";
+import { markdownDefaultOptions, markdownStyles } from "./styles";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Fragment } from "react";
 import { Pressable, StyleSheet, View, Platform, Share } from "react-native";
@@ -25,12 +25,9 @@ export const PostCard = ({ post }: PostCardProps) => {
   const themedMarkdownStyle = markdownStyles(theme);
   const themedStyle = styles(theme);
 
-  const titleOptions: useMarkdownHookOptions = {
-    styles: {
-      ...themedMarkdownStyle,
-      text: themedMarkdownStyle.h2,
-    },
-  };
+  const titleOptions: useMarkdownHookOptions = markdownDefaultOptions(theme, {
+    text: themedMarkdownStyle.h2,
+  });
 
   const postTitle = useMarkdown(post.post.name, titleOptions);
 

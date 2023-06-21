@@ -1,10 +1,10 @@
 import { CommentView } from "lemmy-js-client";
 import { ThemedText, CreatorLine } from "@rn-app/components";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
-import { markdownStyles } from "../post/styles";
+import { useMarkdown } from "react-native-marked";
+import { markdownDefaultOptions } from "../post/styles";
 import { SheetManager } from "react-native-actions-sheet";
 import { useCommentVote } from "@rn-app/pages/posts/hooks/useCommunities";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
@@ -16,13 +16,10 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const commentIndentColors = theme.colors.commentIndentHighlight;
   const commentIndent = comment.comment.path.split(".").length - 3;
 
-  const themedMarkdownStyle = markdownStyles(theme);
-  const bodyOptions: useMarkdownHookOptions = {
-    styles: {
-      ...themedMarkdownStyle,
-    },
-  };
-  const commentBody = useMarkdown(comment.comment.content, bodyOptions);
+  const commentBody = useMarkdown(
+    comment.comment.content,
+    markdownDefaultOptions(theme)
+  );
   const currentUser = useCurrentUser();
 
   const onCommentReply = () => {

@@ -3,7 +3,7 @@ import { Fragment, useState } from "react";
 import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
 import { Theme, useTheme } from "@rn-app/theme";
 import { Dimensions, Pressable, StyleSheet, View } from "react-native";
-import { markdownStyles } from "./styles";
+import { markdownDefaultOptions, markdownStyles } from "./styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
 import { useNavigation } from "@react-navigation/native";
@@ -96,7 +96,9 @@ export const PostPreview = ({
     );
   }
 
-  console.log("Post type not built", JSON.stringify(post.post, null, 2));
+  if (!content) {
+    console.log("Post type not built", JSON.stringify(post.post, null, 2));
+  }
 
   content = content || <ThemedText>Post type not built</ThemedText>;
 
@@ -396,26 +398,25 @@ const MarkdownText = ({ text, type, options }: MarkdownTextProps) => {
   );
 };
 const PostTitle = ({ text }: PostTextProps) => {
-  const themedMarkdownStyle = markdownStyles(useTheme());
+  const theme = useTheme();
+  const themedMarkdownStyle = markdownStyles(theme);
 
-  const titleOptions: useMarkdownHookOptions = {
-    styles: {
-      ...themedMarkdownStyle,
-      text: themedMarkdownStyle.h2,
-    },
-  };
+  const titleOptions: useMarkdownHookOptions = markdownDefaultOptions(theme, {
+    text: themedMarkdownStyle.h2,
+  });
   return <MarkdownText text={text} type={"title"} options={titleOptions} />;
 };
 
 const PostBody = ({ text }: PostTextProps) => {
-  const themedMarkdownStyle = markdownStyles(useTheme());
+  const theme = useTheme();
 
-  const bodyOptions: useMarkdownHookOptions = {
-    styles: {
-      ...themedMarkdownStyle,
-    },
-  };
-  return <MarkdownText text={text} type={"body"} options={bodyOptions} />;
+  return (
+    <MarkdownText
+      text={text}
+      type={"body"}
+      options={markdownDefaultOptions(theme)}
+    />
+  );
 };
 
 const styles = (theme: Theme) =>
