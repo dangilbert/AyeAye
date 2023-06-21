@@ -1,7 +1,7 @@
 import { CommentView } from "lemmy-js-client";
 
 import { PostDetail } from "@rn-app/components/post/PostDetail";
-import { useComments, usePost } from "../hooks/useCommunities";
+import { useComments, useMarkAsRead, usePost } from "../hooks/useCommunities";
 import { ActivityIndicator, FAB } from "react-native-paper";
 import { CommentItem } from "@rn-app/components/comment/CommentItem";
 import { FlashList } from "@shopify/flash-list";
@@ -34,6 +34,8 @@ export const PostScreen = ({ navigation, route }) => {
     invalidate: invalidateComments,
   } = useComments(postId, communityId);
 
+  const { mutate: markAsRead } = useMarkAsRead(postId, communityId);
+
   const invalidate = () => {
     invalidatePost();
     invalidateComments();
@@ -45,6 +47,8 @@ export const PostScreen = ({ navigation, route }) => {
         ? `${post?.counts.comments} comments`
         : `${originalPost.counts.comments} comments`,
     });
+
+    post?.read == false && markAsRead();
   }, [post]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {

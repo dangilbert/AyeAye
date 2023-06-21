@@ -63,6 +63,8 @@ export const PostDetail = ({ post }: PostDetailProps) => {
     }
   };
 
+  console.log("Post read", post.read);
+
   return (
     <Fragment key={`post_${post.post.id}`}>
       <PostPreview post={post} />

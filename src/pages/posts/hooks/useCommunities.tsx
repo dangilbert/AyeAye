@@ -120,6 +120,36 @@ export const usePost = (communityId: number, postId: number) => {
   };
 };
 
+export const useMarkAsRead = (postId: number, communityId?: number) => {
+  const queryClient = useQueryClient();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: async () => {
+      const client = useLemmyHttp();
+      const res = await client.markPostAsRead({
+        post_id: postId,
+        read: true,
+        auth: await getCurrentUserSessionToken(),
+      });
+
+      return res;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        [...communityQueries.post(postId, communityId).queryKey],
+        () => {
+          return data.post_view;
+        }
+      );
+    },
+  });
+
+  return {
+    isLoading,
+    mutate,
+  };
+};
+
 export const useComments = (postId: number, communityId?: number) => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({

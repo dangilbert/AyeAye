@@ -1,5 +1,3 @@
-import { storage } from "@rn-app/utils/storage";
-import { useMMKVString } from "react-native-mmkv";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
