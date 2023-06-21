@@ -31,7 +31,25 @@ export const CommunityOverflowMenu = ({
         navigation.navigate("CommunitySidebar", { community });
       },
     },
-    { label: "Subscribe/Unsubscribe", icon: "chat" },
+    {
+      label:
+        community.subscribed === "NotSubscribed"
+          ? "Subscribe"
+          : community.subscribed === "Pending"
+          ? "Pending"
+          : "Subscribe",
+      icon: "chat",
+      ection: () => {
+        switch (community.subscribed) {
+          case "NotSubscribed":
+            break;
+          case "Pending":
+            break;
+          case "Subscribed":
+            break;
+        }
+      },
+    },
   ];
 
   return (
