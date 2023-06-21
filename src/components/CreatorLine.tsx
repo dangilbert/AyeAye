@@ -14,6 +14,7 @@ interface CreatorLineProps {
   communityActorId?: string;
   published: string;
   updated?: string;
+  isOp?: boolean;
 }
 
 export const CreatorLine = ({
@@ -23,6 +24,7 @@ export const CreatorLine = ({
   communityActorId,
   published,
   updated,
+  isOp,
 }: CreatorLineProps) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
@@ -58,6 +60,15 @@ export const CreatorLine = ({
         <View style={{ marginHorizontal: 5 }}>
           <MaterialIcons
             name="edit"
+            color={theme.colors.text}
+            size={theme.sizes.text.label}
+          />
+        </View>
+      )}
+      {isOp && (
+        <View style={{ marginHorizontal: 5 }}>
+          <MaterialIcons
+            name="mic"
             color={theme.colors.text}
             size={theme.sizes.text.label}
           />

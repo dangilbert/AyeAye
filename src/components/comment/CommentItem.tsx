@@ -81,6 +81,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         actorId={comment.creator.actor_id}
         published={comment.comment.published}
         updated={comment.comment.updated}
+        isOp={comment.creator.id === comment.post.creator_id}
       />
       <View style={{ flexDirection: "column", width: "90%" }}>
         {commentBody &&
