@@ -2,7 +2,7 @@ import { storage } from "@rn-app/utils/storage";
 import { useState } from "react";
 import { useMMKVListener } from "react-native-mmkv";
 
-type setting =
+export type setting =
   | "blur_nsfw"
   | "card_style"
   | "show_user_instance_names"
