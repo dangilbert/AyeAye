@@ -7,9 +7,9 @@ import { CommentItem } from "@rn-app/components/comment/CommentItem";
 import { FlashList } from "@shopify/flash-list";
 import { StyleSheet } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
-import { RefObject, useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export const PostScreen = ({ route }) => {
+export const PostScreen = ({ navigation, route }) => {
   const originalPost = route.params.originalPost;
   const themedStyles = styles(useTheme());
 
@@ -38,6 +38,14 @@ export const PostScreen = ({ route }) => {
     invalidatePost();
     invalidateComments();
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: post
+        ? `${post?.counts.comments} comments`
+        : `${originalPost.counts.comments} comments`,
+    });
+  }, [post]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems.length > 0) {
