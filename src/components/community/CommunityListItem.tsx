@@ -3,6 +3,7 @@ import { ThemedText } from "../ThemedText";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import FastImage from "react-native-fast-image";
+import { getActorIdFromUrl } from "@rn-app/utils/actorUtils";
 
 interface CommunityListItemProps {
   name: string;
@@ -39,7 +40,7 @@ export const CommunityListItem = ({
       )}
       <View>
         <ThemedText variant="labelBold">{title ?? name}</ThemedText>
-        <ThemedText variant="label">{actorId}</ThemedText>
+        <ThemedText variant="label">{getActorIdFromUrl(actorId)}</ThemedText>
       </View>
     </Pressable>
   );
