@@ -61,6 +61,8 @@ const isTextPost = (post: Post): boolean => {
 export const getShareContent = (post: Post): string => {
   const postType = getPostType(post);
 
+  console.log(post);
+
   switch (postType) {
     case "Image":
       return post.url + (post.name ? "\n\n" + post.name : "");
@@ -71,7 +73,7 @@ export const getShareContent = (post: Post): string => {
     case "SimpleLink":
       return post.url + (post.name ? "\n\n" + post.name : "");
     case "Text":
-      return post.name;
+      return post.name + "\n\n" + post.ap_id;
     default:
       return "";
   }
