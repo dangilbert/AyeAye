@@ -6,7 +6,8 @@ import { CommunityView } from "lemmy-js-client";
 import { useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useMarkdown } from "react-native-marked";
+// import { useMarkdown } from "react-native-marked";
+import Markdown from "react-native-markdown-display";
 
 export const CommunitySidebarScreen = ({ route, navigation }) => {
   const community = route.params.community as CommunityView;
@@ -22,10 +23,10 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
 
   console.log("community", Object.keys(community.community));
 
-  const descriptionContent = useMarkdown(
-    community.community.description ?? "",
-    markdownDefaultOptions(theme)
-  );
+  // const descriptionContent = useMarkdown(
+  //   community.community.description ?? "",
+  //   markdownDefaultOptions(theme)
+  // );
 
   return (
     <ScrollView style={themedStyles.container}>
@@ -42,7 +43,7 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
           {getActorIdFromUrl(community.community.actor_id)}
         </ThemedText>
         <ThemedText>{community.community.banner}</ThemedText>
-        <ThemedText>{descriptionContent}</ThemedText>
+        <Markdown>{community.community.description}</Markdown>
         <ThemedText>{community.subscribed}</ThemedText>
         {/* <ThemedText>{JSON.stringify(community.counts, null, 2)}</ThemedText> */}
       </View>

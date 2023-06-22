@@ -1,7 +1,8 @@
 import { PostView } from "lemmy-js-client";
 import { Theme, useTheme } from "@rn-app/theme";
 import { markdownDefaultOptions, markdownStyles } from "./styles";
-import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
+// import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
+import Markdown from "react-native-markdown-display";
 import { Fragment } from "react";
 import { Pressable, StyleSheet, View, Platform, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -22,14 +23,14 @@ export interface PostCardProps {
 export const PostCard = ({ post }: PostCardProps) => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const themedMarkdownStyle = markdownStyles(theme);
+  // const themedMarkdownStyle = markdownStyles(theme);
   const themedStyle = styles(theme);
 
-  const titleOptions: useMarkdownHookOptions = markdownDefaultOptions(theme, {
-    text: themedMarkdownStyle.h2,
-  });
+  // const titleOptions: useMarkdownHookOptions = markdownDefaultOptions(theme, {
+  //   text: themedMarkdownStyle.h2,
+  // });
 
-  const postTitle = useMarkdown(post.post.name, titleOptions);
+  // const postTitle = useMarkdown(post.post.name, titleOptions);
 
   const postType = getPostType(post.post);
 
@@ -123,10 +124,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           published={post.post.published}
         />
         <View style={themedStyle.title}>
-          {postTitle &&
-            postTitle.map((element, index) => {
-              return <Fragment key={`title_${index}`}>{element}</Fragment>;
-            })}
+          <Markdown>{post.post.name}</Markdown>
         </View>
         <View style={themedStyle.footer}>
           <View style={themedStyle.footerAction}>

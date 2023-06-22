@@ -50,6 +50,7 @@
     "react-native-gesture-handler": "~2.9.0",
     "react-native-intersection-observer": "^0.0.9",
     "react-native-marked": "^5.0.4",
+    "react-native-markdown-display": "^7.0.0-alpha.2",
     "react-native-mmkv": "^2.8.0",
     "react-native-modal": "^13.0.1",
     "react-native-paper": "^5.8.0",

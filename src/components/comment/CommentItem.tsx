@@ -3,8 +3,9 @@ import { ThemedText, CreatorLine } from "@rn-app/components";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useMarkdown } from "react-native-marked";
-import { markdownDefaultOptions } from "../post/styles";
+// import { useMarkdown } from "react-native-marked";
+// import { markdownDefaultOptions } from "../post/styles";
+import Markdown from "react-native-markdown-display";
 import { SheetManager } from "react-native-actions-sheet";
 import { useCommentVote } from "@rn-app/pages/posts/hooks/useCommunities";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
@@ -16,10 +17,10 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const commentIndentColors = theme.colors.commentIndentHighlight;
   const commentIndent = comment.comment.path.split(".").length - 3;
 
-  const commentBody = useMarkdown(
-    comment.comment.content,
-    markdownDefaultOptions(theme)
-  );
+  // const commentBody = useMarkdown(
+  //   comment.comment.content,
+  //   markdownDefaultOptions(theme)
+  // );
   const currentUser = useCurrentUser();
 
   const onCommentReply = () => {
@@ -80,19 +81,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         updated={comment.comment.updated}
         isOp={comment.creator.id === comment.post.creator_id}
       />
-      <View style={{ flexDirection: "column", width: "90%" }}>
-        {commentBody &&
-          commentBody.map((element, index) => {
-            return (
-              <View
-                key={`comment_${comment.comment.id}_body_${index}`}
-                style={{ width: "100%" }}
-              >
-                {element}
-              </View>
-            );
-          })}
-      </View>
+      <Markdown>{comment.comment.content}</Markdown>
       <View style={themedStyle.footer}>
         <Pressable style={themedStyle.footerAction} onPress={onCommentReply}>
           <MaterialIcons
