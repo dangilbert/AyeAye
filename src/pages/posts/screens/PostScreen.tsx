@@ -8,6 +8,7 @@ import { FlashList } from "@shopify/flash-list";
 import { StyleSheet } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSharedValue } from "react-native-reanimated";
 
 export const PostScreen = ({ navigation, route }) => {
   const originalPost = route.params.originalPost;
@@ -19,6 +20,7 @@ export const PostScreen = ({ navigation, route }) => {
   const communityId = originalPost.community.id;
 
   const [currentTopComment, setCurentTopComment] = useState<number>(0);
+  const activeComment = useSharedValue(-1);
 
   const {
     data: post,
@@ -111,6 +113,7 @@ export const PostScreen = ({ navigation, route }) => {
             <CommentItem
               key={`commentitem_${item.comment.id}`}
               comment={item}
+              activeComment={activeComment}
             />
           );
         }}

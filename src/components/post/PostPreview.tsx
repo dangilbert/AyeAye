@@ -389,11 +389,11 @@ const MarkdownText = ({ text, type }: MarkdownTextProps) => {
     </View>
   );
 };
-const PostTitle = ({ text }: PostTextProps) => {
+export const PostTitle = ({ text }: PostTextProps) => {
   return <MarkdownText text={text} type={"title"} />;
 };
 
-const PostBody = ({ text }: PostTextProps) => {
+export const PostBody = ({ text }: PostTextProps) => {
   return <MarkdownText text={text} type={"body"} />;
 };
 

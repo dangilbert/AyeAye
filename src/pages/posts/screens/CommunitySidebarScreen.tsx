@@ -1,14 +1,11 @@
 import { ThemedText } from "@rn-app/components";
 import { ThemedMarkdown } from "@rn-app/components/ThemedMarkdown";
-import { markdownDefaultOptions } from "@rn-app/components/post/styles";
 import { Theme, useTheme } from "@rn-app/theme";
 import { getActorIdFromUrl } from "@rn-app/utils/actorUtils";
 import { CommunityView } from "lemmy-js-client";
 import { useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
-// import { useMarkdown } from "react-native-marked";
-import Markdown from "react-native-markdown-display";
 
 export const CommunitySidebarScreen = ({ route, navigation }) => {
   const community = route.params.community as CommunityView;

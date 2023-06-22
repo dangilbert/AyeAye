@@ -11,6 +11,7 @@ import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { BlurView } from "@react-native-community/blur";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
 import { ThemedMarkdown } from "../ThemedMarkdown";
+import { PostTitle } from "./PostPreview";
 
 export interface PostCardProps {
   post: PostView;
@@ -114,7 +115,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           published={post.post.published}
         />
         <View style={themedStyle.title}>
-          <ThemedMarkdown>{`#### ${post.post.name}`}</ThemedMarkdown>
+          <PostTitle text={post.post.name} />
         </View>
         <View style={themedStyle.footer}>
           <View style={themedStyle.footerAction}>
@@ -157,7 +158,6 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.colors.secondaryBackground,
       marginVertical: 5,
       padding: 10,
-      borderRadius: 5,
       flexDirection: "row",
     },
     rightContent: {
@@ -168,6 +168,7 @@ const styles = (theme: Theme) =>
       flexDirection: "row",
       iconColor: theme.colors.icon,
       iconSize: 20,
+      marginTop: 5,
       justifyContent: "space-between",
     },
     footerAction: {
