@@ -295,8 +295,7 @@ const VideoPost = ({
             url={url}
             onPress={() =>
               navigator.navigate("MediaModal", {
-                embed_video_url,
-                thumbnail_url,
+                videoUri: embed_video_url,
               })
             }
           />

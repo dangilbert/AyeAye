@@ -85,8 +85,7 @@ export const PostCard = ({ post }: PostCardProps) => {
               url={post.post.url}
               onPress={() =>
                 navigation.navigate("MediaModal", {
-                  embed_video_url: post.post.embed_video_url,
-                  thumbnail_url: post.post.thumbnail_url,
+                  videoUri: post.post.embed_video_url,
                 })
               }
               imageStyle={{ resizeMode: "cover" }}

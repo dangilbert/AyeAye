@@ -12,6 +12,7 @@ export const MediaModalScreen = gestureHandlerRootHOC(({ route }) => {
   const themedStyle = styles(useTheme());
 
   console.log("imageUri", imageUri);
+  console.log("videoUri", videoUri);
 
   const isYoutubeVideo =
     videoUri && youtubeDomains.some((uri) => videoUri.includes(uri));
