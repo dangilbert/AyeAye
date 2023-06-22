@@ -1,4 +1,5 @@
 import { ThemedText } from "@rn-app/components";
+import { ThemedMarkdown } from "@rn-app/components/ThemedMarkdown";
 import { markdownDefaultOptions } from "@rn-app/components/post/styles";
 import { Theme, useTheme } from "@rn-app/theme";
 import { getActorIdFromUrl } from "@rn-app/utils/actorUtils";
@@ -23,11 +24,6 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
 
   console.log("community", Object.keys(community.community));
 
-  // const descriptionContent = useMarkdown(
-  //   community.community.description ?? "",
-  //   markdownDefaultOptions(theme)
-  // );
-
   return (
     <ScrollView style={themedStyles.container}>
       <View>
@@ -43,7 +39,7 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
           {getActorIdFromUrl(community.community.actor_id)}
         </ThemedText>
         <ThemedText>{community.community.banner}</ThemedText>
-        <Markdown>{community.community.description}</Markdown>
+        <ThemedMarkdown>{community.community.description}</ThemedMarkdown>
         <ThemedText>{community.subscribed}</ThemedText>
         {/* <ThemedText>{JSON.stringify(community.counts, null, 2)}</ThemedText> */}
       </View>

@@ -1,10 +1,7 @@
 import { Community, Person, PostView } from "lemmy-js-client";
-import { Fragment, useState } from "react";
-// import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
-import Markdown from "react-native-markdown-display";
+import { useState } from "react";
 import { Theme, useTheme } from "@rn-app/theme";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
-import { markdownDefaultOptions, markdownStyles } from "./styles";
+import { Pressable, StyleSheet, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ThemedText, CreatorLine } from "@rn-app/components";
 import { useNavigation } from "@react-navigation/native";
@@ -12,6 +9,7 @@ import * as WebBrowser from "expo-web-browser";
 import { getPostType } from "@rn-app/utils/postUtils";
 import FastImage from "react-native-fast-image";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
+import { ThemedMarkdown } from "../ThemedMarkdown";
 
 interface PostPreviewProps {
   post: PostView;
@@ -381,27 +379,21 @@ interface PostTextProps {
 interface MarkdownTextProps {
   type: "title" | "body";
   text?: string;
-  // options?: useMarkdownHookOptions;
 }
-const MarkdownText = ({ text, type, options }: MarkdownTextProps) => {
-  // const postBody = useMarkdown(text ?? "", options);
-  // const itemWidth = Dimensions.get("window").width - 32;
-
-  return <Markdown>{text}</Markdown>;
+const MarkdownText = ({ text, type }: MarkdownTextProps) => {
+  return (
+    <View style={{ marginVertical: 5 }}>
+      <ThemedMarkdown>{`${
+        type === "title" ? "#### " : ""
+      }${text}`}</ThemedMarkdown>
+    </View>
+  );
 };
 const PostTitle = ({ text }: PostTextProps) => {
-  const theme = useTheme();
-  const themedMarkdownStyle = markdownStyles(theme);
-
-  // const titleOptions: useMarkdownHookOptions = markdownDefaultOptions(theme, {
-  //   text: themedMarkdownStyle.h2,
-  // });
   return <MarkdownText text={text} type={"title"} />;
 };
 
 const PostBody = ({ text }: PostTextProps) => {
-  const theme = useTheme();
-
   return <MarkdownText text={text} type={"body"} />;
 };
 

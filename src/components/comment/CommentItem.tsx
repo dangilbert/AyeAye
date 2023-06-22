@@ -3,12 +3,10 @@ import { ThemedText, CreatorLine } from "@rn-app/components";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
-// import { useMarkdown } from "react-native-marked";
-// import { markdownDefaultOptions } from "../post/styles";
-import Markdown from "react-native-markdown-display";
 import { SheetManager } from "react-native-actions-sheet";
 import { useCommentVote } from "@rn-app/pages/posts/hooks/useCommunities";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
+import { ThemedMarkdown } from "../ThemedMarkdown";
 
 export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const theme = useTheme();
@@ -17,10 +15,6 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
   const commentIndentColors = theme.colors.commentIndentHighlight;
   const commentIndent = comment.comment.path.split(".").length - 3;
 
-  // const commentBody = useMarkdown(
-  //   comment.comment.content,
-  //   markdownDefaultOptions(theme)
-  // );
   const currentUser = useCurrentUser();
 
   const onCommentReply = () => {
@@ -81,7 +75,7 @@ export const CommentItem = ({ comment }: { comment: CommentView }) => {
         updated={comment.comment.updated}
         isOp={comment.creator.id === comment.post.creator_id}
       />
-      <Markdown>{comment.comment.content}</Markdown>
+      <ThemedMarkdown>{comment.comment.content}</ThemedMarkdown>
       <View style={themedStyle.footer}>
         <Pressable style={themedStyle.footerAction} onPress={onCommentReply}>
           <MaterialIcons

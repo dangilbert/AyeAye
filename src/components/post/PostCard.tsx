@@ -1,9 +1,5 @@
 import { PostView } from "lemmy-js-client";
 import { Theme, useTheme } from "@rn-app/theme";
-import { markdownDefaultOptions, markdownStyles } from "./styles";
-// import { useMarkdown, useMarkdownHookOptions } from "react-native-marked";
-import Markdown from "react-native-markdown-display";
-import { Fragment } from "react";
 import { Pressable, StyleSheet, View, Platform, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -14,6 +10,7 @@ import Snackbar from "react-native-snackbar";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { BlurView } from "@react-native-community/blur";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
+import { ThemedMarkdown } from "../ThemedMarkdown";
 
 export interface PostCardProps {
   post: PostView;
@@ -23,14 +20,7 @@ export interface PostCardProps {
 export const PostCard = ({ post }: PostCardProps) => {
   const theme = useTheme();
   const navigation = useNavigation();
-  // const themedMarkdownStyle = markdownStyles(theme);
   const themedStyle = styles(theme);
-
-  // const titleOptions: useMarkdownHookOptions = markdownDefaultOptions(theme, {
-  //   text: themedMarkdownStyle.h2,
-  // });
-
-  // const postTitle = useMarkdown(post.post.name, titleOptions);
 
   const postType = getPostType(post.post);
 
@@ -124,7 +114,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           published={post.post.published}
         />
         <View style={themedStyle.title}>
-          <Markdown>{post.post.name}</Markdown>
+          <ThemedMarkdown>{`#### ${post.post.name}`}</ThemedMarkdown>
         </View>
         <View style={themedStyle.footer}>
           <View style={themedStyle.footerAction}>

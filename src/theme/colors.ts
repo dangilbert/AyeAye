@@ -9,6 +9,9 @@ export type ThemeColors = {
   linkText: string;
   border: string;
   commentIndentHighlight: string[];
+  blockquote: {
+    backgroundColor: string;
+  };
 };
 
 // Light theme colors
@@ -32,6 +35,9 @@ export const lightColors = {
     "80baed",
     "#9280ed",
   ],
+  blockquote: {
+    backgroundColor: "#e2e2e2",
+  },
 };
 
 // Dark theme colors
@@ -54,4 +60,7 @@ export const darkColors = {
     "80baed",
     "#9280ed",
   ],
+  blockquote: {
+    backgroundColor: "#424242",
+  },
 };
