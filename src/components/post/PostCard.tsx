@@ -117,6 +117,14 @@ export const PostCard = ({ post }: PostCardProps) => {
         <View style={themedStyle.title}>
           <PostTitle text={post.post.name} />
         </View>
+        {["Link", "SimpleLink", "Video"].includes(postType) &&
+          post.post.url && (
+            <View style={themedStyle.title}>
+              <ThemedText variant={"caption"}>
+                {new URL(post.post.url).hostname.replace("www.", "")}
+              </ThemedText>
+            </View>
+          )}
         <View style={themedStyle.footer}>
           <View style={themedStyle.footerAction}>
             <MaterialIcons

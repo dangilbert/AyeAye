@@ -108,6 +108,7 @@ export const PostScreen = ({ navigation, route }) => {
         contentContainerStyle={{ paddingBottom: 86 }}
         refreshing={isLoadingPost && !!post}
         estimatedItemSize={100}
+        drawDistance={500}
         renderItem={({ item }) => {
           return (
             <CommentItem
