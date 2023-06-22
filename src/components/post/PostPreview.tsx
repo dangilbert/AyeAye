@@ -10,6 +10,8 @@ import { getPostType } from "@rn-app/utils/postUtils";
 import FastImage from "react-native-fast-image";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
 import { ThemedMarkdown } from "../ThemedMarkdown";
+import { Thumbnail } from "react-native-thumbnail-video";
+import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
 
 interface PostPreviewProps {
   post: PostView;
@@ -288,13 +290,25 @@ const VideoPost = ({
             style={themedStyle.imageThumb}
             source={{ uri: thumbnail_url }}
           />
+        ) : isYoutubeUrl(url) ? (
+          <Thumbnail
+            url={url}
+            onPress={() =>
+              navigator.navigate("MediaModal", {
+                embed_video_url,
+                thumbnail_url,
+              })
+            }
+          />
         ) : (
           <View style={themedStyle.iconContainer}>
             <MaterialIcons name={"link"} style={themedStyle.icon} />
           </View>
         )}
 
-        <ThemedText variant={"label"}>{embed_title}</ThemedText>
+        <ThemedText variant={"label"} style={{ marginTop: 10 }}>
+          {embed_title}
+        </ThemedText>
         {embed_description && (
           <ThemedText variant={"caption"}>{embed_description}</ThemedText>
         )}

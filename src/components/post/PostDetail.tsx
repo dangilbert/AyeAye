@@ -101,6 +101,7 @@ export const PostDetail = ({ post }: PostDetailProps) => {
             style={{
               backgroundColor:
                 post.my_vote === 1 ? theme.colors.iconActive : undefined,
+              borderRadius: 5,
             }}
           />
           <ThemedText variant="label">{post.counts.score}</ThemedText>
@@ -112,6 +113,7 @@ export const PostDetail = ({ post }: PostDetailProps) => {
             style={{
               backgroundColor:
                 post.my_vote === -1 ? theme.colors.iconActive : undefined,
+              borderRadius: 5,
             }}
           />
         </View>

@@ -10,8 +10,9 @@ import Snackbar from "react-native-snackbar";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { BlurView } from "@react-native-community/blur";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
-import { ThemedMarkdown } from "../ThemedMarkdown";
+import { Thumbnail } from "react-native-thumbnail-video";
 import { PostTitle } from "./PostPreview";
+import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
 
 export interface PostCardProps {
   post: PostView;
@@ -78,6 +79,24 @@ export const PostCard = ({ post }: PostCardProps) => {
             <FastImage
               style={[themedStyle.imageBox, themedStyle.image]}
               source={{ uri: post.post.thumbnail_url }}
+            />
+          ) : isYoutubeUrl(post.post.url) ? (
+            <Thumbnail
+              url={post.post.url}
+              onPress={() =>
+                navigation.navigate("MediaModal", {
+                  embed_video_url: post.post.embed_video_url,
+                  thumbnail_url: post.post.thumbnail_url,
+                })
+              }
+              imageStyle={{ resizeMode: "cover" }}
+              iconStyle={{ width: 10, height: 10, alignSelf: "center" }}
+              style={{
+                width: 60,
+                height: 60,
+                alignContent: "center",
+                justifyContent: "center",
+              }}
             />
           ) : (
             <View style={themedStyle.iconContainer}>
