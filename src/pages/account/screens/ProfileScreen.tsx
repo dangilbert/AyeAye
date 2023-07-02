@@ -1,32 +1,35 @@
 import { useNavigation } from "@react-navigation/native";
 import { ThemedText } from "@rn-app/components";
-import { ActivityIndicator, Button } from "react-native-paper";
-import { useCurrentUserProfile } from "../hooks/useCurrentUserProfile";
+import { Button } from "react-native-paper";
+import { useUserProfile } from "../hooks/useCurrentUserProfile";
 import { useCurrentUser } from "../hooks/useAccount";
 import { StyleSheet, View } from "react-native";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { Avatar } from "@rn-app/components";
 import { Theme, useTheme } from "@rn-app/theme";
+import { LoadingActivityView } from "@rn-app/components/feed/LoadingActivityView";
 
-export const ProfileScreen = () => {
-  const currentSession = useCurrentUser();
+export const ProfileScreen = ({ route }) => {
+  console.log("route", route);
+  const { userId } = route.params ?? { userId: undefined };
 
-  return !!currentSession ? (
-    <LoggedInProfileScreen />
+  const currentSession = useCurrentUser({ enabled: !userId });
+
+  return !!currentSession || userId ? (
+    <LoggedInProfileScreen userId={userId} />
   ) : (
     <LoggedOutProfileScreen />
   );
 };
 
-const LoggedInProfileScreen = () => {
-  const { data: currentUser } = useCurrentUserProfile();
-  const userSession = useCurrentUser();
+const LoggedInProfileScreen = ({ userId }: { userId?: number }) => {
+  const { data: userProfile } = useUserProfile(userId);
 
   const themedStyles = styles(useTheme());
 
   return (
     <>
-      {currentUser ? (
+      {userProfile ? (
         <View
           style={{
             alignItems: "center",
@@ -34,20 +37,22 @@ const LoggedInProfileScreen = () => {
           }}
         >
           <Avatar
-            name={currentUser.person_view.person.name}
-            avatarUrl={currentUser.person_view.person.avatar}
+            name={userProfile.person_view.person.name}
+            avatarUrl={userProfile.person_view.person.avatar}
           />
-          <ThemedText variant={"subheading"}>
-            {currentUser.person_view.person.name}
+          <ThemedText variant={"subheading"} style={{ marginTop: 10 }}>
+            {userProfile.person_view.person.name}
           </ThemedText>
-          <ThemedText>@{getShortActorId(userSession?.instance)}</ThemedText>
+          <ThemedText>
+            @{getShortActorId(userProfile.person_view.person.actor_id)}
+          </ThemedText>
 
           <View style={themedStyles.statItem}>
             <ThemedText style={themedStyles.statItemTitle}>
               Comment count
             </ThemedText>
             <ThemedText>
-              {currentUser.person_view.counts.comment_count}
+              {userProfile.person_view.counts.comment_count}
             </ThemedText>
           </View>
           <View style={themedStyles.statItem}>
@@ -55,24 +60,24 @@ const LoggedInProfileScreen = () => {
               Comment score
             </ThemedText>
             <ThemedText>
-              {currentUser.person_view.counts.comment_score}
+              {userProfile.person_view.counts.comment_score}
             </ThemedText>
           </View>
           <View style={themedStyles.statItem}>
             <ThemedText style={themedStyles.statItemTitle}>
               Post count
             </ThemedText>
-            <ThemedText>{currentUser.person_view.counts.post_count}</ThemedText>
+            <ThemedText>{userProfile.person_view.counts.post_count}</ThemedText>
           </View>
           <View style={themedStyles.statItem}>
             <ThemedText style={themedStyles.statItemTitle}>
               Post score
             </ThemedText>
-            <ThemedText>{currentUser.person_view.counts.post_score}</ThemedText>
+            <ThemedText>{userProfile.person_view.counts.post_score}</ThemedText>
           </View>
         </View>
       ) : (
-        <ActivityIndicator />
+        <LoadingActivityView />
       )}
     </>
   );

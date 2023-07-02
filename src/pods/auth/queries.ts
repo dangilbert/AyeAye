@@ -12,12 +12,17 @@ export interface User {
 }
 
 const getProfileForCurrentUser = async () => {
+  const user = await getCurrentUserSession();
+  return getProfileForUser({ userId: user.id });
+};
+
+const getProfileForUser = async ({ userId }: { userId: number }) => {
   const client = useLemmyHttp();
   const user = await getCurrentUserSession();
 
   return await client.getPersonDetails({
     auth: user?.jwt,
-    username: user?.username,
+    person_id: userId,
     saved_only: false,
     limit: 40,
     page: 1,
@@ -45,9 +50,10 @@ export const authQueries = createQueryKeys("auth", {
     queryKey: [{ userId: "currentUser", entity: "session" }],
     queryFn: () => getCurrentUserSession(),
   }),
-  currentUserProfile: () => ({
-    queryKey: [{ userId: "currentUser", entity: "profile" }],
-    queryFn: () => getProfileForCurrentUser(),
+  userProfile: (userId?: number) => ({
+    queryKey: [{ userId: userId ?? -1, entity: "profile" }],
+    queryFn: () =>
+      userId ? getProfileForUser({ userId }) : getProfileForCurrentUser(),
   }),
 
   users: () => ({

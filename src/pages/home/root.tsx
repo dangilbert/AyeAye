@@ -10,7 +10,7 @@ import { useCurrentUser } from "../account/hooks/useAccount";
 const Tab = createMaterialBottomTabNavigator();
 
 export const HomeRoot = () => {
-  const currentSession = useCurrentUser();
+  const currentSession = useCurrentUser({ enabled: true });
 
   return (
     <Tab.Navigator>

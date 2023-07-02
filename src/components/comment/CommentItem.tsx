@@ -38,7 +38,7 @@ export const CommentItem = ({
   const commentIndentColors = theme.colors.commentIndentHighlight;
   const commentIndent = comment.comment.path.split(".").length - 3;
 
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser({ enabled: true });
 
   const onCommentReply = () => {
     SheetManager.show("comment-reply-sheet", {

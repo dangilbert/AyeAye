@@ -12,7 +12,7 @@ import {
 
 export const CommunitiesScreen = () => {
   const themedStyles = styles(useTheme());
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser({ enabled: true });
 
   const {
     data: communities,

@@ -18,7 +18,7 @@ export interface PostDetailProps {
 export const PostDetail = ({ post }: PostDetailProps) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser({ enabled: true });
 
   const onShare = async () => {
     try {

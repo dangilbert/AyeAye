@@ -3,9 +3,10 @@ import { KEYS } from "@rn-app/utils/constants";
 import { storage } from "@rn-app/utils/storage";
 import { useQuery } from "@tanstack/react-query";
 
-export const useCurrentUser = () => {
+export const useCurrentUser = ({ enabled }: { enabled: boolean }) => {
   const { data } = useQuery({
     ...authQueries.currentUserSession(),
+    enabled,
   });
 
   return data;

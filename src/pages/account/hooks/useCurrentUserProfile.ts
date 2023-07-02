@@ -1,9 +1,9 @@
 import { authQueries } from "@rn-app/pods/auth/queries";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useCurrentUserProfile = () => {
+export const useUserProfile = (userId?: number) => {
   const { data, isLoading } = useQuery({
-    ...authQueries.currentUserProfile(),
+    ...authQueries.userProfile(userId),
   });
 
   const queryClient = useQueryClient();
@@ -13,7 +13,7 @@ export const useCurrentUserProfile = () => {
     data,
     invalidate: () => {
       queryClient.invalidateQueries({
-        queryKey: authQueries.currentUserProfile().queryKey,
+        queryKey: authQueries.userProfile(userId).queryKey,
       });
     },
   };

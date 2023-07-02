@@ -4,6 +4,7 @@ import { CommunityScreen } from "./screens/CommunityScreen";
 import { PostScreen } from "./screens/PostScreen";
 import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
 import { CommunitySidebarScreen } from "./screens/CommunitySidebarScreen";
+import { ProfileScreen } from "../account/screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,8 @@ export const PostsNavigator = () => {
         component={PostScreen}
         options={{ title: "<Post info>" }}
       />
+
+      <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
   );
 };

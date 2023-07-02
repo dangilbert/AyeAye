@@ -48,10 +48,18 @@ export const CreatorLine = ({
   return (
     <View style={themedStyle.creatorLine}>
       <View style={{ flexDirection: "column" }}>
-        <ThemedText variant="labelBold">
-          @{creator.name}
-          {actorId && showUserInstanceNames && `@${getShortActorId(actorId)}`}
-        </ThemedText>
+        <TouchableOpacity
+          onPress={() => {
+            navigator.push("Profile", {
+              userId: creator.id,
+            });
+          }}
+        >
+          <ThemedText variant="labelBold">
+            @{creator.name}
+            {actorId && showUserInstanceNames && `@${getShortActorId(actorId)}`}
+          </ThemedText>
+        </TouchableOpacity>
         {community && (
           <TouchableOpacity
             onPress={() => {
