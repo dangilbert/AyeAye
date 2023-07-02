@@ -5,3 +5,7 @@ export const isImage = (url: string) => {
 export const isYoutubeUrl = (url?: string): boolean => {
   return !!url && (url.includes("youtube") || url.includes("youtu.be"));
 };
+
+export const urlHost = (url: string) => {
+  return new URL(url).host;
+};

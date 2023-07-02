@@ -1,8 +1,11 @@
 import { Theme, useTheme } from "@rn-app/theme";
 import { ReactNode } from "react";
-import { StyleSheet, Platform } from "react-native";
+import { StyleSheet, Platform, View } from "react-native";
 import Markdown, { MarkdownProps } from "react-native-markdown-display";
 import * as WebBrowser from "expo-web-browser";
+import { ThemedText } from "./ThemedText";
+import ImageModal from "@dreamwalk-os/react-native-image-modal";
+import { urlHost } from "@rn-app/utils/urlUtils";
 
 export const ThemedMarkdown = ({
   children,
@@ -18,10 +21,52 @@ export const ThemedMarkdown = ({
         WebBrowser.openBrowserAsync(url);
         return false;
       }}
+      rules={rules}
     >
       {children}
     </Markdown>
   );
+};
+
+const rules = {
+  image: (node, children, parent, styles) => {
+    return (
+      <>
+        <View
+          style={{
+            borderWidth: 1,
+            borderColor: "white",
+            borderRadius: 5,
+            flexDirection: "row",
+            flex: 1,
+            alignItems: "center",
+            margin: 5,
+          }}
+          key={node}
+        >
+          <ImageModal
+            resizeMode="cover"
+            modalImageResizeMode="contain"
+            style={{ width: 70, height: 70, margin: 10 }}
+            source={{ uri: node.attributes.src }}
+          />
+          <View style={{ flexDirection: "column", justifyContent: "center" }}>
+            {node.attributes.alt?.length && (
+              <ThemedText style={{ marginEnd: 10, marginTop: 10 }}>
+                {node.attributes.alt}
+              </ThemedText>
+            )}
+            <ThemedText
+              variant={"label"}
+              style={{ marginEnd: 10, marginBottom: 10 }}
+            >
+              {urlHost(node.attributes.src)}
+            </ThemedText>
+          </View>
+        </View>
+      </>
+    );
+  },
 };
 
 const styles = (theme: Theme) =>
