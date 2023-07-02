@@ -79,6 +79,7 @@ export const CommentItem = ({
       item={comment}
       renderUnderlayRight={VotingUnderlay}
       snapPointsRight={[itemWidth, itemWidth * 2]}
+      activationThreshold={40}
       onChange={(params) => {
         if (params?.snapPoint === itemWidth * 2) {
           onDownvote();
