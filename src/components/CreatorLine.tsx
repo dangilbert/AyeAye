@@ -43,8 +43,6 @@ export const CreatorLine = ({
     published.endsWith("Z") == true ? published : `${published}Z`
   );
 
-  console.log("community", JSON.stringify(community, null, 2));
-
   return (
     <View style={themedStyle.creatorLine}>
       <View style={{ flexDirection: "column" }}>

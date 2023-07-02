@@ -68,12 +68,12 @@ export const CommunityScreen = ({ navigation, route }) => {
         }}
         onEndReachedThreshold={0.5}
         ListHeaderComponent={() =>
-          isLoading && !posts ? <ActivityIndicator /> : null
+          isLoading && !posts ? <LoadingActivityView /> : null
         }
         ListFooterComponent={
           isFetchingNextPage ? (
             LoadingActivityView
-          ) : !hasNextPage ? (
+          ) : !hasNextPage && !isLoading && !isFetchingNextPage ? (
             <EndOfContentView />
           ) : null
         }
