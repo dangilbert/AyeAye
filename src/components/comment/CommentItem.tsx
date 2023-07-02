@@ -1,21 +1,29 @@
 import { CommentView } from "lemmy-js-client";
 import { ThemedText, CreatorLine } from "@rn-app/components";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
 import { useCommentVote } from "@rn-app/pages/posts/hooks/useCommunities";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
 import { ThemedMarkdown } from "../ThemedMarkdown";
-import {
-  SwipeableItem,
-  withSwipeableContext,
-  useSwipeableContext,
-} from "react-native-easy-swipe";
-import { useCallback } from "react";
-import Animated, { useDerivedValue } from "react-native-reanimated";
+import Animated, {
+  interpolateColor,
+  runOnJS,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import SwipeableItem, {
+  SwipeableItemImperativeRef,
+  UnderlayParams,
+} from "react-native-swipeable-item";
+import { useEffect, useRef, useState } from "react";
 
-const _CommentItem = ({
+const itemWidth = 75;
+
+export const CommentItem = ({
   comment,
   activeComment: activeItem,
 }: {
@@ -24,18 +32,13 @@ const _CommentItem = ({
 }) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
-  const { close } = useSwipeableContext();
+
+  const itemRef = useRef<SwipeableItemImperativeRef>(null);
 
   const commentIndentColors = theme.colors.commentIndentHighlight;
   const commentIndent = comment.comment.path.split(".").length - 3;
 
   const currentUser = useCurrentUser();
-
-  useDerivedValue(() => {
-    if (activeItem.value !== comment.comment.id) {
-      close();
-    }
-  }, []);
 
   const onCommentReply = () => {
     SheetManager.show("comment-reply-sheet", {
@@ -60,7 +63,6 @@ const _CommentItem = ({
     } else {
       castVote("unvote");
     }
-    close();
   };
   const onDownvote = () => {
     if (!currentUser) return;
@@ -69,43 +71,22 @@ const _CommentItem = ({
     } else {
       castVote("unvote");
     }
-    close();
   };
-
-  const renderLeftActions = useCallback(() => {
-    return (
-      <>
-        <SwipeableItem.Button onPress={onUpvote}>
-          <View
-            style={[themedStyle.swipeAction, { backgroundColor: "orange" }]}
-          >
-            <MaterialIcons name={"arrow-upward"} />
-          </View>
-        </SwipeableItem.Button>
-        <SwipeableItem.Button onPress={onDownvote}>
-          <View style={[themedStyle.swipeAction, { backgroundColor: "blue" }]}>
-            <MaterialIcons name={"arrow-downward"} />
-          </View>
-        </SwipeableItem.Button>
-      </>
-    );
-  }, []);
-
-  const renderRightActions = useCallback(() => {
-    return <></>;
-  }, []);
-
-  const handleStartDrag = useCallback(() => {
-    activeItem.value = comment.comment.id;
-  }, [comment, activeItem]);
 
   return (
     <SwipeableItem
-      containerStyle={themedStyle.container}
-      renderRightActions={renderRightActions}
-      renderLeftActions={renderLeftActions}
-      onStartDrag={handleStartDrag}
-      // onItemPress={handleItemPress}
+      ref={itemRef}
+      item={comment}
+      renderUnderlayRight={VotingUnderlay}
+      snapPointsRight={[itemWidth, itemWidth * 2]}
+      onChange={(params) => {
+        if (params?.snapPoint === itemWidth * 2) {
+          onDownvote();
+        } else if (params?.snapPoint === itemWidth) {
+          onUpvote();
+        }
+        itemRef.current?.close();
+      }}
     >
       <View style={themedStyle.overlay}>
         <View
@@ -174,7 +155,72 @@ const _CommentItem = ({
   );
 };
 
-export const CommentItem = withSwipeableContext(_CommentItem);
+const VotingUnderlay = ({
+  close,
+  percentOpen,
+}: UnderlayParams<CommentView>) => {
+  const themedStyles = styles(useTheme());
+  const [votingState, setVotingState] = useState<"up" | "down">("up");
+  const [width, setWidth] = useState(0);
+  const rotation = useSharedValue(0);
+
+  useAnimatedReaction(
+    () => {
+      return percentOpen.value;
+    },
+    (result) => {
+      runOnJS(setVotingState)(result < 0.6 ? "up" : "down");
+      runOnJS(setWidth)(result * itemWidth * 2);
+    },
+    [percentOpen, setVotingState]
+  );
+
+  useEffect(() => {
+    if (votingState == "down") {
+      rotation.value = withTiming(180, { duration: 200 });
+    } else {
+      rotation.value = withTiming(0, { duration: 200 });
+    }
+  }, [votingState, rotation]);
+
+  const animatedIconStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotateZ: `${rotation.value}deg` }],
+    };
+  });
+
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      rotation.value,
+      [0, 180],
+      [
+        themedStyles.upvoteItem.backgroundColor,
+        themedStyles.downvoteItem.backgroundColor,
+      ]
+    );
+
+    return {
+      backgroundColor,
+      width: width,
+    };
+  });
+
+  return (
+    <Animated.View
+      style={[
+        themedStyles.row,
+        themedStyles.underlayRight,
+        animatedContainerStyle,
+      ]}
+    >
+      <TouchableOpacity onPress={() => close()}>
+        <Animated.View style={animatedIconStyle}>
+          <MaterialIcons name={"arrow-upward"} color={"white"} size={36} />
+        </Animated.View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 const styles = (theme: Theme) =>
   StyleSheet.create({
@@ -199,5 +245,22 @@ const styles = (theme: Theme) =>
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+    },
+    row: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      width: itemWidth * 2,
+      flex: 1,
+    },
+    underlayRight: {},
+    voteItem: {
+      color: theme.colors.icon,
+    },
+    upvoteItem: {
+      backgroundColor: theme.colors.vote.upvoteBackgroundColor,
+    },
+    downvoteItem: {
+      backgroundColor: theme.colors.vote.downvoteBackgroundColor,
     },
   });

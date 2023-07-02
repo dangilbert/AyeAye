@@ -98,7 +98,7 @@ export const PostPreview = ({
   }
 
   if (!content) {
-    console.log("Post type not built", JSON.stringify(post.post, null, 2));
+    // console.log("Post type not built", JSON.stringify(post.post, null, 2));
   }
 
   content = content || <ThemedText>Post type not built</ThemedText>;

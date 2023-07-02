@@ -12,6 +12,10 @@ export type ThemeColors = {
   blockquote: {
     backgroundColor: string;
   };
+  vote: {
+    upvoteBackgroundColor: string;
+    downvoteBackgroundColor: string;
+  };
 };
 
 // Light theme colors
@@ -38,6 +42,10 @@ export const lightColors = {
   blockquote: {
     backgroundColor: "#e2e2e2",
   },
+  vote: {
+    upvoteBackgroundColor: "#80ed89",
+    downvoteBackgroundColor: "#ed8080",
+  },
 };
 
 // Dark theme colors
@@ -62,5 +70,9 @@ export const darkColors = {
   ],
   blockquote: {
     backgroundColor: "#424242",
+  },
+  vote: {
+    upvoteBackgroundColor: "#80ed89",
+    downvoteBackgroundColor: "#ed8080",
   },
 };
