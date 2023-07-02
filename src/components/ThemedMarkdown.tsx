@@ -1,7 +1,10 @@
 import { Theme, useTheme } from "@rn-app/theme";
 import { ReactNode } from "react";
 import { StyleSheet, Platform, View } from "react-native";
-import Markdown, { MarkdownProps } from "react-native-markdown-display";
+import Markdown, {
+  MarkdownProps,
+  RenderRules,
+} from "react-native-markdown-display";
 import * as WebBrowser from "expo-web-browser";
 import { ThemedText } from "./ThemedText";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
@@ -14,6 +17,7 @@ export const ThemedMarkdown = ({
 } & MarkdownProps) => {
   const theme = useTheme();
   const themedStyles = styles(theme);
+  console.log("children", children);
   return (
     <Markdown
       style={themedStyles}
@@ -42,7 +46,7 @@ const rules = {
             alignItems: "center",
             margin: 5,
           }}
-          key={node}
+          key={node.key}
         >
           <ImageModal
             resizeMode="cover"
@@ -51,7 +55,7 @@ const rules = {
             source={{ uri: node.attributes.src }}
           />
           <View style={{ flexDirection: "column", justifyContent: "center" }}>
-            {node.attributes.alt?.length && (
+            {!!node.attributes.alt?.length && (
               <ThemedText style={{ marginEnd: 10, marginTop: 10 }}>
                 {node.attributes.alt}
               </ThemedText>
@@ -67,7 +71,7 @@ const rules = {
       </>
     );
   },
-};
+} as RenderRules;
 
 const styles = (theme: Theme) =>
   StyleSheet.create({
