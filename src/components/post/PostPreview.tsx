@@ -180,7 +180,7 @@ const LinkPost = ({
           <CreatorLine
             creator={creator}
             actorId={creator.actor_id}
-            community={community.name}
+            community={community}
             communityActorId={community.actor_id}
             published={published}
           />
@@ -233,7 +233,7 @@ const ImagePost = ({
           <CreatorLine
             creator={creator}
             actorId={creator.actor_id}
-            community={community.name}
+            community={community}
             communityActorId={community.actor_id}
             published={published}
           />
@@ -320,7 +320,7 @@ const VideoPost = ({
           <CreatorLine
             creator={creator}
             actorId={creator.actor_id}
-            community={community.name}
+            community={community}
             communityActorId={community.actor_id}
             published={published}
           />
@@ -371,7 +371,7 @@ const TextPost = ({
           <CreatorLine
             creator={creator}
             actorId={creator.actor_id}
-            community={community.name}
+            community={community}
             communityActorId={community.actor_id}
             published={published}
           />

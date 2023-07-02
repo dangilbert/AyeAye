@@ -1,15 +1,16 @@
 import { useTheme, Theme } from "@rn-app/theme";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 import TimeAgo from "./TimeAgo";
-import { Person } from "lemmy-js-client";
+import { Community, Person } from "lemmy-js-client";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
+import { useNavigation } from "@react-navigation/native";
 
 interface CreatorLineProps {
   creator: Person;
-  community?: string;
+  community?: Community;
   actorId?: string;
   communityActorId?: string;
   published: string;
@@ -28,6 +29,7 @@ export const CreatorLine = ({
 }: CreatorLineProps) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
+  const navigator = useNavigation();
 
   const { value: showUserInstanceNames } = useBooleanSetting(
     "show_user_instance_names"
@@ -40,6 +42,9 @@ export const CreatorLine = ({
   const fixedPublished = new Date(
     published.endsWith("Z") == true ? published : `${published}Z`
   );
+
+  console.log("community", JSON.stringify(community, null, 2));
+
   return (
     <View style={themedStyle.creatorLine}>
       <View style={{ flexDirection: "column" }}>
@@ -48,12 +53,21 @@ export const CreatorLine = ({
           {actorId && showUserInstanceNames && `@${getShortActorId(actorId)}`}
         </ThemedText>
         {community && (
-          <ThemedText variant="label">
-            to {community}
-            {communityActorId &&
-              showCommunityInstanceNames &&
-              `@${getShortActorId(communityActorId)}`}
-          </ThemedText>
+          <TouchableOpacity
+            onPress={() => {
+              navigator.push("CommunityFeed", {
+                communityId: community.id,
+                communityType: undefined,
+              });
+            }}
+          >
+            <ThemedText variant="label">
+              to {community.name}
+              {communityActorId &&
+                showCommunityInstanceNames &&
+                `@${getShortActorId(communityActorId)}`}
+            </ThemedText>
+          </TouchableOpacity>
         )}
       </View>
       {updated && (

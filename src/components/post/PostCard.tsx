@@ -137,7 +137,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       <View style={themedStyle.rightContent}>
         <CreatorLine
           creator={post.creator}
-          community={post.community.name}
+          community={post.community}
           actorId={post.creator.actor_id}
           communityActorId={post.community.actor_id}
           published={post.post.published}
