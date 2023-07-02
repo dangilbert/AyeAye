@@ -62,7 +62,12 @@ export const PostCard = ({ post }: PostCardProps) => {
               style={[themedStyle.imageBox, themedStyle.imageBlur]}
               blurAmount={5}
               pointerEvents="none"
-            />
+            >
+              <MaterialIcons
+                name={"warning"}
+                style={[themedStyle.icon, themedStyle.warningIcon]}
+              />
+            </BlurView>
           )}
         </View>
       )}
@@ -110,7 +115,12 @@ export const PostCard = ({ post }: PostCardProps) => {
               blurType="light"
               style={[themedStyle.imageBox, themedStyle.imageBlur]}
               blurAmount={5}
-            />
+            >
+              <MaterialIcons
+                name={"warning"}
+                style={[themedStyle.icon, themedStyle.warningIcon]}
+              />
+            </BlurView>
           )}
         </Pressable>
       )}
@@ -182,7 +192,6 @@ const styles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       backgroundColor: theme.colors.secondaryBackground,
-      marginVertical: 5,
       padding: 10,
       flexDirection: "row",
     },
@@ -224,17 +233,20 @@ const styles = (theme: Theme) =>
     imageBlur: {
       zIndex: 2,
     },
+    warningIcon: {
+      alignSelf: "center",
+    },
     title: {
       flex: 1,
     },
     icon: {
       color: theme.colors.text,
       margin: 10,
-      fontSize: 20,
+      fontSize: 30,
     },
     iconContainer: {
-      width: 50,
-      height: 50,
+      width: 60,
+      height: 60,
       marginEnd: 10,
       borderRadius: 5,
       backgroundColor: theme.colors.border,

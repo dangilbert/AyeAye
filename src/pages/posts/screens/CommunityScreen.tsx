@@ -7,6 +7,8 @@ import FastImage, { Source } from "react-native-fast-image";
 import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
 import { View } from "react-native";
 import { CommunityOverflowMenu } from "@rn-app/components/community/CommunityOverflowMenu";
+import { LoadingActivityView } from "@rn-app/components/feed/LoadingActivityView";
+import { EndOfContentView } from "@rn-app/components/feed/EndOfContentView";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
@@ -68,7 +70,14 @@ export const CommunityScreen = ({ navigation, route }) => {
         ListHeaderComponent={() =>
           isLoading && !posts ? <ActivityIndicator /> : null
         }
-        ListFooterComponent={isFetchingNextPage ? ActivityIndicator : null}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            LoadingActivityView
+          ) : !hasNextPage ? (
+            <EndOfContentView />
+          ) : null
+        }
+        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
       />
     </>
   );
