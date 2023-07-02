@@ -17,7 +17,6 @@ export const ThemedMarkdown = ({
 } & MarkdownProps) => {
   const theme = useTheme();
   const themedStyles = styles(theme);
-  console.log("children", children);
   return (
     <Markdown
       style={themedStyles}

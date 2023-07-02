@@ -10,7 +10,7 @@ import { PlaceholderAvatar } from "@rn-app/components/user/PlaceholderAvatar";
 
 export const AccountSelectorScreen = () => {
   const accounts = useUserSessions();
-  const currentSession = useCurrentUser();
+  const currentSession = useCurrentUser({ enabled: true });
 
   const themedStyles = styles(useTheme());
 
