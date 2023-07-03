@@ -5,6 +5,7 @@ import { AccountSelectorScreen } from "./screens/AccountSelectorScreen";
 import { AddIconButton } from "./components/AddIconButton";
 import { BackButton } from "./components/BackButton";
 import { ManageAccountsButton } from "./components/ManageAccountsButton";
+import { PostScreen } from "../posts/screens/PostScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export const AccountNavigator = () => {
             headerRight: () => <ManageAccountsButton />,
           }}
         />
+        <Stack.Screen name="Post" component={PostScreen} />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen

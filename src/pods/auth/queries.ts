@@ -13,10 +13,16 @@ export interface User {
 
 const getProfileForCurrentUser = async () => {
   const user = await getCurrentUserSession();
-  return getProfileForUser({ userId: user.id });
+  return getProfileForUser({ userId: user.id, pageParam: 1 });
 };
 
-const getProfileForUser = async ({ userId }: { userId: number }) => {
+const getProfileForUser = async ({
+  userId,
+  pageParam,
+}: {
+  userId: number;
+  pageParam: number;
+}) => {
   const client = useLemmyHttp();
   const user = await getCurrentUserSession();
 
@@ -25,7 +31,7 @@ const getProfileForUser = async ({ userId }: { userId: number }) => {
     person_id: userId,
     saved_only: false,
     limit: 40,
-    page: 1,
+    page: pageParam,
   });
 };
 
@@ -53,7 +59,33 @@ export const authQueries = createQueryKeys("auth", {
   userProfile: (userId?: number) => ({
     queryKey: [{ userId: userId ?? -1, entity: "profile" }],
     queryFn: () =>
-      userId ? getProfileForUser({ userId }) : getProfileForCurrentUser(),
+      userId
+        ? getProfileForUser({ userId, pageParam: 1 })
+        : getProfileForCurrentUser(),
+  }),
+
+  userPosts: (userId: number) => ({
+    queryKey: [{ userId: userId ?? -1, entity: "userPosts" }],
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await getProfileForUser({ userId, pageParam });
+      return {
+        posts: res.posts,
+        nextPage: pageParam + 1,
+        hasNextPage: res.posts.length > 0,
+      };
+    },
+  }),
+
+  userComments: (userId: number) => ({
+    queryKey: [{ userId: userId ?? -1, entity: "userComments" }],
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await getProfileForUser({ userId, pageParam });
+      return {
+        comments: res.comments,
+        nextPage: pageParam + 1,
+        hasNextPage: res.comments.length > 0,
+      };
+    },
   }),
 
   users: () => ({

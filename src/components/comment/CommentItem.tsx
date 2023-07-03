@@ -20,15 +20,20 @@ import SwipeableItem, {
   UnderlayParams,
 } from "react-native-swipeable-item";
 import { useEffect, useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const itemWidth = 75;
 
 export const CommentItem = ({
   comment,
-  activeComment: activeItem,
+  indentDisabled,
+  swipeDisabled,
+  openPostOnTap,
 }: {
   comment: CommentView;
-  activeComment: Animated.SharedValue<number>;
+  indentDisabled: boolean;
+  swipeDisabled: boolean;
+  openPostOnTap: boolean;
 }) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
@@ -39,6 +44,8 @@ export const CommentItem = ({
   const commentIndent = comment.comment.path.split(".").length - 3;
 
   const currentUser = useCurrentUser({ enabled: true });
+
+  const navigator = useNavigation();
 
   const onCommentReply = () => {
     SheetManager.show("comment-reply-sheet", {
@@ -80,6 +87,7 @@ export const CommentItem = ({
       renderUnderlayRight={VotingUnderlay}
       snapPointsRight={[itemWidth, itemWidth * 2]}
       activationThreshold={40}
+      swipeEnabled={!swipeDisabled}
       onChange={(params) => {
         if (params?.snapPoint === itemWidth * 2) {
           onDownvote();
@@ -89,17 +97,33 @@ export const CommentItem = ({
         itemRef.current?.close();
       }}
     >
-      <View style={themedStyle.overlay}>
+      <TouchableOpacity
+        style={themedStyle.overlay}
+        onPress={
+          openPostOnTap
+            ? () => {
+                navigator.push("Post", {
+                  originalPost: {
+                    post: comment.post,
+                    community: comment.community,
+                    counts: {},
+                    creator: {},
+                  },
+                });
+              }
+            : undefined
+        }
+      >
         <View
           style={{
             borderBottomColor: theme.colors.border,
             borderBottomWidth: 1,
-            marginStart: commentIndent * 3,
+            marginStart: indentDisabled ? 0 : commentIndent * 3,
             paddingVertical: 5,
             paddingHorizontal: 10,
             borderStartColor:
               commentIndentColors[commentIndent % commentIndentColors.length],
-            borderStartWidth: 3,
+            borderStartWidth: indentDisabled ? 0 : 3,
             backgroundColor: theme.colors.secondaryBackground,
             flexDirection: "column",
             gap: 5,
@@ -151,7 +175,7 @@ export const CommentItem = ({
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </SwipeableItem>
   );
 };
