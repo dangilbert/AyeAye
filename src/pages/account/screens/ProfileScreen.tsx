@@ -40,8 +40,6 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
   const { data: userProfile } = useUserProfile(userId);
   const [currentView, setCurrentView] = useState<"posts" | "comments">("posts");
 
-  const themedStyles = styles(useTheme());
-
   const {
     data: userPosts,
     isLoading: isLoadingPosts,
@@ -60,7 +58,6 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
     invalidate: invalidateComments,
   } = useUserComments(userId);
 
-  // TODO swap these when we switch between posts and comments
   const hasNextPage =
     currentView == "posts" ? hasNextPostsPage : hasNextCommentsPage;
   const fetchNextPage =
@@ -113,6 +110,7 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
       ListFooterComponent={isFetchingNextPage ? LoadingActivityView : null}
       onRefresh={() => invalidate()}
       refreshing={isLoading && !!userPosts}
+      ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
     />
   );
 };

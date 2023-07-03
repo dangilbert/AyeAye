@@ -407,7 +407,11 @@ export const PostTitle = ({ text }: PostTextProps) => {
 };
 
 export const PostBody = ({ text }: PostTextProps) => {
-  return <MarkdownText text={text} type={"body"} />;
+  return text && text.length ? (
+    <MarkdownText text={text} type={"body"} />
+  ) : (
+    <></>
+  );
 };
 
 const styles = (theme: Theme) =>

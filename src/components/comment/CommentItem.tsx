@@ -99,20 +99,17 @@ export const CommentItem = ({
     >
       <TouchableOpacity
         style={themedStyle.overlay}
-        onPress={
-          openPostOnTap
-            ? () => {
-                navigator.push("Post", {
-                  originalPost: {
-                    post: comment.post,
-                    community: comment.community,
-                    counts: {},
-                    creator: {},
-                  },
-                });
-              }
-            : undefined
-        }
+        onPress={() => {
+          navigator.push("Post", {
+            originalPost: {
+              post: comment.post,
+              community: comment.community,
+              counts: {},
+              creator: {},
+            },
+          });
+        }}
+        disabled={!openPostOnTap}
       >
         <View
           style={{
