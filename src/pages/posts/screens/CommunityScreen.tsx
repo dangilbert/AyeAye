@@ -1,7 +1,6 @@
 import { PostCard } from "@rn-app/components/post/PostCard";
 import { useCommunity, usePosts } from "../hooks/useCommunities";
 import { useEffect } from "react";
-import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
 import FastImage, { Source } from "react-native-fast-image";
 import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
@@ -9,14 +8,19 @@ import { View } from "react-native";
 import { CommunityOverflowMenu } from "@rn-app/components/community/CommunityOverflowMenu";
 import { LoadingActivityView } from "@rn-app/components/feed/LoadingActivityView";
 import { EndOfContentView } from "@rn-app/components/feed/EndOfContentView";
+import { EmptyErrorRetry } from "@rn-app/components/feed/EmptyErrorRetry";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
   const communityType = route.params.communityType;
 
-  const { data: community } = useCommunity(communityId, communityType);
+  const { data: community, error: communityError } = useCommunity(
+    communityId,
+    communityType
+  );
   const {
     data: posts,
+    error: postsError,
     fetchNextPage,
     isLoading,
     isFetchingNextPage,
@@ -49,6 +53,18 @@ export const CommunityScreen = ({ navigation, route }) => {
     });
   }, [community]);
 
+  const isError = !!communityError || !!postsError;
+
+  if (isError && !posts) {
+    return (
+      <EmptyErrorRetry
+        retryCalback={function (): void {
+          invalidate();
+        }}
+      />
+    );
+  }
+
   return (
     <>
       <FlashList
@@ -73,11 +89,16 @@ export const CommunityScreen = ({ navigation, route }) => {
         ListFooterComponent={
           isFetchingNextPage ? (
             LoadingActivityView
-          ) : !hasNextPage && !isLoading && !isFetchingNextPage ? (
+          ) : !hasNextPage && !isLoading && !isFetchingNextPage && posts ? (
             <EndOfContentView />
           ) : null
         }
         ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+        ListEmptyComponent={() =>
+          !isLoading && !isFetchingNextPage && !!isError ? (
+            <EndOfContentView />
+          ) : null
+        }
       />
     </>
   );

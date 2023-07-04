@@ -9,6 +9,8 @@ import { StyleSheet } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSharedValue } from "react-native-reanimated";
+import { EmptyErrorRetry } from "@rn-app/components/feed/EmptyErrorRetry";
+import { LoadingActivityView } from "@rn-app/components/feed/LoadingActivityView";
 
 export const PostScreen = ({ navigation, route }) => {
   const originalPost = route.params.originalPost;
@@ -24,11 +26,13 @@ export const PostScreen = ({ navigation, route }) => {
 
   const {
     data: post,
+    error: postError,
     isLoading: isLoadingPost,
     invalidate: invalidatePost,
   } = usePost(communityId, postId);
   const {
     data: comments,
+    error: commentsError,
     fetchNextPage,
     isLoading: isLoadingComments,
     isFetchingNextPage,
@@ -97,16 +101,36 @@ export const PostScreen = ({ navigation, route }) => {
     });
   };
 
+  const isError = !!commentsError || !!postError;
+
+  commentsError && console.log("commentsError", commentsError);
+  postError && console.log("postError", postError);
+  console.log("isError", isError);
+
+  const onErrorRetry = () => {
+    if (post) {
+      invalidateComments();
+    } else if (comments) {
+      invalidatePost();
+    } else {
+      invalidate();
+    }
+  };
+
+  if (isError && !post) {
+    return <EmptyErrorRetry retryCalback={onErrorRetry} />;
+  }
+
   return (
     <>
       <FlashList
         ref={listRef}
-        data={post ? commentList : []}
+        data={post || originalPost ? commentList : []}
         onRefresh={() => {
           invalidate();
         }}
         contentContainerStyle={{ paddingBottom: 86 }}
-        refreshing={isLoadingPost && !!post}
+        refreshing={isLoadingPost && !post}
         estimatedItemSize={100}
         drawDistance={500}
         renderItem={({ item }) => {
@@ -114,7 +138,6 @@ export const PostScreen = ({ navigation, route }) => {
             <CommentItem
               key={`commentitem_${item.comment.id}`}
               comment={item}
-              activeComment={activeComment}
             />
           );
         }}
@@ -124,7 +147,7 @@ export const PostScreen = ({ navigation, route }) => {
           ) : originalPost ? (
             <PostDetail post={originalPost} />
           ) : (
-            <ActivityIndicator />
+            <LoadingActivityView />
           )
         }
         onEndReached={() => {
@@ -139,6 +162,9 @@ export const PostScreen = ({ navigation, route }) => {
         viewabilityConfigCallbackPairs={[
           { viewabilityConfig, onViewableItemsChanged },
         ]}
+        ListEmptyComponent={() =>
+          isError ? <EmptyErrorRetry retryCalback={onErrorRetry} /> : null
+        }
       />
       <FAB
         icon="chevron-down"

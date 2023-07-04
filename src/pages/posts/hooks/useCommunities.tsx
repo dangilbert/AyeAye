@@ -22,17 +22,24 @@ export const useCommunities = (
   communityType: CommunityType,
   userId?: string
 ) => {
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      ...communityQueries.communities(communityType, userId),
-      getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
-    });
+  const {
+    data,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    error,
+  } = useInfiniteQuery({
+    ...communityQueries.communities(communityType, userId),
+    getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
+  });
 
   const queryClient = useQueryClient();
 
   return {
     isLoading,
     data: data?.pages?.flatMap((page) => page.communities),
+    error,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
@@ -49,9 +56,7 @@ export const useCommunity = (
   communityType?: CommunityType,
   userId?: string
 ) => {
-  console.log("useCommunity", communityId, communityType, userId);
-
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     ...communityQueries.communities(communityType, userId),
 
     select: (data: ListCommunitiesResponse) =>
@@ -64,6 +69,7 @@ export const useCommunity = (
   return {
     isLoading,
     data,
+    error,
   };
 };
 
@@ -72,21 +78,28 @@ export const usePosts = (
   communityType?: CommunityType
 ) => {
   const [sortType] = useMMKVString("settings.post-sort-type", storage);
-  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteQuery({
-      ...communityQueries.posts({
-        communityId,
-        communityType,
-        sortType: (sortType ?? "Hot") as SortType,
-      }),
-      getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
-    });
+  const {
+    data,
+    error,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    ...communityQueries.posts({
+      communityId,
+      communityType,
+      sortType: (sortType ?? "Hot") as SortType,
+    }),
+    getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
+  });
 
   const queryClient = useQueryClient();
 
   return {
     isLoading,
     data,
+    error,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
@@ -103,7 +116,7 @@ export const usePosts = (
 };
 
 export const usePost = (communityId: number, postId: number) => {
-  const { data, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery({
     ...communityQueries.post(postId, communityId),
   });
 
@@ -112,6 +125,7 @@ export const usePost = (communityId: number, postId: number) => {
   return {
     isLoading,
     data,
+    error,
     invalidate: () => {
       queryClient.invalidateQueries({
         queryKey: communityQueries.post(postId, communityId).queryKey,
@@ -151,17 +165,24 @@ export const useMarkAsRead = (postId: number, communityId?: number) => {
 };
 
 export const useComments = (postId: number, communityId?: number) => {
-  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteQuery({
-      ...communityQueries.comments(postId, communityId),
-      getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
-    });
+  const {
+    data,
+    error,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    ...communityQueries.comments(postId, communityId),
+    getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
+  });
 
   const queryClient = useQueryClient();
 
   return {
     isLoading,
     data,
+    error,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,

@@ -26,14 +26,14 @@ const itemWidth = 75;
 
 export const CommentItem = ({
   comment,
-  indentDisabled,
-  swipeDisabled,
-  openPostOnTap,
+  indentDisabled = false,
+  swipeDisabled = false,
+  openPostOnTap = false,
 }: {
   comment: CommentView;
-  indentDisabled: boolean;
-  swipeDisabled: boolean;
-  openPostOnTap: boolean;
+  indentDisabled?: boolean;
+  swipeDisabled?: boolean;
+  openPostOnTap?: boolean;
 }) => {
   const theme = useTheme();
   const themedStyle = styles(theme);
