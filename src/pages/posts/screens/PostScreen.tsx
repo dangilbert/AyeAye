@@ -22,7 +22,6 @@ export const PostScreen = ({ navigation, route }) => {
   const communityId = originalPost.community.id;
 
   const [currentTopComment, setCurentTopComment] = useState<number>(0);
-  const activeComment = useSharedValue(-1);
 
   const {
     data: post,
@@ -105,7 +104,6 @@ export const PostScreen = ({ navigation, route }) => {
 
   commentsError && console.log("commentsError", commentsError);
   postError && console.log("postError", postError);
-  console.log("isError", isError);
 
   const onErrorRetry = () => {
     if (post) {
@@ -141,6 +139,9 @@ export const PostScreen = ({ navigation, route }) => {
             />
           );
         }}
+        keyExtractor={(item) =>
+          `comment_${item.comment.id}+${item.my_vote}+${item.counts.score}`
+        }
         ListHeaderComponent={() =>
           post ? (
             <PostDetail post={post} />
@@ -156,14 +157,16 @@ export const PostScreen = ({ navigation, route }) => {
           }
         }}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isLoadingComments || isFetchingNextPage ? ActivityIndicator : null
-        }
+        ListFooterComponent={isFetchingNextPage ? LoadingActivityView : null}
         viewabilityConfigCallbackPairs={[
           { viewabilityConfig, onViewableItemsChanged },
         ]}
         ListEmptyComponent={() =>
-          isError ? <EmptyErrorRetry retryCalback={onErrorRetry} /> : null
+          isLoadingComments && (!!post || !!originalPost) ? (
+            <LoadingActivityView />
+          ) : isError ? (
+            <EmptyErrorRetry retryCalback={onErrorRetry} />
+          ) : null
         }
       />
       <FAB

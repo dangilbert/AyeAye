@@ -6,14 +6,18 @@ import {
 import { useLemmyHttp } from "@rn-app/pods/host/useLemmyHttp";
 import { storage } from "@rn-app/utils/storage";
 import {
+  UseInfiniteQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  CommentResponse,
+  CommentView,
   CommunityView,
   ListCommunitiesResponse,
+  PostView,
   SortType,
 } from "lemmy-js-client";
 import { useMMKVString } from "react-native-mmkv";
@@ -244,37 +248,58 @@ export const usePostComment = (
 
 export const usePostVote = (postId: number, communityId?: number) => {
   const queryClient = useQueryClient();
+  const queryKey = [...communityQueries.post(postId, communityId).queryKey];
+
+  const voteScore = (vote: "up" | "unvote" | "down"): number => {
+    switch (vote) {
+      case "up":
+        return 1;
+      case "down":
+        return -1;
+      case "unvote":
+      default:
+        return 0;
+    }
+  };
 
   const { mutate } = useMutation({
     mutationFn: async (vote: "up" | "unvote" | "down") => {
-      let voteScore;
-      switch (vote) {
-        case "up":
-          voteScore = 1;
-          break;
-        case "down":
-          voteScore = -1;
-          break;
-        case "unvote":
-          voteScore = 0;
-          break;
-      }
       const client = useLemmyHttp();
       const res = await client.likePost({
         post_id: postId!!,
         auth: await getCurrentUserSessionToken(),
-        score: voteScore,
+        score: voteScore(vote),
       });
 
       return res;
     },
+    onMutate: async (vote) => {
+      await queryClient.cancelQueries(queryKey);
+
+      const previousData = queryClient.getQueryData(queryKey);
+
+      queryClient.setQueryData(queryKey, (oldData?: PostView) => {
+        if (!oldData) throw new Error("No data");
+        return {
+          ...oldData,
+          my_vote: voteScore(vote),
+          counts: {
+            ...oldData.counts,
+            score: oldData.counts.score + voteScore(vote),
+          },
+          someKey: new Date().getTime(),
+        };
+      });
+
+      return { previousData };
+    },
+    onError: (err, vote, context) => {
+      queryClient.setQueryData(queryKey, context?.previousData);
+    },
     onSuccess: (data) => {
-      queryClient.setQueryData(
-        [...communityQueries.post(postId, communityId).queryKey],
-        () => {
-          return data.post_view;
-        }
-      );
+      queryClient.setQueryData(queryKey, () => {
+        return data.post_view;
+      });
     },
   });
 
@@ -294,65 +319,107 @@ export const useCommentVote = ({
 }) => {
   const queryClient = useQueryClient();
 
+  const queryKey = [...communityQueries.comments(postId, communityId).queryKey];
+
+  const voteScore = (vote: "up" | "unvote" | "down"): number => {
+    switch (vote) {
+      case "up":
+        return 1;
+      case "down":
+        return -1;
+      case "unvote":
+      default:
+        return 0;
+    }
+  };
+
   const { mutate } = useMutation({
     mutationFn: async (vote: "up" | "unvote" | "down") => {
-      let voteScore;
-      switch (vote) {
-        case "up":
-          voteScore = 1;
-          break;
-        case "down":
-          voteScore = -1;
-          break;
-        case "unvote":
-          voteScore = 0;
-          break;
-      }
-
-      console.log("Params in comment mutation", postId, communityId);
-
       const client = useLemmyHttp();
       const res = await client.likeComment({
         comment_id: commentId,
         auth: await getCurrentUserSessionToken(),
-        score: voteScore,
+        score: voteScore(vote),
       });
 
       return res;
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        [...communityQueries.comments(postId, communityId).queryKey],
-        (oldData) => {
-          const relevantCommentPage = oldData.pages.find((page) =>
-            page.comments.find((comment) => comment.comment.id === commentId)
-          );
+    onMutate: async (vote) => {
+      await queryClient.cancelQueries(queryKey);
 
-          const relevantCommentPageIndex =
-            oldData.pages.indexOf(relevantCommentPage);
+      const previousData = queryClient.getQueryData(queryKey);
 
-          relevantCommentPage.comments = relevantCommentPage.comments.map(
-            (comment) => {
-              if (comment.comment.id === commentId) {
-                return data.comment_view;
-              }
+      queryClient.setQueryData(queryKey, (oldData: any): any => {
+        if (!oldData) throw new Error("No data");
 
-              return comment;
+        const relevantCommentPage = oldData.pages.find((page: any) =>
+          page.comments.find((comment: any) => comment.comment.id === commentId)
+        );
+
+        const relevantCommentPageIndex =
+          oldData.pages.indexOf(relevantCommentPage);
+
+        relevantCommentPage.comments = relevantCommentPage.comments.map(
+          (comment: CommentView) => {
+            if (comment.comment.id === commentId) {
+              return {
+                ...comment,
+                my_vote: voteScore(vote),
+                counts: {
+                  ...comment.counts,
+                  score: comment.counts.score + voteScore(vote),
+                },
+              };
             }
-          );
 
-          const output = {
-            ...oldData,
-            pages: [
-              ...oldData.pages.slice(0, relevantCommentPageIndex),
-              { ...relevantCommentPage },
-              ...oldData.pages.slice(relevantCommentPageIndex + 1),
-            ],
-          };
+            return comment;
+          }
+        );
 
-          return { ...output, someKey: new Date().getTime() };
-        }
-      );
+        const output = {
+          ...oldData,
+          pages: [
+            ...oldData.pages.slice(0, relevantCommentPageIndex),
+            { ...relevantCommentPage },
+            ...oldData.pages.slice(relevantCommentPageIndex + 1),
+          ],
+        };
+
+        return { ...output, someKey: new Date().getTime() };
+      });
+
+      return { previousData };
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKey, (oldData: any) => {
+        const relevantCommentPage = oldData.pages.find((page: any) =>
+          page.comments.find((comment: any) => comment.comment.id === commentId)
+        );
+
+        const relevantCommentPageIndex =
+          oldData.pages.indexOf(relevantCommentPage);
+
+        relevantCommentPage.comments = relevantCommentPage.comments.map(
+          (comment: any) => {
+            if (comment.comment.id === commentId) {
+              return data.comment_view;
+            }
+
+            return comment;
+          }
+        );
+
+        const output = {
+          ...oldData,
+          pages: [
+            ...oldData.pages.slice(0, relevantCommentPageIndex),
+            { ...relevantCommentPage },
+            ...oldData.pages.slice(relevantCommentPageIndex + 1),
+          ],
+        };
+
+        return { ...output, someKey: new Date().getTime() };
+      });
     },
   });
 

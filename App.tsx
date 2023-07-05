@@ -38,7 +38,7 @@ function onAppStateChange(status: any) {
 }
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 2 } },
+  defaultOptions: { queries: { retry: 2, refetchOnWindowFocus: false } },
 });
 
 const RootStack = createNativeStackNavigator();
