@@ -226,6 +226,7 @@ const styles = (theme: Theme) =>
       bottom: 0,
       right: 0,
       borderRadius: 5,
+      backgroundColor: theme.colors.image.placeholder.backgroundColor,
     },
     image: {
       zIndex: 1,

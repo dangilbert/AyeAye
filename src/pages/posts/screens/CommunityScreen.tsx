@@ -14,10 +14,7 @@ export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
   const communityType = route.params.communityType;
 
-  const { data: community, error: communityError } = useCommunity(
-    communityId,
-    communityType
-  );
+  const { data: community, error: communityError } = useCommunity(communityId);
   const {
     data: posts,
     error: postsError,
@@ -39,6 +36,7 @@ export const CommunityScreen = ({ navigation, route }) => {
     );
 
   useEffect(() => {
+    console.log("Updating header", community);
     navigation.setOptions({
       title:
         community?.community.title ??

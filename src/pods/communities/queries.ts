@@ -30,6 +30,15 @@ const getCommunitiesForUser = async ({
   return res;
 };
 
+const getCommunity = async ({ communityId }: { communityId: number }) => {
+  const res = await useLemmyHttp().getCommunity({
+    id: communityId,
+    auth: await getCurrentUserSessionToken(),
+  });
+
+  return res;
+};
+
 const getPostsForCommunity = async ({
   page,
   sortType,
@@ -93,8 +102,12 @@ export const communityQueries = createQueryKeys("communities", {
       };
     },
   }),
+  community: (communityId: number) => ({
+    queryKey: [{ communityId, entity: "community" }],
+    queryFn: async () => await getCommunity({ communityId }),
+  }),
   post: (postId: number, communityId?: number, userId?: string) => ({
-    queryKey: [{ communityId, postId, userId, entity: "post" }],
+    queryKey: [{ communityId, postId, entity: "post" }],
     queryFn: async () => {
       const res = (
         await useLemmyHttp().getPost({

@@ -55,18 +55,10 @@ export const useCommunities = (
   };
 };
 
-export const useCommunity = (
-  communityId: number,
-  communityType?: CommunityType,
-  userId?: string
-) => {
+export const useCommunity = (communityId: number) => {
   const { data, isLoading, error } = useQuery({
-    ...communityQueries.communities(communityType, userId),
-
-    select: (data: ListCommunitiesResponse) =>
-      data.communities?.find(
-        (community: CommunityView) => community.community.id === communityId
-      ),
+    ...communityQueries.community(communityId),
+    select: (data) => data.community_view,
     enabled: !!communityId,
   });
 

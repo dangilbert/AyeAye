@@ -35,9 +35,11 @@ export const CommunityOverflowMenu = ({
           ? "Subscribe"
           : community.subscribed === "Pending"
           ? "Pending"
+          : community.subscribed === "Subscribed"
+          ? "Unsubscribe"
           : "Subscribe",
       icon: "chat",
-      ection: () => {
+      action: () => {
         switch (community.subscribed) {
           case "NotSubscribed":
             break;

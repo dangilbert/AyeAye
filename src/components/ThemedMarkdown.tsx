@@ -34,40 +34,38 @@ export const ThemedMarkdown = ({
 const rules = {
   image: (node, children, parent, styles) => {
     return (
-      <>
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: "white",
-            borderRadius: 5,
-            flexDirection: "row",
-            flex: 1,
-            alignItems: "center",
-            margin: 5,
-          }}
-          key={node.key}
-        >
-          <ImageModal
-            resizeMode="cover"
-            modalImageResizeMode="contain"
-            style={{ width: 70, height: 70, margin: 10 }}
-            source={{ uri: node.attributes.src }}
-          />
-          <View style={{ flexDirection: "column", justifyContent: "center" }}>
-            {!!node.attributes.alt?.length && (
-              <ThemedText style={{ marginEnd: 10, marginTop: 10 }}>
-                {node.attributes.alt}
-              </ThemedText>
-            )}
-            <ThemedText
-              variant={"label"}
-              style={{ marginEnd: 10, marginBottom: 10 }}
-            >
-              {urlHost(node.attributes.src)}
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: "white",
+          borderRadius: 5,
+          flexDirection: "row",
+          flex: 1,
+          alignItems: "center",
+          margin: 5,
+        }}
+        key={node.key}
+      >
+        <ImageModal
+          resizeMode="cover"
+          modalImageResizeMode="contain"
+          style={{ width: 70, height: 70, margin: 10 }}
+          source={{ uri: node.attributes.src }}
+        />
+        <View style={{ flexDirection: "column", justifyContent: "center" }}>
+          {!!node.attributes.alt?.length && (
+            <ThemedText style={{ marginEnd: 10, marginTop: 10 }}>
+              {node.attributes.alt}
             </ThemedText>
-          </View>
+          )}
+          <ThemedText
+            variant={"label"}
+            style={{ marginEnd: 10, marginBottom: 10 }}
+          >
+            {urlHost(node.attributes.src)}
+          </ThemedText>
         </View>
-      </>
+      </View>
     );
   },
 } as RenderRules;

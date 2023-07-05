@@ -16,6 +16,11 @@ export type ThemeColors = {
     upvoteBackgroundColor: string;
     downvoteBackgroundColor: string;
   };
+  image: {
+    placeholder: {
+      backgroundColor: string;
+    };
+  };
 };
 
 // Light theme colors
@@ -46,6 +51,11 @@ export const lightColors = {
     upvoteBackgroundColor: "#80ed89",
     downvoteBackgroundColor: "#ed8080",
   },
+  image: {
+    placeholder: {
+      backgroundColor: "#444444",
+    },
+  },
 };
 
 // Dark theme colors
@@ -74,5 +84,10 @@ export const darkColors = {
   vote: {
     upvoteBackgroundColor: "#80ed89",
     downvoteBackgroundColor: "#ed8080",
+  },
+  image: {
+    placeholder: {
+      backgroundColor: "#444444",
+    },
   },
 };
