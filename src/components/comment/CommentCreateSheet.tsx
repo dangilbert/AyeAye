@@ -26,7 +26,7 @@ export const CommentCreateSheet = ({
   const insets = useSafeAreaInsets();
 
   const [commentContent, onChangeText] = useState("");
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser({ enabled: true });
 
   const { mutate: postComment, isLoading: isPostingComment } = usePostComment(
     postId,

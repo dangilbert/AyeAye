@@ -9,7 +9,7 @@ import { LoggedOutEmptyView } from "@rn-app/components/LoggedOutEmptyView";
 
 export const InboxScreen = () => {
   const [inboxType, setInboxType] = useState("inbox");
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser({ enabled: true });
   const {
     data: messages,
     fetchNextPage,

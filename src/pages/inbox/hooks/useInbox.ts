@@ -3,7 +3,7 @@ import { messagingQueries } from "@rn-app/pods/messaging/queries";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useInbox = () => {
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser({ enabled: true });
 
   const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
