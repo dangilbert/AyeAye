@@ -21,6 +21,7 @@ import SwipeableItem, {
 } from "react-native-swipeable-item";
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 
 const itemWidth = 75;
 
@@ -182,7 +183,7 @@ const VotingUnderlay = ({
   percentOpen,
 }: UnderlayParams<CommentView>) => {
   const themedStyles = styles(useTheme());
-  const [votingState, setVotingState] = useState<"up" | "down">("up");
+  const [votingState, setVotingState] = useState<"off" | "up" | "down">("up");
   const [width, setWidth] = useState(0);
   const rotation = useSharedValue(0);
 
@@ -191,7 +192,9 @@ const VotingUnderlay = ({
       return percentOpen.value;
     },
     (result) => {
-      runOnJS(setVotingState)(result < 0.6 ? "up" : "down");
+      runOnJS(setVotingState)(
+        result < 0.3 ? "off" : result < 0.6 ? "up" : "down"
+      );
       runOnJS(setWidth)(result * itemWidth * 2);
     },
     [percentOpen, setVotingState]
@@ -202,6 +205,9 @@ const VotingUnderlay = ({
       rotation.value = withTiming(180, { duration: 200 });
     } else {
       rotation.value = withTiming(0, { duration: 200 });
+    }
+    if (votingState !== "off") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   }, [votingState, rotation]);
 
