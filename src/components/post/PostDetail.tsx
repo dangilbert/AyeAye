@@ -1,11 +1,11 @@
 import { Fragment } from "react";
 import { Theme, useTheme } from "@rn-app/theme";
 import { StyleSheet, View, Platform, Pressable, Share } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedText } from "@rn-app/components";
 import { PostView } from "lemmy-js-client";
 import { PostPreview } from "./PostPreview";
-import { getShareContent } from "@rn-app/utils/postUtils";
+import { getPostType, getShareContent } from "@rn-app/utils/postUtils";
 import Snackbar from "react-native-snackbar";
 import { SheetManager } from "react-native-actions-sheet";
 import { usePostVote } from "@rn-app/pages/posts/hooks/useCommunities";
@@ -63,16 +63,14 @@ export const PostDetail = ({ post }: PostDetailProps) => {
     }
   };
 
-  // console.log("Post read", post.read);
-
   return (
     <Fragment key={`post_${post.post.id}`}>
       <PostPreview post={post} />
 
       <View style={themedStyle.footer}>
         <View style={themedStyle.footerAction}>
-          <MaterialIcons
-            name="comment"
+          <MaterialCommunityIcons
+            name="comment-text-multiple-outline"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
           />
@@ -95,7 +93,7 @@ export const PostDetail = ({ post }: PostDetailProps) => {
         <View style={themedStyle.footerAction}>
           <MaterialIcons
             onPress={onUpvote}
-            name="keyboard-arrow-up"
+            name="arrow-upward"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
             style={{
@@ -107,7 +105,7 @@ export const PostDetail = ({ post }: PostDetailProps) => {
           <ThemedText variant="label">{post.counts.score}</ThemedText>
           <MaterialIcons
             onPress={onDownvote}
-            name="keyboard-arrow-down"
+            name="arrow-downward"
             size={themedStyle.footer.iconSize}
             color={themedStyle.footer.iconColor}
             style={{

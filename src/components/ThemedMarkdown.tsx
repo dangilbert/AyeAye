@@ -6,7 +6,7 @@ import Markdown, {
   RenderRules,
 } from "react-native-markdown-display";
 import * as WebBrowser from "expo-web-browser";
-import { ThemedText } from "./ThemedText";
+import { Text } from "react-native-paper";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
 import { urlHost } from "@rn-app/utils/urlUtils";
 
@@ -54,16 +54,19 @@ const rules = {
         />
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
           {!!node.attributes.alt?.length && (
-            <ThemedText style={{ marginEnd: 10, marginTop: 10 }}>
+            <Text
+              style={{ marginEnd: 10, marginTop: 10 }}
+              variant={"labelSmall"}
+            >
               {node.attributes.alt}
-            </ThemedText>
+            </Text>
           )}
-          <ThemedText
-            variant={"label"}
+          <Text
+            variant={"labelSmall"}
             style={{ marginEnd: 10, marginBottom: 10 }}
           >
             {urlHost(node.attributes.src)}
-          </ThemedText>
+          </Text>
         </View>
       </View>
     );

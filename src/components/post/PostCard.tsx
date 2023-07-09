@@ -2,17 +2,23 @@ import { PostView } from "lemmy-js-client";
 import { Theme, useTheme } from "@rn-app/theme";
 import { Pressable, StyleSheet, View, Platform, Share } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { ThemedText, CreatorLine } from "@rn-app/components";
+import {
+  Entypo,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import { CreatorLine } from "@rn-app/components";
 import { getPostType, getShareContent } from "@rn-app/utils/postUtils";
 import FastImage from "react-native-fast-image";
 import Snackbar from "react-native-snackbar";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { BlurView } from "@react-native-community/blur";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
-import { Thumbnail } from "react-native-thumbnail-video";
+
 import { PostTitle } from "./PostPreview";
 import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
+import { Text } from "react-native-paper";
+import { PostIcon } from "./PostIcon";
 
 export interface PostCardProps {
   post: PostView;
@@ -25,8 +31,6 @@ export const PostCard = ({ post }: PostCardProps) => {
   const themedStyle = styles(theme);
 
   const postType = getPostType(post.post);
-
-  const { value: blurNSFW } = useBooleanSetting("blur_nsfw");
 
   const onShare = async () => {
     try {
@@ -48,98 +52,11 @@ export const PostCard = ({ post }: PostCardProps) => {
         })
       }
     >
-      {postType === "Image" && (
-        <View style={themedStyle.imageContainer}>
-          <ImageModal
-            resizeMode="cover"
-            modalImageResizeMode="contain"
-            style={[themedStyle.imageBox, themedStyle.image]}
-            source={{ uri: post.post.thumbnail_url ?? post.post.url }}
-          />
-          {post.post.nsfw && blurNSFW && (
-            <BlurView
-              blurType="light"
-              style={[themedStyle.imageBox, themedStyle.imageBlur]}
-              blurAmount={5}
-              pointerEvents="none"
-            >
-              <MaterialIcons
-                name={"warning"}
-                style={[themedStyle.icon, themedStyle.warningIcon]}
-              />
-            </BlurView>
-          )}
-        </View>
-      )}
-      {postType === "Video" && (
-        <Pressable
-          style={themedStyle.imageContainer}
-          onPress={() => {
-            navigation.navigate("MediaModal", {
-              videoUri: post.post.embed_video_url ?? post.post.url,
-            });
-          }}
-        >
-          {post.post.thumbnail_url ? (
-            <FastImage
-              style={[themedStyle.imageBox, themedStyle.image]}
-              source={{ uri: post.post.thumbnail_url }}
-            />
-          ) : isYoutubeUrl(post.post.url) ? (
-            <Thumbnail
-              url={post.post.url}
-              onPress={() =>
-                navigation.navigate("MediaModal", {
-                  videoUri: post.post.embed_video_url,
-                })
-              }
-              imageStyle={{ resizeMode: "cover" }}
-              iconStyle={{ width: 10, height: 10, alignSelf: "center" }}
-              style={{
-                width: 60,
-                height: 60,
-                alignContent: "center",
-                justifyContent: "center",
-              }}
-            />
-          ) : (
-            <View style={themedStyle.iconContainer}>
-              <MaterialIcons
-                name={"play-circle-outline"}
-                style={themedStyle.icon}
-              />
-            </View>
-          )}
-          {post.post.nsfw && blurNSFW && (
-            <BlurView
-              blurType="light"
-              style={[themedStyle.imageBox, themedStyle.imageBlur]}
-              blurAmount={5}
-            >
-              <MaterialIcons
-                name={"warning"}
-                style={[themedStyle.icon, themedStyle.warningIcon]}
-              />
-            </BlurView>
-          )}
-        </Pressable>
-      )}
-      {(postType === "Link" || postType === "SimpleLink") && (
-        <View style={themedStyle.iconContainer}>
-          <MaterialIcons name={"link"} style={themedStyle.icon} />
-        </View>
-      )}
-      {postType === "Text" && (
-        <View style={themedStyle.iconContainer}>
-          <MaterialIcons name={"text-snippet"} style={themedStyle.icon} />
-        </View>
-      )}
+      <PostIcon post={post} />
       <View style={themedStyle.rightContent}>
         <CreatorLine
           creator={post.creator}
-          community={post.community}
           actorId={post.creator.actor_id}
-          communityActorId={post.community.actor_id}
           published={post.post.published}
         />
         <View style={themedStyle.title}>
@@ -148,39 +65,62 @@ export const PostCard = ({ post }: PostCardProps) => {
         {["Link", "SimpleLink", "Video"].includes(postType) &&
           post.post.url && (
             <View style={themedStyle.title}>
-              <ThemedText variant={"caption"}>
+              <Text variant={"labelSmall"}>
                 {new URL(post.post.url).hostname.replace("www.", "")}
-              </ThemedText>
+              </Text>
             </View>
           )}
         <View style={themedStyle.footer}>
+          <Pressable
+            style={themedStyle.footerAction}
+            onPress={() => {
+              navigation.push("CommunityFeed", {
+                communityId: post.community.id,
+                communityType: undefined,
+              });
+            }}
+          >
+            {post.community.icon && (
+              <FastImage
+                source={{ uri: post.community.icon }}
+                style={{
+                  width: themedStyle.icon.fontSize / 2,
+                  height: themedStyle.icon.fontSize / 2,
+                  borderRadius: themedStyle.icon.fontSize / 2,
+                }}
+              />
+            )}
+            <Text variant="labelMedium">{post.community.name}</Text>
+          </Pressable>
           <View style={themedStyle.footerAction}>
-            <MaterialIcons
-              name="comment"
-              size={themedStyle.footer.iconSize}
+            <MaterialCommunityIcons
+              name="comment-text-multiple-outline"
+              size={themedStyle.footer.iconSize * 0.9}
               color={themedStyle.footer.iconColor}
             />
-            <ThemedText variant="label">{post.counts.comments}</ThemedText>
+            <Text variant="labelSmall">{post.counts.comments}</Text>
           </View>
-          <Pressable style={themedStyle.footerAction} onPress={onShare}>
+          {/* <Pressable style={themedStyle.footerAction} onPress={onShare}>
             <MaterialIcons
               name={Platform.OS === "ios" ? "ios-share" : "share"}
               size={themedStyle.footer.iconSize}
               color={themedStyle.footer.iconColor}
             />
-          </Pressable>
+          </Pressable> */}
           <View style={themedStyle.footerAction}>
-            <MaterialIcons
-              name="arrow-upward"
-              size={themedStyle.footer.iconSize}
-              color={themedStyle.footer.iconColor}
-            />
-            <ThemedText variant="label">{post.counts.score}</ThemedText>
-            <MaterialIcons
-              name="arrow-downward"
-              size={themedStyle.footer.iconSize}
-              color={themedStyle.footer.iconColor}
-            />
+            <View style={{ flexDirection: "column" }}>
+              <MaterialIcons
+                name="arrow-upward"
+                size={themedStyle.footer.iconSize / 2}
+                color={themedStyle.footer.iconColor}
+              />
+              <MaterialIcons
+                name="arrow-downward"
+                size={themedStyle.footer.iconSize / 2}
+                color={themedStyle.footer.iconColor}
+              />
+            </View>
+            <Text variant="labelSmall">{post.counts.score}</Text>
           </View>
         </View>
       </View>
@@ -203,8 +143,8 @@ const styles = (theme: Theme) =>
       flexDirection: "row",
       iconColor: theme.colors.icon,
       iconSize: 20,
-      marginTop: 5,
-      justifyContent: "space-between",
+      marginTop: 10,
+      gap: 15,
     },
     footerAction: {
       flexDirection: "row",

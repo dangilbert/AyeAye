@@ -1,12 +1,13 @@
 import { useTheme, Theme } from "@rn-app/theme";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ThemedText } from "./ThemedText";
+import { Text } from "react-native-paper";
 import TimeAgo from "./TimeAgo";
 import { Community, Person } from "lemmy-js-client";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { useNavigation } from "@react-navigation/native";
+import FastImage from "react-native-fast-image";
 
 interface CreatorLineProps {
   creator: Person;
@@ -53,10 +54,10 @@ export const CreatorLine = ({
             });
           }}
         >
-          <ThemedText variant="labelBold">
+          <Text variant="labelMedium">
             @{creator.name}
             {actorId && showUserInstanceNames && `@${getShortActorId(actorId)}`}
-          </ThemedText>
+          </Text>
         </TouchableOpacity>
         {community && (
           <TouchableOpacity
@@ -66,13 +67,29 @@ export const CreatorLine = ({
                 communityType: undefined,
               });
             }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingTop: 5,
+            }}
           >
-            <ThemedText variant="label">
+            {community.icon && (
+              <FastImage
+                source={{ uri: community.icon }}
+                style={{
+                  width: 15,
+                  height: 15,
+                  borderRadius: 15,
+                  marginEnd: 5,
+                }}
+              />
+            )}
+            <Text variant="labelSmall">
               to {community.name}
               {communityActorId &&
                 showCommunityInstanceNames &&
                 `@${getShortActorId(communityActorId)}`}
-            </ThemedText>
+            </Text>
           </TouchableOpacity>
         )}
       </View>

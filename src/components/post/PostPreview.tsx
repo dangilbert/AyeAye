@@ -12,6 +12,7 @@ import ImageModal from "@dreamwalk-os/react-native-image-modal";
 import { ThemedMarkdown } from "../ThemedMarkdown";
 import { Thumbnail } from "react-native-thumbnail-video";
 import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
+import { PostIcon } from "./PostIcon";
 
 interface PostPreviewProps {
   post: PostView;
@@ -45,6 +46,7 @@ export const PostPreview = ({
         creator={creator}
         community={community}
         published={published}
+        post={post}
       />
     );
   }
@@ -76,6 +78,7 @@ export const PostPreview = ({
         embed_title={embed_title ?? url!!}
         embed_description={embed_description}
         thumbnail_url={thumbnail_url}
+        post={post}
       />
     );
   }
@@ -116,6 +119,7 @@ interface LinkPostProps {
   embed_title: string;
   embed_description?: string;
   thumbnail_url?: string;
+  post: PostView;
 }
 
 const LinkPost = ({
@@ -128,6 +132,7 @@ const LinkPost = ({
   embed_title,
   embed_description,
   thumbnail_url,
+  post,
 }: LinkPostProps) => {
   const themedStyle = styles(useTheme());
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -142,20 +147,7 @@ const LinkPost = ({
         style={themedStyle.linkContainer}
         onPress={() => handleOpenBrowserAsync()}
       >
-        {thumbnail_url ? (
-          <FastImage
-            style={themedStyle.imageThumb}
-            source={{ uri: thumbnail_url }}
-          />
-        ) : (
-          <View style={themedStyle.iconContainer}>
-            <MaterialIcons
-              name={"link"}
-              size={themedStyle.icon.size}
-              color={themedStyle.icon.color}
-            />
-          </View>
-        )}
+        <PostIcon post={post} />
         <View
           style={{
             flexDirection: "column",
@@ -341,6 +333,7 @@ interface TextPostProps {
   creator: Person;
   community: Community;
   published: string;
+  post: PostView;
 }
 
 const TextPost = ({
@@ -349,6 +342,7 @@ const TextPost = ({
   creator,
   community,
   published,
+  post,
 }: TextPostProps) => {
   const themedStyle = styles(useTheme());
 
@@ -357,13 +351,7 @@ const TextPost = ({
   return (
     <>
       <View style={themedStyle.titleLine}>
-        <View style={themedStyle.iconContainer}>
-          <MaterialIcons
-            name={"text-snippet"}
-            size={themedStyle.icon.size}
-            color={themedStyle.icon.color}
-          />
-        </View>
+        <PostIcon post={post} />
         <View style={themedStyle.titleAndCreator}>
           <Pressable onPress={() => setCollapsed(!collapsed)}>
             <PostTitle text={name} />
