@@ -41,7 +41,7 @@ export const LargePostCard = ({ post }: PostCardProps) => {
             source={{ uri: post.post.url }}
             style={{ width: "100%", aspectRatio: 1 }}
           />
-          {blurNSFW && !unblurNSFW && (
+          {blurNSFW && !unblurNSFW && post.post.nsfw && (
             <Pressable
               style={StyleSheet.absoluteFill}
               onPress={() => setUnblurNSFW(true)}
