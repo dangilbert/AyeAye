@@ -6,9 +6,17 @@ import { CommunityView } from "lemmy-js-client";
 import { useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
+import { useChangeSubscription, useCommunity } from "../hooks/useCommunities";
 
 export const CommunitySidebarScreen = ({ route, navigation }) => {
-  const community = route.params.community as CommunityView;
+  const originalCommunity = route.params.community as CommunityView;
+  const { data: fetchedCommunity } = useCommunity(
+    originalCommunity.community.id
+  );
+
+  const community = fetchedCommunity ?? originalCommunity;
+
+  console.log("fetched community in sidebar", fetchedCommunity?.subscribed);
 
   const theme = useTheme();
   const themedStyles = styles(theme);
@@ -18,6 +26,9 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
       title: community?.community.name,
     });
   }, [community]);
+
+  const { mutate: subscribeToCommunity, isLoading: changingSubscription } =
+    useChangeSubscription({ communityId: community.community.id });
 
   return (
     <ScrollView style={themedStyles.container}>
@@ -37,8 +48,11 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
                 position: "absolute",
                 bottom: 20,
                 end: 20,
+                borderRadius: 30,
+                borderColor: "white",
+                borderWidth: 2,
               }}
-              resizeMode="contain"
+              resizeMode="cover"
             />
           </View>
         )}
@@ -63,10 +77,9 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
               }
               mode="outlined"
               onPress={() => {
-                navigation.navigate("CommunityCreatePost", {
-                  community: community.community,
-                });
+                subscribeToCommunity(community.subscribed === "NotSubscribed");
               }}
+              disabled={changingSubscription}
             >
               {community.subscribed === "Subscribed"
                 ? "Unsubscribe"

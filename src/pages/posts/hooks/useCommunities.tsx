@@ -69,6 +69,46 @@ export const useCommunity = (communityId: number) => {
   };
 };
 
+export const useChangeSubscription = ({
+  communityId,
+}: {
+  communityId: number;
+}) => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isLoading, error } = useMutation({
+    mutationFn: async (subscribe: boolean) => {
+      console.log("subscribe", subscribe);
+      const client = useLemmyHttp();
+      const res = await client.followCommunity({
+        community_id: communityId,
+        follow: subscribe,
+        auth: await getCurrentUserSessionToken(),
+      });
+
+      return res;
+    },
+    onSuccess: (data) => {
+      console.log("data", data.community_view);
+      // queryClient.invalidateQueries([
+      //   ...communityQueries.communities("Subscribed").queryKey,
+      // ]);
+      queryClient.setQueryData(
+        [...communityQueries.community(communityId).queryKey],
+        () => {
+          return data;
+        }
+      );
+    },
+  });
+
+  return {
+    mutate,
+    isLoading,
+    error,
+  };
+};
+
 export const usePosts = (
   communityId: number,
   communityType?: CommunityType
