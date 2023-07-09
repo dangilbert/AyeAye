@@ -106,7 +106,7 @@ export const PostPreview = ({
 
   content = content || <ThemedText>Post type not built</ThemedText>;
 
-  return <View style={{ margin: 10 }}>{content}</View>;
+  return content;
 };
 
 interface LinkPostProps {
@@ -396,7 +396,9 @@ export const PostTitle = ({ text }: PostTextProps) => {
 
 export const PostBody = ({ text }: PostTextProps) => {
   return text && text.length ? (
-    <MarkdownText text={text} type={"body"} />
+    <View style={{ marginHorizontal: 10 }}>
+      <MarkdownText text={text} type={"body"} />
+    </View>
   ) : (
     <></>
   );
@@ -417,6 +419,7 @@ const styles = (theme: Theme) =>
     titleLine: {
       flexDirection: "row",
       marginVertical: 5,
+      marginHorizontal: 10,
     },
     titleAndCreator: {
       flexDirection: "column",
