@@ -40,6 +40,8 @@ export const LargePostCard = ({ post }: PostCardProps) => {
             ref={imageModalRef}
             source={{ uri: post.post.url }}
             style={{ width: "100%", aspectRatio: 1 }}
+            modalImageResizeMode="contain"
+            resizeMode="cover"
           />
           {blurNSFW && !unblurNSFW && post.post.nsfw && (
             <Pressable
