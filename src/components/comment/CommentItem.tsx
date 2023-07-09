@@ -181,9 +181,10 @@ export const CommentItem = ({
 const VotingUnderlay = ({
   close,
   percentOpen,
+  item,
 }: UnderlayParams<CommentView>) => {
   const themedStyles = styles(useTheme());
-  const [votingState, setVotingState] = useState<"off" | "up" | "down">("up");
+  const [votingState, setVotingState] = useState<"off" | "up" | "down">("off");
   const [width, setWidth] = useState(0);
   const rotation = useSharedValue(0);
 
@@ -207,7 +208,7 @@ const VotingUnderlay = ({
       rotation.value = withTiming(0, { duration: 200 });
     }
     if (votingState !== "off") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
   }, [votingState, rotation]);
 
@@ -233,6 +234,16 @@ const VotingUnderlay = ({
     };
   });
 
+  const animatedUndoIconStyle = useAnimatedStyle(() => {
+    const shouldShowUndoUpvote =
+      (votingState === "up" || votingState === "off") && item.my_vote === 1;
+    const shouldShowUndoDownvote =
+      votingState === "down" && item.my_vote === -1;
+    return {
+      opacity: shouldShowUndoUpvote || shouldShowUndoDownvote ? 1 : 0,
+    };
+  });
+
   return (
     <Animated.View
       style={[
@@ -243,7 +254,21 @@ const VotingUnderlay = ({
     >
       <TouchableOpacity onPress={() => close()}>
         <Animated.View style={animatedIconStyle}>
-          <MaterialIcons name={"arrow-upward"} color={"white"} size={36} />
+          <MaterialIcons
+            name={"arrow-upward"}
+            color={"white"}
+            size={36}
+            style={{
+              position: "absolute",
+              top: 8,
+              bottom: 8,
+              left: 8,
+              right: 8,
+            }}
+          />
+          <Animated.View style={animatedUndoIconStyle}>
+            <MaterialIcons name={"not-interested"} color={"white"} size={52} />
+          </Animated.View>
         </Animated.View>
       </TouchableOpacity>
     </Animated.View>

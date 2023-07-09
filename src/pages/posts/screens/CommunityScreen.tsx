@@ -36,7 +36,6 @@ export const CommunityScreen = ({ navigation, route }) => {
     );
 
   useEffect(() => {
-    console.log("Updating header", community);
     navigation.setOptions({
       title:
         community?.community.title ??
@@ -70,7 +69,7 @@ export const CommunityScreen = ({ navigation, route }) => {
         onRefresh={() => {
           invalidate();
         }}
-        refreshing={isLoading && !!posts}
+        refreshing={isLoading}
         estimatedItemSize={60}
         renderItem={({ item }) => {
           return <PostCard key={`postcard_${item.post.id}`} post={item} />;
