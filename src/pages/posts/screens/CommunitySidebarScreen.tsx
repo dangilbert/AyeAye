@@ -1,4 +1,4 @@
-import { Button, Text } from "react-native-paper";
+import { Button, Chip, Text } from "react-native-paper";
 import { ThemedMarkdown } from "@rn-app/components/ThemedMarkdown";
 import { Theme, useTheme } from "@rn-app/theme";
 import { getActorIdFromUrl } from "@rn-app/utils/actorUtils";
@@ -59,8 +59,16 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
         {!community.community.banner && (
           <FastImage
             source={{ uri: community.community.icon }}
-            style={{ width: 100, height: 100, alignSelf: "center" }}
-            resizeMode="contain"
+            style={{
+              width: 100,
+              height: 100,
+              alignSelf: "center",
+              borderRadius: 50,
+              borderColor: "white",
+              borderWidth: 2,
+              margin: 10,
+            }}
+            resizeMode="cover"
           />
         )}
         <View style={{ padding: 10 }}>
@@ -99,12 +107,22 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
               Block
             </Button>
           </View>
-          <Text variant={"headlineMedium"} style={{ marginVertical: 10 }}>
+          <Text variant={"headlineMedium"} style={{ marginTop: 10 }}>
             {community.community.title ?? community.community.name}
           </Text>
-          <Text variant={"labelMedium"}>
+          <Text variant={"labelMedium"} style={{ marginBottom: 10 }}>
             {getActorIdFromUrl(community.community.actor_id)}
           </Text>
+
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <Chip icon="account-group-outline">
+              {community.counts.subscribers}
+            </Chip>
+            <Chip icon="text">{community.counts.posts}</Chip>
+            <Chip icon="comment-text-multiple-outline">
+              {community.counts.comments}
+            </Chip>
+          </View>
           <ThemedMarkdown>{community.community.description}</ThemedMarkdown>
         </View>
       </View>
