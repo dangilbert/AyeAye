@@ -34,7 +34,7 @@ export const LargePostCard = ({ post }: PostCardProps) => {
         })
       }
     >
-      <PostPreview post={post} showBody={false} />
+      <PostPreview post={post} />
     </Pressable>
   );
 };

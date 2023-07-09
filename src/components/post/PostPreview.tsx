@@ -16,7 +16,6 @@ import { PostIcon } from "./PostIcon";
 
 interface PostPreviewProps {
   post: PostView;
-  showBody?: boolean;
 }
 
 export const PostPreview = ({
@@ -35,7 +34,6 @@ export const PostPreview = ({
     community,
   },
   post,
-  showBody = true,
 }: PostPreviewProps) => {
   const postType = getPostType(post.post);
 
@@ -49,7 +47,6 @@ export const PostPreview = ({
         community={community}
         published={published}
         post={post}
-        showBody={showBody}
       />
     );
   }
@@ -64,7 +61,6 @@ export const PostPreview = ({
         community={community}
         published={published}
         url={url!!}
-        showBody={showBody}
       />
     );
   }
@@ -83,7 +79,6 @@ export const PostPreview = ({
         embed_description={embed_description}
         thumbnail_url={thumbnail_url}
         post={post}
-        showBody={showBody}
       />
     );
   }
@@ -101,7 +96,6 @@ export const PostPreview = ({
         embed_description={embed_description}
         thumbnail_url={thumbnail_url}
         embed_video_url={embed_video_url!!}
-        showBody={showBody}
       />
     );
   }
@@ -126,7 +120,6 @@ interface LinkPostProps {
   embed_description?: string;
   thumbnail_url?: string;
   post: PostView;
-  showBody: boolean;
 }
 
 const LinkPost = ({
@@ -140,7 +133,6 @@ const LinkPost = ({
   embed_description,
   thumbnail_url,
   post,
-  showBody,
 }: LinkPostProps) => {
   const themedStyle = styles(useTheme());
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -186,7 +178,7 @@ const LinkPost = ({
           />
         </View>
       </View>
-      {!collapsed && showBody && (
+      {!collapsed && (
         <Pressable onPress={() => setCollapsed(!collapsed)}>
           <PostBody text={body} />
         </Pressable>
@@ -202,7 +194,6 @@ interface ImagePostProps {
   community: Community;
   published: string;
   url: string;
-  showBody: boolean;
 }
 
 const ImagePost = ({
@@ -212,7 +203,6 @@ const ImagePost = ({
   community,
   published,
   url,
-  showBody,
 }: ImagePostProps) => {
   const themedStyle = styles(useTheme());
   const navigator = useNavigation();
@@ -241,7 +231,7 @@ const ImagePost = ({
           />
         </View>
       </View>
-      {!collapsed && showBody && (
+      {!collapsed && (
         <Pressable onPress={() => setCollapsed(!collapsed)}>
           <PostBody text={body} />
         </Pressable>
@@ -261,7 +251,6 @@ interface VideoPostProps {
   embed_description?: string;
   thumbnail_url?: string;
   embed_video_url: string;
-  showBody: boolean;
 }
 
 const VideoPost = ({
@@ -275,7 +264,6 @@ const VideoPost = ({
   embed_description,
   thumbnail_url,
   embed_video_url,
-  showBody,
 }: VideoPostProps) => {
   const themedStyle = styles(useTheme());
   const navigator = useNavigation();
@@ -330,7 +318,7 @@ const VideoPost = ({
           />
         </View>
       </View>
-      {!collapsed && showBody && (
+      {!collapsed && (
         <Pressable onPress={() => setCollapsed(!collapsed)}>
           <PostBody text={body} />
         </Pressable>
@@ -346,7 +334,6 @@ interface TextPostProps {
   community: Community;
   published: string;
   post: PostView;
-  showBody: boolean;
 }
 
 const TextPost = ({
@@ -356,7 +343,6 @@ const TextPost = ({
   community,
   published,
   post,
-  showBody,
 }: TextPostProps) => {
   const themedStyle = styles(useTheme());
 
@@ -379,7 +365,7 @@ const TextPost = ({
           />
         </View>
       </View>
-      {!collapsed && showBody && (
+      {!collapsed && (
         <Pressable onPress={() => setCollapsed(!collapsed)}>
           <PostBody text={body} />
         </Pressable>
