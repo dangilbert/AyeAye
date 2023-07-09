@@ -1,9 +1,9 @@
 import { Pressable, StyleSheet, View } from "react-native";
-import { ThemedText } from "../ThemedText";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import FastImage from "react-native-fast-image";
 import { getActorIdFromUrl } from "@rn-app/utils/actorUtils";
+import { Chip, Text } from "react-native-paper";
 
 interface CommunityListItemProps {
   name: string;
@@ -12,6 +12,7 @@ interface CommunityListItemProps {
   icon?: string;
   customIcon?: "menu";
   instanceName?: string;
+  subscribers?: number;
   onPress: () => void;
 }
 
@@ -22,6 +23,7 @@ export const CommunityListItem = ({
   icon,
   customIcon,
   onPress,
+  subscribers,
 }: CommunityListItemProps) => {
   const themedStyles = styles(useTheme());
 
@@ -38,10 +40,19 @@ export const CommunityListItem = ({
           />
         </View>
       )}
-      <View>
-        <ThemedText variant="labelBold">{title ?? name}</ThemedText>
-        <ThemedText variant="label">{getActorIdFromUrl(actorId)}</ThemedText>
+      <View style={{ flex: 1 }}>
+        <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">
+          {title ?? name}
+        </Text>
+        <Text variant="labelSmall" numberOfLines={1}>
+          {getActorIdFromUrl(actorId)}
+        </Text>
       </View>
+      {!!subscribers && (
+        <View style={{ marginStart: 10 }}>
+          <Chip icon="account-group-outline">{`${subscribers}`}</Chip>
+        </View>
+      )}
     </Pressable>
   );
 };

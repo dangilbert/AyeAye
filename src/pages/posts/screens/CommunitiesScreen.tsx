@@ -74,10 +74,10 @@ export const CommunitiesScreen = () => {
   }
 
   communities?.sort((a, b) => {
-    if (a.community.name < b.community.name) {
+    if (a.community.name.toLowerCase() < b.community.name.toLowerCase()) {
       return -1;
     }
-    if (a.community.name > b.community.name) {
+    if (a.community.name.toLowerCase() > b.community.name.toLowerCase()) {
       return 1;
     }
     return 0;

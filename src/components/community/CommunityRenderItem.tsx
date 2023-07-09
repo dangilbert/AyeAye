@@ -16,6 +16,9 @@ export type CommunityItem = {
     actor_id?: string;
     instanceName?: string;
   };
+  counts: {
+    subscribers: number;
+  };
 };
 
 export type SectionHeader = {
@@ -33,6 +36,7 @@ export const CommunityRenderItem = ({ item }: { item: CommunityItem }) => {
       icon={item.community.icon}
       instanceName={getShortActorId(item.community.actor_id)}
       actorId={item.community.actor_id}
+      subscribers={item.counts?.subscribers}
       onPress={() => {
         navigation.navigate("CommunityFeed", {
           communityId: item.community.id,

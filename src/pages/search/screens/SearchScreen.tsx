@@ -24,6 +24,9 @@ type CommunityItem = {
     actor_id?: string;
     instanceName?: string;
   };
+  counts: {
+    subscribers: number;
+  };
 };
 type SectionHeader = {
   sectionTitle: string;
