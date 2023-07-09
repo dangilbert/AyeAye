@@ -5,7 +5,7 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedText } from "@rn-app/components";
 import { PostView } from "lemmy-js-client";
 import { PostPreview } from "./PostPreview";
-import { getPostType, getShareContent } from "@rn-app/utils/postUtils";
+import { getShareContent } from "@rn-app/utils/postUtils";
 import Snackbar from "react-native-snackbar";
 import { SheetManager } from "react-native-actions-sheet";
 import { usePostVote } from "@rn-app/pages/posts/hooks/useCommunities";

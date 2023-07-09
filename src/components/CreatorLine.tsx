@@ -85,7 +85,7 @@ export const CreatorLine = ({
               />
             )}
             <Text variant="labelSmall">
-              to {community.name}
+              {community.name}
               {communityActorId &&
                 showCommunityInstanceNames &&
                 `@${getShortActorId(communityActorId)}`}

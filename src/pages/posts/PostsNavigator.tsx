@@ -5,6 +5,8 @@ import { PostScreen } from "./screens/PostScreen";
 import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
 import { CommunitySidebarScreen } from "./screens/CommunitySidebarScreen";
 import { ProfileScreen } from "../account/screens/ProfileScreen";
+import { IconButton } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +31,12 @@ export const PostsNavigator = () => {
         component={CommunitySidebarScreen}
         options={{
           presentation: "modal",
+          headerLeft: () => {
+            const navigation = useNavigation();
+            return (
+              <IconButton icon="close" onPress={() => navigation.goBack()} />
+            );
+          },
         }}
       />
       <Stack.Screen

@@ -71,27 +71,6 @@ export const PostCard = ({ post }: PostCardProps) => {
             </View>
           )}
         <View style={themedStyle.footer}>
-          <Pressable
-            style={themedStyle.footerAction}
-            onPress={() => {
-              navigation.push("CommunityFeed", {
-                communityId: post.community.id,
-                communityType: undefined,
-              });
-            }}
-          >
-            {post.community.icon && (
-              <FastImage
-                source={{ uri: post.community.icon }}
-                style={{
-                  width: themedStyle.icon.fontSize / 2,
-                  height: themedStyle.icon.fontSize / 2,
-                  borderRadius: themedStyle.icon.fontSize / 2,
-                }}
-              />
-            )}
-            <Text variant="labelMedium">{post.community.name}</Text>
-          </Pressable>
           <View style={themedStyle.footerAction}>
             <MaterialCommunityIcons
               name="comment-text-multiple-outline"
@@ -122,6 +101,27 @@ export const PostCard = ({ post }: PostCardProps) => {
             </View>
             <Text variant="labelSmall">{post.counts.score}</Text>
           </View>
+          <Pressable
+            style={themedStyle.footerAction}
+            onPress={() => {
+              navigation.push("CommunityFeed", {
+                communityId: post.community.id,
+                communityType: undefined,
+              });
+            }}
+          >
+            {post.community.icon && (
+              <FastImage
+                source={{ uri: post.community.icon }}
+                style={{
+                  width: themedStyle.icon.fontSize / 2,
+                  height: themedStyle.icon.fontSize / 2,
+                  borderRadius: themedStyle.icon.fontSize / 2,
+                }}
+              />
+            )}
+            <Text variant="labelMedium">{post.community.name}</Text>
+          </Pressable>
         </View>
       </View>
     </Pressable>
