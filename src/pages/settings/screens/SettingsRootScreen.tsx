@@ -1,5 +1,9 @@
-import { ThemedText } from "@rn-app/components";
-import { setting, useBooleanSetting } from "@rn-app/hooks/useSetting";
+import { Chip, Text } from "react-native-paper";
+import {
+  setting,
+  useBooleanSetting,
+  useStringSetting,
+} from "@rn-app/hooks/useSetting";
 import { Theme, useTheme } from "@rn-app/theme";
 import {
   Image,
@@ -10,7 +14,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { Switch } from "react-native-paper";
+import { RadioButton, Switch } from "react-native-paper";
 
 interface SettingItem {
   type: "switch" | "multi-option" | "static";
@@ -126,6 +130,15 @@ const sections = [
         settingKey: "show_community_icons",
         displayName: "Show community icons",
       },
+      {
+        type: "multi-option",
+        settingKey: "card_style",
+        displayName: "Card style",
+        options: [
+          { name: "Compact", value: "compact" },
+          { name: "Full", value: "full" },
+        ],
+      },
     ],
   },
   {
@@ -170,7 +183,7 @@ const SwitchSettingsListItem = ({
 
   return (
     <View style={themedStyles.settingsRow}>
-      <ThemedText>{item.displayName}</ThemedText>
+      <Text variant={"bodyMedium"}>{item.displayName}</Text>
       <Switch onValueChange={() => setValue(!value)} value={value} />
     </View>
   );
@@ -183,7 +196,29 @@ const MultiOptionSettingsListItem = ({
   isFirstElement: boolean;
   isLastElement: boolean;
 }) => {
-  return <></>;
+  const themedStyles = styles(useTheme());
+
+  const { value, setValue } = useStringSetting(item.settingKey);
+  return (
+    <View style={[themedStyles.settingsRow, { alignItems: "flex-start" }]}>
+      <Text variant={"bodyMedium"}>{item.displayName}</Text>
+      <View style={{ flexDirection: "column" }}>
+        {item.options.map((option) => (
+          <Chip
+            style={{ margin: 5 }}
+            onPress={() => setValue(option.value)}
+            icon={
+              value === option.value
+                ? "check-circle-outline"
+                : "checkbox-blank-circle-outline"
+            }
+          >
+            {option.name}
+          </Chip>
+        ))}
+      </View>
+    </View>
+  );
 };
 
 const SettingsListSectionHeader = ({
@@ -196,9 +231,9 @@ const SettingsListSectionHeader = ({
   const themedStyles = styles(useTheme());
 
   return (
-    <ThemedText variant="subheading" style={themedStyles.sectionHeader}>
+    <Text variant="headlineSmall" style={themedStyles.sectionHeader}>
       {section.title}
-    </ThemedText>
+    </Text>
   );
 };
 
@@ -210,7 +245,7 @@ const AboutSection = () => {
         source={require("@rn-app/../assets/icon.png")}
         style={themedStyles.appIcon}
       />
-      <ThemedText>An item for the about section</ThemedText>
+      <Text>An item for the about section</Text>
     </>
   );
 };
