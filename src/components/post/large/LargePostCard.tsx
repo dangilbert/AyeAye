@@ -5,12 +5,16 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { CreatorLine } from "@rn-app/components";
 import { getPostType } from "@rn-app/utils/postUtils";
-import FastImage from "react-native-fast-image";
 
 import { PostPreview, PostTitle } from "../PostPreview";
+import ImageModal, {
+  ImageDetail,
+} from "@dreamwalk-os/react-native-image-modal";
+import { PostCardFooter } from "../PostCardFooter";
+import { useBooleanSetting } from "@rn-app/hooks/useSetting";
+import { BlurView } from "@react-native-community/blur";
+import { useRef, useState } from "react";
 import { Text } from "react-native-paper";
-import { PostIcon } from "../PostIcon";
-import { PostDetail } from "../PostDetail";
 
 export interface PostCardProps {
   post: PostView;
@@ -23,6 +27,50 @@ export const LargePostCard = ({ post }: PostCardProps) => {
   const themedStyle = styles(theme);
 
   const postType = getPostType(post.post);
+  const blurNSFW = useBooleanSetting("blur_nsfw");
+  const [unblurNSFW, setUnblurNSFW] = useState(false);
+  const imageModalRef = useRef<ImageModal>(null);
+
+  let postContent;
+  switch (postType) {
+    case "Image":
+      postContent = (
+        <View style={{ position: "relative", width: "100%", aspectRatio: 1 }}>
+          <ImageModal
+            ref={imageModalRef}
+            source={{ uri: post.post.url }}
+            style={{ width: "100%", aspectRatio: 1 }}
+          />
+          {blurNSFW && !unblurNSFW && (
+            <Pressable
+              style={StyleSheet.absoluteFill}
+              onPress={() => setUnblurNSFW(true)}
+            >
+              <BlurView
+                style={StyleSheet.absoluteFill}
+                blurType="light"
+                blurAmount={30}
+              />
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  { alignItems: "center", justifyContent: "center" },
+                ]}
+              >
+                <MaterialIcons
+                  name="warning"
+                  size={50}
+                  color={theme.colors.icon}
+                />
+                <Text variant="labelMedium">Sensitive content ahead</Text>
+                <Text variant="labelMedium">View anyway</Text>
+              </View>
+            </Pressable>
+          )}
+        </View>
+      );
+      break;
+  }
 
   return (
     <Pressable
@@ -34,7 +82,16 @@ export const LargePostCard = ({ post }: PostCardProps) => {
         })
       }
     >
-      <PostPreview post={post} />
+      {postContent}
+      <View style={{ padding: 10 }}>
+        <PostTitle text={post.post.name} />
+        <CreatorLine
+          creator={post.creator}
+          actorId={post.creator.actor_id}
+          published={post.post.published}
+        />
+        <PostCardFooter post={post} />
+      </View>
     </Pressable>
   );
 };
@@ -43,8 +100,7 @@ const styles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       backgroundColor: theme.colors.secondaryBackground,
-      padding: 10,
-      flexDirection: "row",
+      flexDirection: "column",
     },
     rightContent: {
       flex: 1,

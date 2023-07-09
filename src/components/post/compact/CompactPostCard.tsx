@@ -10,6 +10,7 @@ import FastImage from "react-native-fast-image";
 import { PostTitle } from "../PostPreview";
 import { Text } from "react-native-paper";
 import { PostIcon } from "../PostIcon";
+import { PostCardFooter } from "../PostCardFooter";
 
 export interface PostCardProps {
   post: PostView;
@@ -51,52 +52,7 @@ export const CompactPostCard = ({ post }: PostCardProps) => {
               </Text>
             </View>
           )}
-        <View style={themedStyle.footer}>
-          <View style={themedStyle.footerAction}>
-            <MaterialCommunityIcons
-              name="comment-text-multiple-outline"
-              size={themedStyle.footer.iconSize * 0.9}
-              color={themedStyle.footer.iconColor}
-            />
-            <Text variant="labelSmall">{post.counts.comments}</Text>
-          </View>
-          <View style={themedStyle.footerAction}>
-            <View style={{ flexDirection: "column" }}>
-              <MaterialIcons
-                name="arrow-upward"
-                size={themedStyle.footer.iconSize / 2}
-                color={themedStyle.footer.iconColor}
-              />
-              <MaterialIcons
-                name="arrow-downward"
-                size={themedStyle.footer.iconSize / 2}
-                color={themedStyle.footer.iconColor}
-              />
-            </View>
-            <Text variant="labelSmall">{post.counts.score}</Text>
-          </View>
-          <Pressable
-            style={themedStyle.footerAction}
-            onPress={() => {
-              navigation.push("CommunityFeed", {
-                communityId: post.community.id,
-                communityType: undefined,
-              });
-            }}
-          >
-            {post.community.icon && (
-              <FastImage
-                source={{ uri: post.community.icon }}
-                style={{
-                  width: themedStyle.icon.fontSize / 2,
-                  height: themedStyle.icon.fontSize / 2,
-                  borderRadius: themedStyle.icon.fontSize / 2,
-                }}
-              />
-            )}
-            <Text variant="labelMedium">{post.community.name}</Text>
-          </Pressable>
-        </View>
+        <PostCardFooter post={post} />
       </View>
     </Pressable>
   );
