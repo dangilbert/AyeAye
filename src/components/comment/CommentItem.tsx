@@ -1,5 +1,5 @@
 import { CommentView } from "lemmy-js-client";
-import { ThemedText, CreatorLine } from "@rn-app/components";
+import { CreatorLine } from "@rn-app/components";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -22,6 +22,7 @@ import SwipeableItem, {
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
+import { Text } from "react-native-paper";
 
 const itemWidth = 75;
 
@@ -157,7 +158,7 @@ export const CommentItem = ({
                     comment.my_vote === 1 ? theme.colors.iconActive : undefined,
                 }}
               />
-              <ThemedText variant="label">{comment.counts.score}</ThemedText>
+              <Text variant="labelSmall">{comment.counts.score}</Text>
               <MaterialIcons
                 onPress={onDownvote}
                 name="arrow-downward"

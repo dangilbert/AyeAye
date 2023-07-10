@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { Menu } from "react-native-paper";
 import { useState } from "react";
-import { ThemedText } from "../ThemedText";
+import { Text } from "react-native-paper";
 import { CommunityView } from "lemmy-js-client";
 import { useNavigation } from "@react-navigation/native";
 
@@ -77,7 +77,7 @@ export const CommunityOverflowMenu = ({
               style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
             >
               <MaterialIcons name={type.icon} style={themedStyles.icon} />
-              <ThemedText>{type.label}</ThemedText>
+              <Text>{type.label}</Text>
             </View>
           }
         />

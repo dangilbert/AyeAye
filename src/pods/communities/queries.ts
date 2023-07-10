@@ -27,8 +27,6 @@ const getCommunitiesForUser = async ({
     auth: await getCurrentUserSessionToken(),
   });
 
-  console.log("getCommunitiesForUser", res);
-
   return res;
 };
 

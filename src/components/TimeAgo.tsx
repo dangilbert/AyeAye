@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import ReactTimeAgo from "react-time-ago";
-import { ThemedText } from "./ThemedText";
 // import { timezoneOffset } from "./time/timeSetup";
+import { Text } from "react-native-paper";
 
 export default function TimeAgo(props) {
   // TODO fix the timezone offset
@@ -18,7 +18,7 @@ export default function TimeAgo(props) {
 }
 
 function Time({ children }) {
-  return <ThemedText variant="label">{children}</ThemedText>;
+  return <Text variant="labelSmall">{children}</Text>;
 }
 
 Time.propTypes = {

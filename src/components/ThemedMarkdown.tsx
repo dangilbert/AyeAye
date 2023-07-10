@@ -9,6 +9,7 @@ import * as WebBrowser from "expo-web-browser";
 import { Text } from "react-native-paper";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
 import { urlHost } from "@rn-app/utils/urlUtils";
+import { typescale } from "@rn-app/theme/paper-copy/tokens";
 
 export const ThemedMarkdown = ({
   children,
@@ -79,6 +80,7 @@ const styles = (theme: Theme) =>
     body: {
       color: theme.colors.text,
       backgroundColor: "transparent",
+      ...typescale.bodyMedium,
     },
     text: {
       color: theme.colors.text,
@@ -87,27 +89,27 @@ const styles = (theme: Theme) =>
     // Headings
     heading1: {
       flexDirection: "row",
-      fontSize: 32,
+      ...typescale.headlineLarge,
     },
     heading2: {
       flexDirection: "row",
-      fontSize: 24,
+      ...typescale.headlineMedium,
     },
     heading3: {
       flexDirection: "row",
-      fontSize: 18,
+      ...typescale.headlineSmall,
     },
     heading4: {
       flexDirection: "row",
-      fontSize: 16,
+      ...typescale.titleLarge,
     },
     heading5: {
       flexDirection: "row",
-      fontSize: 13,
+      ...typescale.titleMedium,
     },
     heading6: {
       flexDirection: "row",
-      fontSize: 11,
+      ...typescale.titleSmall,
     },
 
     // Horizontal Rule
@@ -132,7 +134,7 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.colors.blockquote.backgroundColor,
       borderColor: "#CCC",
       borderLeftWidth: 4,
-      marginLeft: 5,
+      margin: 5,
       paddingHorizontal: 5,
     },
 
@@ -184,7 +186,8 @@ const styles = (theme: Theme) =>
       borderColor: "#CCCCCC",
       backgroundColor: theme.colors.blockquote.backgroundColor,
       padding: 10,
-      borderRadius: 4,
+      borderRadius: 5,
+      margin: 5,
       ...Platform.select({
         ["ios"]: {
           fontFamily: "Courier",
@@ -199,7 +202,8 @@ const styles = (theme: Theme) =>
       borderColor: "#CCCCCC",
       backgroundColor: theme.colors.blockquote.backgroundColor,
       padding: 10,
-      borderRadius: 4,
+      borderRadius: 5,
+      margin: 5,
       ...Platform.select({
         ["ios"]: {
           fontFamily: "Courier",

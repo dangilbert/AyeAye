@@ -13,6 +13,7 @@ import { ThemedMarkdown } from "../ThemedMarkdown";
 import { Thumbnail } from "react-native-thumbnail-video";
 import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
 import { PostIcon } from "./PostIcon";
+import { Text } from "react-native-paper";
 
 interface PostPreviewProps {
   post: PostView;
@@ -155,12 +156,12 @@ const LinkPost = ({
             justifyContent: "center",
           }}
         >
-          <ThemedText variant={"label"}>{embed_title}</ThemedText>
-          <ThemedText variant={"label"} style={{ fontStyle: "italic" }}>
+          <Text variant={"bodyMedium"}>{embed_title}</Text>
+          <Text variant={"labelMedium"} style={{ fontStyle: "italic" }}>
             {new URL(url).host}
-          </ThemedText>
+          </Text>
           {embed_description && (
-            <ThemedText variant={"caption"}>{embed_description}</ThemedText>
+            <Text variant={"labelSmall"}>{embed_description}</Text>
           )}
         </View>
       </Pressable>
@@ -385,7 +386,7 @@ const MarkdownText = ({ text, type }: MarkdownTextProps) => {
   return (
     <View style={{ marginVertical: 5 }}>
       <ThemedMarkdown>{`${
-        type === "title" ? "#### " : ""
+        type === "title" ? "##### " : ""
       }${text}`}</ThemedMarkdown>
     </View>
   );
