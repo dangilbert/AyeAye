@@ -12,8 +12,8 @@ export type setting =
 const defaults = {
   blur_nsfw: true,
   card_style: "compact",
-  show_user_instance_names: true,
-  show_community_instance_names: true,
+  show_user_instance_names: false,
+  show_community_instance_names: false,
   show_community_icons: true,
 };
 

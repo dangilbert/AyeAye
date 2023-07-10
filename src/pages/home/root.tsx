@@ -13,7 +13,7 @@ export const HomeRoot = () => {
   const currentSession = useCurrentUser({ enabled: true });
 
   return (
-    <Tab.Navigator>
+    <Tab.Navigator shifting={false}>
       <Tab.Screen
         name="Posts"
         component={PostsNavigator}

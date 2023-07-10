@@ -182,7 +182,7 @@ const SwitchSettingsListItem = ({
   const { value, setValue } = useBooleanSetting(item.settingKey);
 
   return (
-    <View style={themedStyles.settingsRow}>
+    <View style={themedStyles.settingsRow} key={`switch_${item.settingKey}`}>
       <Text variant={"bodyMedium"}>{item.displayName}</Text>
       <Switch onValueChange={() => setValue(!value)} value={value} />
     </View>
@@ -200,7 +200,10 @@ const MultiOptionSettingsListItem = ({
 
   const { value, setValue } = useStringSetting(item.settingKey);
   return (
-    <View style={[themedStyles.settingsRow, { alignItems: "flex-start" }]}>
+    <View
+      style={[themedStyles.settingsRow, { alignItems: "flex-start" }]}
+      key={`multi_option_${item.settingKey}`}
+    >
       <Text variant={"bodyMedium"}>{item.displayName}</Text>
       <View style={{ flexDirection: "column" }}>
         {item.options.map((option) => (
@@ -231,7 +234,11 @@ const SettingsListSectionHeader = ({
   const themedStyles = styles(useTheme());
 
   return (
-    <Text variant="headlineSmall" style={themedStyles.sectionHeader}>
+    <Text
+      variant="headlineSmall"
+      style={themedStyles.sectionHeader}
+      key={`section_${section.title}`}
+    >
       {section.title}
     </Text>
   );
@@ -240,13 +247,13 @@ const SettingsListSectionHeader = ({
 const AboutSection = () => {
   const themedStyles = styles(useTheme());
   return (
-    <>
+    <View key={`about_section`}>
       <Image
         source={require("@rn-app/../assets/icon.png")}
         style={themedStyles.appIcon}
       />
       <Text>An item for the about section</Text>
-    </>
+    </View>
   );
 };
 
