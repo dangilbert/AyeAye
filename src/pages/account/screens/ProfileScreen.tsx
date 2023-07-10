@@ -1,16 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
 import { ThemedText } from "@rn-app/components";
-import { Button } from "react-native-paper";
+import { Button, Chip } from "react-native-paper";
 import {
   useUserComments,
   useUserPosts,
   useUserProfile,
 } from "../hooks/useCurrentUserProfile";
 import { useCurrentUser } from "../hooks/useAccount";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
 import { Avatar } from "@rn-app/components";
-import { Theme, useTheme } from "@rn-app/theme";
 import { LoadingActivityView } from "@rn-app/components/feed/LoadingActivityView";
 import {
   CommentView,
@@ -20,8 +19,9 @@ import {
 import { FlashList } from "@shopify/flash-list";
 import { PostCard } from "@rn-app/components/post/PostCard";
 import { SegmentedButtons } from "react-native-paper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CommentItem } from "@rn-app/components/comment/CommentItem";
+import { ProfileOverflowMenu } from "./ProfileOverflowMenu";
 
 export const ProfileScreen = ({ route }) => {
   console.log("route", route);
@@ -38,7 +38,9 @@ export const ProfileScreen = ({ route }) => {
 
 const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
   const { data: userProfile } = useUserProfile(userId);
+  const currentSession = useCurrentUser({ enabled: !userId });
   const [currentView, setCurrentView] = useState<"posts" | "comments">("posts");
+  const navigation = useNavigation();
 
   const {
     data: userPosts,
@@ -49,6 +51,8 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
     invalidate: invalidatePosts,
   } = useUserPosts(userId);
 
+  console.log(userProfile);
+
   const {
     data: userComments,
     isLoading: isLoadingComments,
@@ -57,6 +61,23 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
     fetchNextPage: fetchNextCommentsPage,
     invalidate: invalidateComments,
   } = useUserComments(userId);
+
+  useEffect(() => {
+    if (
+      !currentSession ||
+      !userProfile ||
+      userProfile?.person_view.person.id === currentSession.id
+    ) {
+      return;
+    }
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: "row" }}>
+          {userProfile && <ProfileOverflowMenu userProfile={userProfile} />}
+        </View>
+      ),
+    });
+  }, [userProfile]);
 
   const hasNextPage =
     currentView == "posts" ? hasNextPostsPage : hasNextCommentsPage;
@@ -72,15 +93,13 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
 
   return (
     <FlashList<PostView | CommentView>
-      ListHeaderComponent={() =>
-        userProfile ? (
-          <ProfileHeader
-            userProfile={userProfile}
-            currentView={currentView}
-            setCurrentView={setCurrentView}
-          />
-        ) : null
-      }
+      ListHeaderComponent={() => (
+        <ProfileHeader
+          userProfile={userProfile}
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+        />
+      )}
       estimatedItemSize={100}
       data={
         currentView == "posts"
@@ -120,11 +139,10 @@ const ProfileHeader = ({
   currentView,
   setCurrentView,
 }: {
-  userProfile: GetPersonDetailsResponse;
+  userProfile?: GetPersonDetailsResponse;
   currentView: "posts" | "comments";
   setCurrentView: (currentView: "posts" | "comments") => void;
 }) => {
-  const themedStyles = styles(useTheme());
   return (
     <View
       style={{
@@ -133,36 +151,23 @@ const ProfileHeader = ({
       }}
     >
       <Avatar
-        name={userProfile.person_view.person.name}
-        avatarUrl={userProfile.person_view.person.avatar}
+        name={userProfile?.person_view.person.name ?? "?"}
+        avatarUrl={userProfile?.person_view.person.avatar}
       />
       <ThemedText variant={"subheading"} style={{ marginTop: 10 }}>
-        {userProfile.person_view.person.name}
+        {userProfile?.person_view.person.name}
       </ThemedText>
       <ThemedText>
-        @{getShortActorId(userProfile.person_view.person.actor_id)}
+        @{getShortActorId(userProfile?.person_view.person.actor_id)}
       </ThemedText>
 
-      <View style={themedStyles.statItem}>
-        <ThemedText style={themedStyles.statItemTitle}>
-          Comment count
-        </ThemedText>
-        <ThemedText>{userProfile.person_view.counts.comment_count}</ThemedText>
+      <View style={{ flexDirection: "row", gap: 10, margin: 10 }}>
+        <Chip icon="comment-text-multiple-outline">
+          {userProfile?.person_view.counts.comment_score ?? 0}
+        </Chip>
+        <Chip icon="text">{userProfile?.person_view.counts.post_score}</Chip>
       </View>
-      <View style={themedStyles.statItem}>
-        <ThemedText style={themedStyles.statItemTitle}>
-          Comment score
-        </ThemedText>
-        <ThemedText>{userProfile.person_view.counts.comment_score}</ThemedText>
-      </View>
-      <View style={themedStyles.statItem}>
-        <ThemedText style={themedStyles.statItemTitle}>Post count</ThemedText>
-        <ThemedText>{userProfile.person_view.counts.post_count}</ThemedText>
-      </View>
-      <View style={themedStyles.statItem}>
-        <ThemedText style={themedStyles.statItemTitle}>Post score</ThemedText>
-        <ThemedText>{userProfile.person_view.counts.post_score}</ThemedText>
-      </View>
+
       <SegmentedButtons
         value={currentView}
         onValueChange={(value) => setCurrentView(value as "posts" | "comments")}
@@ -191,16 +196,3 @@ const LoggedOutProfileScreen = () => {
     </>
   );
 };
-
-const styles = (theme: Theme) =>
-  StyleSheet.create({
-    statItem: {
-      flexDirection: "row",
-      maxWidth: 400,
-      justifyContent: "space-between",
-      padding: 10,
-    },
-    statItemTitle: {
-      flex: 1,
-    },
-  });

@@ -1,6 +1,11 @@
-import { authQueries } from "@rn-app/pods/auth/queries";
+import {
+  authQueries,
+  getCurrentUserSessionToken,
+} from "@rn-app/pods/auth/queries";
+import { useLemmyHttp } from "@rn-app/pods/host/useLemmyHttp";
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -66,5 +71,43 @@ export const useUserComments = (userId: number) => {
         queryKey: authQueries.userComments(userId).queryKey,
       });
     },
+  };
+};
+
+export const useBlockPerson = ({
+  personId,
+  onSuccess,
+}: {
+  personId: number;
+  onSuccess: () => void;
+}) => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isLoading, error } = useMutation({
+    mutationFn: async (block: boolean) => {
+      const client = useLemmyHttp();
+      const res = await client.blockPerson({
+        person_id: personId,
+        block: block,
+        auth: await getCurrentUserSessionToken(),
+      });
+
+      return res;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        [...authQueries.userProfile(personId).queryKey],
+        () => {
+          return data;
+        }
+      );
+      onSuccess();
+    },
+  });
+
+  return {
+    mutate,
+    isLoading,
+    error,
   };
 };
