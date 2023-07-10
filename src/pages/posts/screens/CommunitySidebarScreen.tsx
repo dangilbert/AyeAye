@@ -6,7 +6,11 @@ import { CommunityView } from "lemmy-js-client";
 import { useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useChangeSubscription, useCommunity } from "../hooks/useCommunities";
+import {
+  useChangeCommunityBlock,
+  useChangeSubscription,
+  useCommunity,
+} from "../hooks/useCommunities";
 
 export const CommunitySidebarScreen = ({ route, navigation }) => {
   const originalCommunity = route.params.community as CommunityView;
@@ -29,6 +33,9 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
 
   const { mutate: subscribeToCommunity, isLoading: changingSubscription } =
     useChangeSubscription({ communityId: community.community.id });
+
+  const { mutate: blockCommunity, isLoading: changingCommunityBlock } =
+    useChangeCommunityBlock({ communityId: community.community.id });
 
   return (
     <ScrollView style={themedStyles.container}>
@@ -96,15 +103,14 @@ export const CommunitySidebarScreen = ({ route, navigation }) => {
                 : "Pending"}
             </Button>
             <Button
-              icon="account-plus"
+              icon="block-helper"
               mode="outlined"
               onPress={() => {
-                navigation.navigate("CommunityCreatePost", {
-                  community: community.community,
-                });
+                blockCommunity(!community.blocked);
               }}
+              disabled={changingCommunityBlock}
             >
-              Block
+              {community.blocked ? "Unblock" : "Block"}
             </Button>
           </View>
           <Text variant={"headlineMedium"} style={{ marginTop: 10 }}>

@@ -6,20 +6,12 @@ import {
 import { useLemmyHttp } from "@rn-app/pods/host/useLemmyHttp";
 import { storage } from "@rn-app/utils/storage";
 import {
-  UseInfiniteQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import {
-  CommentResponse,
-  CommentView,
-  CommunityView,
-  ListCommunitiesResponse,
-  PostView,
-  SortType,
-} from "lemmy-js-client";
+import { CommentView, PostView, SortType } from "lemmy-js-client";
 import { useMMKVString } from "react-native-mmkv";
 
 export const useCommunities = (
@@ -78,7 +70,6 @@ export const useChangeSubscription = ({
 
   const { mutate, isLoading, error } = useMutation({
     mutationFn: async (subscribe: boolean) => {
-      console.log("subscribe", subscribe);
       const client = useLemmyHttp();
       const res = await client.followCommunity({
         community_id: communityId,
@@ -89,10 +80,47 @@ export const useChangeSubscription = ({
       return res;
     },
     onSuccess: (data) => {
-      console.log("data", data.community_view);
-      // queryClient.invalidateQueries([
-      //   ...communityQueries.communities("Subscribed").queryKey,
-      // ]);
+      queryClient.invalidateQueries([
+        ...communityQueries.communities("Subscribed").queryKey,
+      ]);
+      queryClient.setQueryData(
+        [...communityQueries.community(communityId).queryKey],
+        () => {
+          return data;
+        }
+      );
+    },
+  });
+
+  return {
+    mutate,
+    isLoading,
+    error,
+  };
+};
+
+export const useChangeCommunityBlock = ({
+  communityId,
+}: {
+  communityId: number;
+}) => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isLoading, error } = useMutation({
+    mutationFn: async (block: boolean) => {
+      const client = useLemmyHttp();
+      const res = await client.blockCommunity({
+        community_id: communityId,
+        block: block,
+        auth: await getCurrentUserSessionToken(),
+      });
+
+      return res;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries([
+        ...communityQueries.communities("Subscribed").queryKey,
+      ]);
       queryClient.setQueryData(
         [...communityQueries.community(communityId).queryKey],
         () => {
