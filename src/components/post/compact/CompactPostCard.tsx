@@ -2,10 +2,8 @@ import { PostView } from "lemmy-js-client";
 import { Theme, useTheme } from "@rn-app/theme";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { CreatorLine } from "@rn-app/components";
 import { getPostType } from "@rn-app/utils/postUtils";
-import FastImage from "react-native-fast-image";
 
 import { PostTitle } from "../PostPreview";
 import { Text } from "react-native-paper";

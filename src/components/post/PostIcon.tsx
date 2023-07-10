@@ -10,6 +10,9 @@ import { useNavigation } from "@react-navigation/native";
 import FastImage from "react-native-fast-image";
 import { Thumbnail } from "react-native-thumbnail-video";
 import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
+import { handleDownload } from "@rn-app/utils/mediaUtils";
+import { useState } from "react";
+import { LoadingActivityView } from "../feed/LoadingActivityView";
 
 interface PostIconProps {
   post: PostView;
@@ -18,10 +21,12 @@ interface PostIconProps {
 export const PostIcon = ({ post }: PostIconProps) => {
   const themedStyle = styles(useTheme());
   const navigation = useNavigation();
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const postType: PostType = getPostType(post.post);
   const { value: blurNSFW } = useBooleanSetting("blur_nsfw");
 
+  const imageUri = post.post.thumbnail_url ?? post.post.url;
   return (
     <>
       {postType === "Image" && (
@@ -30,7 +35,31 @@ export const PostIcon = ({ post }: PostIconProps) => {
             resizeMode="cover"
             modalImageResizeMode="contain"
             style={[themedStyle.imageBox, themedStyle.image]}
-            source={{ uri: post.post.thumbnail_url ?? post.post.url }}
+            source={{ uri: imageUri }}
+            renderFooter={() => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <MaterialIcons
+                  name={"file-download"}
+                  style={themedStyle.icon}
+                  onPress={() =>
+                    (async () => {
+                      setIsDownloading(true);
+                      await handleDownload({
+                        uri: imageUri!!,
+                        mimeType: "image/jpeg",
+                      });
+                      setIsDownloading(false);
+                    })()
+                  }
+                  disabled={isDownloading}
+                />
+              </View>
+            )}
           />
           {post.post.nsfw && blurNSFW && (
             <BlurView
