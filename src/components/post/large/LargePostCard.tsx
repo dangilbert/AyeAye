@@ -6,15 +6,13 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { CreatorLine } from "@rn-app/components";
 import { getPostType } from "@rn-app/utils/postUtils";
 
-import { PostPreview, PostTitle } from "../PostPreview";
-import ImageModal, {
-  ImageDetail,
-} from "@dreamwalk-os/react-native-image-modal";
+import { PostTitle } from "../PostPreview";
 import { PostCardFooter } from "../PostCardFooter";
 import { useBooleanSetting } from "@rn-app/hooks/useSetting";
 import { BlurView } from "@react-native-community/blur";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Text } from "react-native-paper";
+import { ImagePopover } from "../media/ImagePopover";
 
 export interface PostCardProps {
   post: PostView;
@@ -29,19 +27,18 @@ export const LargePostCard = ({ post }: PostCardProps) => {
   const postType = getPostType(post.post);
   const blurNSFW = useBooleanSetting("blur_nsfw");
   const [unblurNSFW, setUnblurNSFW] = useState(false);
-  const imageModalRef = useRef<ImageModal>(null);
 
   let postContent;
   switch (postType) {
     case "Image":
       postContent = (
         <View style={{ position: "relative", width: "100%", aspectRatio: 1 }}>
-          <ImageModal
-            ref={imageModalRef}
-            source={{ uri: post.post.url }}
-            style={{ width: "100%", aspectRatio: 1 }}
-            modalImageResizeMode="contain"
-            resizeMode="cover"
+          <ImagePopover
+            uri={post.post.url!!}
+            title={
+              post.post.name ??
+              new URL(post.post.url!!).pathname.split("/").slice(-1)
+            }
           />
           {blurNSFW && !unblurNSFW && post.post.nsfw && (
             <Pressable

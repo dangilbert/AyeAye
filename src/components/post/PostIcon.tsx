@@ -31,7 +31,9 @@ export const PostIcon = ({ post }: PostIconProps) => {
     <>
       {postType === "Image" && (
         <View style={themedStyle.imageContainer}>
-          <ImagePopover uri={imageUri!!} title={post.post.name.trim()} />
+          <View style={themedStyle.imageBox}>
+            <ImagePopover uri={imageUri!!} title={post.post.name.trim()} />
+          </View>
           {post.post.nsfw && blurNSFW && (
             <BlurView
               blurType="light"
@@ -153,13 +155,9 @@ const styles = (theme: Theme) =>
       borderRadius: 5,
     },
     imageBox: {
-      position: "absolute",
-      top: 0,
+      ...StyleSheet.absoluteFillObject,
       width: 60,
       height: 60,
-      left: 0,
-      bottom: 0,
-      right: 0,
       borderRadius: 5,
       backgroundColor: theme.colors.image.placeholder.backgroundColor,
     },

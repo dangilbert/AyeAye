@@ -9,9 +9,11 @@ import { Theme, useTheme } from "@rn-app/theme";
 export const ImagePopover = ({
   uri,
   title,
+  aspectRatio,
 }: {
   uri: string;
   title: string;
+  aspectRatio?: number;
 }) => {
   const themedStyle = styles(useTheme());
   const [isDownloading, setIsDownloading] = useState(false);
@@ -21,7 +23,7 @@ export const ImagePopover = ({
     <ImageModal
       resizeMode="cover"
       modalImageResizeMode="contain"
-      style={[themedStyle.imageBox, themedStyle.image]}
+      style={[themedStyle.imageBox, !!aspectRatio && { aspectRatio }]}
       source={{ uri: uri }}
       onClose={() => Snackbar.dismiss()}
       renderFooter={() => (
@@ -67,15 +69,9 @@ export const ImagePopover = ({
 const styles = (theme: Theme) =>
   StyleSheet.create({
     imageBox: {
-      position: "absolute",
-      top: 0,
-      width: 60,
-      height: 60,
-      left: 0,
-      bottom: 0,
-      right: 0,
+      width: "100%",
+      aspectRatio: 1,
       borderRadius: 5,
-      backgroundColor: theme.colors.image.placeholder.backgroundColor,
     },
     image: {
       zIndex: 1,

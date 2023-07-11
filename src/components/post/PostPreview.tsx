@@ -14,6 +14,7 @@ import { Thumbnail } from "react-native-thumbnail-video";
 import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
 import { PostIcon } from "./PostIcon";
 import { Text } from "react-native-paper";
+import { ImagePopover } from "./media/ImagePopover";
 
 interface PostPreviewProps {
   post: PostView;
@@ -212,12 +213,13 @@ const ImagePost = ({
 
   return (
     <>
-      <ImageModal
-        style={themedStyle.image}
-        source={{ uri: url }}
-        resizeMode="cover"
-        modalImageResizeMode="contain"
-      />
+      <View style={themedStyle.image}>
+        <ImagePopover
+          uri={url}
+          title={name}
+          aspectRatio={themedStyle.image.aspectRatio}
+        />
+      </View>
       <View style={themedStyle.titleLine}>
         <View style={themedStyle.titleAndCreator}>
           <Pressable onPress={() => setCollapsed(!collapsed)}>

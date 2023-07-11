@@ -10,6 +10,7 @@ import { Text } from "react-native-paper";
 import ImageModal from "@dreamwalk-os/react-native-image-modal";
 import { urlHost } from "@rn-app/utils/urlUtils";
 import { typescale } from "@rn-app/theme/paper-copy/tokens";
+import { ImagePopover } from "./post/media/ImagePopover";
 
 export const ThemedMarkdown = ({
   children,
@@ -47,12 +48,15 @@ const rules = {
         }}
         key={node.key}
       >
-        <ImageModal
-          resizeMode="cover"
-          modalImageResizeMode="contain"
-          style={{ width: 70, height: 70, margin: 10 }}
-          source={{ uri: node.attributes.src }}
-        />
+        <View style={{ width: 70, height: 70, margin: 10 }}>
+          <ImagePopover
+            uri={node.attributes.src}
+            title={
+              node.attributes.alt ??
+              new URL(node.attributes.src).pathname.split("/").slice(-1)
+            }
+          />
+        </View>
         <View style={{ flexDirection: "column", justifyContent: "center" }}>
           {!!node.attributes.alt?.length && (
             <Text
