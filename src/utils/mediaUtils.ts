@@ -1,4 +1,6 @@
 import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import Snackbar from "react-native-snackbar";
 import * as Haptics from "expo-haptics";
 
@@ -39,5 +41,28 @@ const saveImage = async (uri: string) => {
   } catch (error) {
     console.log(error);
     throw error;
+  }
+};
+
+export const shareImage = async (uri: string, title: string) => {
+  const fileUri =
+    FileSystem.cacheDirectory +
+    `${title.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.jpg`;
+  Snackbar.show({ text: "Preparing...", duration: Snackbar.LENGTH_INDEFINITE });
+  try {
+    const res = await FileSystem.downloadAsync(uri, fileUri);
+    const options = {
+      mimeType: res.mimeType ?? "image/jpeg",
+      dialogTitle: "Share",
+      UTI: res.mimeType ?? "image/jpeg",
+    };
+    await Sharing.shareAsync(fileUri, options);
+    Snackbar.dismiss();
+  } catch (err) {
+    Snackbar.show({
+      text: "Something went wrong sharing.",
+    });
+    console.log(JSON.stringify(err));
+    return;
   }
 };

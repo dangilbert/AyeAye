@@ -13,6 +13,7 @@ import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
 import { handleDownload } from "@rn-app/utils/mediaUtils";
 import { useState } from "react";
 import Snackbar from "react-native-snackbar";
+import { ImagePopover } from "./media/ImagePopover";
 
 interface PostIconProps {
   post: PostView;
@@ -21,7 +22,6 @@ interface PostIconProps {
 export const PostIcon = ({ post }: PostIconProps) => {
   const themedStyle = styles(useTheme());
   const navigation = useNavigation();
-  const [isDownloading, setIsDownloading] = useState(false);
 
   const postType: PostType = getPostType(post.post);
   const { value: blurNSFW } = useBooleanSetting("blur_nsfw");
@@ -31,37 +31,7 @@ export const PostIcon = ({ post }: PostIconProps) => {
     <>
       {postType === "Image" && (
         <View style={themedStyle.imageContainer}>
-          <ImageModal
-            resizeMode="cover"
-            modalImageResizeMode="contain"
-            style={[themedStyle.imageBox, themedStyle.image]}
-            source={{ uri: imageUri }}
-            onClose={() => Snackbar.dismiss()}
-            renderFooter={() => (
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <MaterialIcons
-                  name={"file-download"}
-                  style={[themedStyle.icon, { padding: 20 }]}
-                  onPress={() =>
-                    (async () => {
-                      setIsDownloading(true);
-                      await handleDownload({
-                        uri: imageUri!!,
-                        mimeType: "image/jpeg",
-                      });
-                      setIsDownloading(false);
-                    })()
-                  }
-                  disabled={isDownloading}
-                />
-              </View>
-            )}
-          />
+          <ImagePopover uri={imageUri!!} title={post.post.name.trim()} />
           {post.post.nsfw && blurNSFW && (
             <BlurView
               blurType="light"
