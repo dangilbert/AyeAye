@@ -46,7 +46,7 @@ export const PostIcon = ({ post }: PostIconProps) => {
               >
                 <MaterialIcons
                   name={"file-download"}
-                  style={themedStyle.icon}
+                  style={[themedStyle.icon, { padding: 20 }]}
                   onPress={() =>
                     (async () => {
                       setIsDownloading(true);
