@@ -5,11 +5,11 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedText } from "@rn-app/components";
 import { PostView } from "lemmy-js-client";
 import { PostPreview } from "./PostPreview";
-import { getShareContent } from "@rn-app/utils/postUtils";
 import Snackbar from "react-native-snackbar";
 import { SheetManager } from "react-native-actions-sheet";
 import { usePostVote } from "@rn-app/pages/posts/hooks/useCommunities";
 import { useCurrentUser } from "@rn-app/pages/account/hooks/useAccount";
+import { getPostUrl } from "@rn-app/utils/postUtils";
 
 export interface PostDetailProps {
   post: PostView;
@@ -22,8 +22,11 @@ export const PostDetail = ({ post }: PostDetailProps) => {
 
   const onShare = async () => {
     try {
+      console.log(getPostUrl(post));
       await Share.share({
-        message: getShareContent(post.post),
+        title: post.post.name,
+        message: "Check out this post on Lemmy",
+        url: getPostUrl(post),
       });
     } catch (error: any) {
       Snackbar.show({ text: error.message });

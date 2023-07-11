@@ -1,4 +1,4 @@
-import { Post } from "lemmy-js-client";
+import { Post, PostView } from "lemmy-js-client";
 import { isImage } from "./urlUtils";
 
 export type PostType =
@@ -58,23 +58,9 @@ const isTextPost = (post: Post): boolean => {
   );
 };
 
-export const getShareContent = (post: Post): string => {
-  const postType = getPostType(post);
-
-  console.log(post);
-
-  switch (postType) {
-    case "Image":
-      return post.url + (post.name ? "\n\n" + post.name : "");
-    case "Video":
-      return post.embed_video_url + (post.name ? "\n\n" + post.name : "");
-    case "Link":
-      return post.url + (post.name ? "\n\n" + post.name : "");
-    case "SimpleLink":
-      return post.url + (post.name ? "\n\n" + post.name : "");
-    case "Text":
-      return post.name + "\n\n" + post.ap_id;
-    default:
-      return "";
-  }
+export const getPostUrl = (post: PostView): string => {
+  return `${post.community.actor_id.replace(
+    `/c/${post.community.name}`,
+    "/post/"
+  )}${post.post.id}`;
 };
