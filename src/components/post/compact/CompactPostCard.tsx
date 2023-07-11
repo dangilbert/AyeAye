@@ -25,7 +25,7 @@ export const CompactPostCard = ({ post }: PostCardProps) => {
   return (
     <Pressable
       key={`post_${post.post.id}`}
-      style={themedStyle.container}
+      style={[themedStyle.container, post.read ? themedStyle.read : {}]}
       onPress={() =>
         navigation.push("Post", {
           originalPost: post,
@@ -62,6 +62,9 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.colors.secondaryBackground,
       padding: 10,
       flexDirection: "row",
+    },
+    read: {
+      backgroundColor: theme.colors.tertiaryBackground,
     },
     rightContent: {
       flex: 1,

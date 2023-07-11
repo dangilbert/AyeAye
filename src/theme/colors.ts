@@ -1,6 +1,7 @@
 export type ThemeColors = {
   background: string;
   secondaryBackground: string;
+  tertiaryBackground: string;
   text: string;
   icon: string;
   iconActive: string;
@@ -27,6 +28,7 @@ export type ThemeColors = {
 export const lightColors = {
   background: "white",
   secondaryBackground: "#f2f2f2",
+  tertiaryBackground: "#c6c6c6",
   text: "black",
   icon: "#e68a00",
   iconActive: "#e68a00",
@@ -62,6 +64,7 @@ export const lightColors = {
 export const darkColors = {
   background: "black",
   secondaryBackground: "#1e1e1e",
+  tertiaryBackground: "#333333",
   text: "#FFFFFF",
   icon: "white",
   iconActive: "#e68a00",
