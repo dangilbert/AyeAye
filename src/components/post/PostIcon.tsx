@@ -12,7 +12,7 @@ import { Thumbnail } from "react-native-thumbnail-video";
 import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
 import { handleDownload } from "@rn-app/utils/mediaUtils";
 import { useState } from "react";
-import { LoadingActivityView } from "../feed/LoadingActivityView";
+import Snackbar from "react-native-snackbar";
 
 interface PostIconProps {
   post: PostView;
@@ -36,6 +36,7 @@ export const PostIcon = ({ post }: PostIconProps) => {
             modalImageResizeMode="contain"
             style={[themedStyle.imageBox, themedStyle.image]}
             source={{ uri: imageUri }}
+            onClose={() => Snackbar.dismiss()}
             renderFooter={() => (
               <View
                 style={{
