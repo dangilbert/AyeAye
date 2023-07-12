@@ -64,7 +64,7 @@ export const lightColors = {
 export const darkColors = {
   background: "black",
   secondaryBackground: "#1e1e1e",
-  tertiaryBackground: "#333333",
+  tertiaryBackground: "#0f0f0f",
   text: "#FFFFFF",
   icon: "white",
   iconActive: "#e68a00",
