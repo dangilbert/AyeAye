@@ -139,9 +139,10 @@ export const useChangeCommunityBlock = ({
 
 export const usePosts = (
   communityId: number,
-  communityType?: CommunityType
+  communityType?: CommunityType,
+  sortType?: SortType
 ) => {
-  const [sortType] = useMMKVString("settings.post-sort-type", storage);
+  const [defaultSortType] = useMMKVString("settings.post-sort-type", storage);
   const {
     data,
     error,
@@ -153,7 +154,7 @@ export const usePosts = (
     ...communityQueries.posts({
       communityId,
       communityType,
-      sortType: (sortType ?? "Hot") as SortType,
+      sortType: (sortType ?? defaultSortType) as SortType,
     }),
     getNextPageParam: (lastPage) => lastPage.hasNextPage && lastPage.nextPage,
   });

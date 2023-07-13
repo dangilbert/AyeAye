@@ -39,7 +39,7 @@ export const PostPreview = ({
 }: PostPreviewProps) => {
   const postType = getPostType(post.post);
 
-  console.log("Post", postType, JSON.stringify(post.post, null, 2));
+  // console.log("Post", postType, JSON.stringify(post.post, null, 2));
 
   let content;
   if (postType === "Text") {

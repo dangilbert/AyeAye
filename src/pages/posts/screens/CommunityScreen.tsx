@@ -1,6 +1,6 @@
 import { PostCard } from "@rn-app/components/post/PostCard";
 import { useCommunity, usePosts } from "../hooks/useCommunities";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import FastImage, { Source } from "react-native-fast-image";
 import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
@@ -9,10 +9,20 @@ import { CommunityOverflowMenu } from "@rn-app/components/community/CommunityOve
 import { LoadingActivityView } from "@rn-app/components/feed/LoadingActivityView";
 import { EndOfContentView } from "@rn-app/components/feed/EndOfContentView";
 import { EmptyErrorRetry } from "@rn-app/components/feed/EmptyErrorRetry";
+import { PostView, SortType } from "lemmy-js-client";
+import { useStringSetting } from "@rn-app/hooks/useSetting";
 
 export const CommunityScreen = ({ navigation, route }) => {
   const communityId = route.params.communityId;
   const communityType = route.params.communityType;
+  const flashListRef = useRef<FlashList<PostView>>(null);
+
+  const { value: defaultSortType } = useStringSetting(
+    "community_default_sort_type"
+  );
+  const [sortType, setSortType] = useState<SortType>(
+    defaultSortType as unknown as SortType
+  );
 
   const { data: community, error: communityError } = useCommunity(communityId);
   const {
@@ -23,7 +33,7 @@ export const CommunityScreen = ({ navigation, route }) => {
     isFetchingNextPage,
     hasNextPage,
     invalidate,
-  } = usePosts(communityId, communityType);
+  } = usePosts(communityId, communityType, sortType);
 
   posts &&
     FastImage.preload(
@@ -35,6 +45,15 @@ export const CommunityScreen = ({ navigation, route }) => {
         .filter((x) => !!x) as Source[]
     );
 
+  const onChangeSortType = useCallback(
+    (sortType: SortType) => {
+      flashListRef.current?.scrollToIndex({ animated: false, index: 0 });
+      setSortType(sortType);
+      invalidate();
+    },
+    [flashListRef]
+  );
+
   useEffect(() => {
     navigation.setOptions({
       title:
@@ -43,12 +62,12 @@ export const CommunityScreen = ({ navigation, route }) => {
         communityType,
       headerRight: () => (
         <View style={{ flexDirection: "row" }}>
-          <PostSortTypeSelector />
+          <PostSortTypeSelector value={sortType} onChange={onChangeSortType} />
           {community && <CommunityOverflowMenu community={community} />}
         </View>
       ),
     });
-  }, [community]);
+  }, [community, sortType]);
 
   const isError = !!communityError || !!postsError;
 
@@ -65,6 +84,7 @@ export const CommunityScreen = ({ navigation, route }) => {
   return (
     <>
       <FlashList
+        ref={flashListRef}
         data={posts?.pages.flatMap((page) => page.posts)}
         onRefresh={() => {
           invalidate();

@@ -1,23 +1,24 @@
-import { storage } from "@rn-app/utils/storage";
-import { useMMKVString } from "react-native-mmkv";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import { Theme, useTheme } from "@rn-app/theme";
 import { Menu } from "react-native-paper";
 import { useState } from "react";
 import { ThemedText } from "../ThemedText";
+import { SortType } from "lemmy-js-client";
 
-export const PostSortTypeSelector = () => {
+export const PostSortTypeSelector = ({
+  value,
+  onChange,
+}: {
+  value: SortType;
+  onChange: (sortType: SortType) => void;
+}) => {
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
 
-  const [sortType, setSortType] = useMMKVString(
-    "settings.post-sort-type",
-    storage
-  );
   const themedStyles = styles(useTheme());
 
   const sortTypes = [
@@ -33,7 +34,7 @@ export const PostSortTypeSelector = () => {
   ];
 
   const selectedType =
-    sortTypes.find((type) => type.value === sortType) ?? sortTypes[0];
+    sortTypes.find((type) => type.value === value) ?? sortTypes[0];
 
   return (
     // <PaperProvider>
@@ -52,7 +53,7 @@ export const PostSortTypeSelector = () => {
         <Menu.Item
           key={type.value}
           onPress={() => {
-            setSortType(type.value);
+            onChange(type.value as SortType);
             closeMenu();
           }}
           title={
