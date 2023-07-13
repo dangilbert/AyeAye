@@ -5,6 +5,7 @@ import Snackbar from "react-native-snackbar";
 import { handleDownload, shareImage } from "@rn-app/utils/mediaUtils";
 import { useState } from "react";
 import { Theme, useTheme } from "@rn-app/theme";
+import { useImgurMedia } from "@rn-app/hooks/useImgurMedia";
 
 export const ImagePopover = ({
   uri,
@@ -15,16 +16,20 @@ export const ImagePopover = ({
   title: string;
   aspectRatio?: number;
 }) => {
-  const themedStyle = styles(useTheme());
+  const theme = useTheme();
+  const themedStyle = styles(theme);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+
+  const { data: mediaData, isLoading: boolean } = useImgurMedia(uri);
 
   return (
     <ImageModal
       resizeMode="cover"
       modalImageResizeMode="contain"
       style={[themedStyle.imageBox, !!aspectRatio && { aspectRatio }]}
-      source={{ uri: uri }}
+      source={{ uri: mediaData?.[0].link }}
+      defaultSource={theme.colors.image.placeholder.asset}
       onClose={() => Snackbar.dismiss()}
       renderFooter={() => (
         <View

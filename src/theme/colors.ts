@@ -20,6 +20,7 @@ export type ThemeColors = {
   image: {
     placeholder: {
       backgroundColor: string;
+      asset: any;
     };
   };
 };
@@ -56,9 +57,10 @@ export const lightColors = {
   image: {
     placeholder: {
       backgroundColor: "#444444",
+      asset: require("@rn-app/../assets/placeholder-dark.png"),
     },
   },
-};
+} as ThemeColors;
 
 // Dark theme colors
 export const darkColors = {
@@ -91,6 +93,7 @@ export const darkColors = {
   image: {
     placeholder: {
       backgroundColor: "#444444",
+      asset: require("@rn-app/../assets/placeholder-light.png"),
     },
   },
-};
+} as ThemeColors;

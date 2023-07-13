@@ -22,10 +22,10 @@ export const handleDownload = async (mediaSource: MediaSource) => {
 };
 
 const saveImage = async (uri: string) => {
-  console.log("In save image");
   try {
     // Request device storage access permission
     const { status } = await MediaLibrary.requestPermissionsAsync(true);
+
     if (status === "granted") {
       // Save image to media library
       await MediaLibrary.saveToLibraryAsync(uri);

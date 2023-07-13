@@ -10,9 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 import FastImage from "react-native-fast-image";
 import { Thumbnail } from "react-native-thumbnail-video";
 import { isYoutubeUrl } from "@rn-app/utils/urlUtils";
-import { handleDownload } from "@rn-app/utils/mediaUtils";
-import { useState } from "react";
-import Snackbar from "react-native-snackbar";
 import { ImagePopover } from "./media/ImagePopover";
 
 interface PostIconProps {

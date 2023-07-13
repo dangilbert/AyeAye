@@ -41,13 +41,11 @@ export const LoginScreen = () => {
   };
 
   const handleLoginSuccess = () => {
-    console.log("Before error");
     Snackbar.show({
       text: "Login successful",
     });
 
     navigator.goBack();
-    console.log("After error");
   };
 
   const handleLogin = async () => {

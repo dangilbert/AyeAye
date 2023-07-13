@@ -45,21 +45,50 @@ const getPostsForCommunity = async ({
   communityId,
   communityType,
   userId,
+  fetchedPostIds,
 }: {
   page: number;
   sortType: SortType;
   communityId?: number;
   communityType?: CommunityType;
   userId?: string;
+  fetchedPostIds: number[];
 }) => {
-  return await useLemmyHttp().getPosts({
-    type_: communityType ?? "All",
-    community_id: communityId,
-    page: page,
-    limit: 25,
-    auth: await getCurrentUserSessionToken(),
-    sort: sortType,
-  });
+  const retries = 5;
+
+  for (let i = 0; i < retries; i++) {
+    const res = await useLemmyHttp().getPosts({
+      type_: communityType ?? "All",
+      community_id: communityId,
+      page: page + i,
+      limit: 25,
+      auth: await getCurrentUserSessionToken(),
+      sort: sortType,
+    });
+
+    if (res.posts.length === 0) {
+      // We've reached the end of the posts
+      return res;
+    }
+
+    const filteredResult = {
+      ...res,
+      posts: res.posts.filter((post) => !fetchedPostIds.includes(post.post.id)),
+    };
+
+    if (filteredResult.posts.length > 0) {
+      // We have some content to show, so return, but also update the page number
+      return {
+        ...filteredResult,
+        page: page + i,
+      };
+    }
+
+    if (i === retries - 1) {
+      // We've reached the end of the posts
+      return res;
+    }
+  }
 };
 
 const getCommentsForPost = async (
@@ -133,22 +162,27 @@ export const communityQueries = createQueryKeys("communities", {
       { communityId, communityType, userId, sortType, entity: "posts" },
     ],
     queryFn: async ({
-      pageParam = 1,
+      pageParam = { page: 1, fetchedPostIds: [] },
     }): Promise<{
-      nextPage: number;
+      nextPage: { page: number; fetchedPostIds: number[] };
       hasNextPage: Boolean;
       posts: PostView[];
     }> => {
       const res = await getPostsForCommunity({
-        page: pageParam,
+        page: pageParam.page,
         sortType,
         communityId,
         communityType,
         userId,
+        fetchedPostIds: pageParam.fetchedPostIds,
       });
       return {
         ...res,
-        nextPage: pageParam + 1,
+        nextPage: {
+          page: !!res.page ? res.page + 1 : pageParam.page + 1,
+          fetchedPostIds:
+            pageParam.fetchedPostIds + res.posts.map((p) => p.post.id),
+        },
         hasNextPage: res.posts.length > 0,
       };
     },

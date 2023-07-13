@@ -1,5 +1,6 @@
 import { Post, PostView } from "lemmy-js-client";
 import { isImage } from "./urlUtils";
+import { isImgurUrl } from "./imgurUtils";
 
 export type PostType =
   | "Link"
@@ -32,7 +33,7 @@ const isImagePost = (post: Post): boolean => {
       !post.embed_title &&
       !post.embed_description &&
       !post.embed_video_url) ||
-    (!!post.url && isImage(post.url))
+    (!!post.url && (isImage(post.url) || isImgurUrl(post.url)))
   );
 };
 
