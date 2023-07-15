@@ -14,6 +14,7 @@ import subscribedCommunitiesState from "@rn-app/pages/home/state/subscribedCommu
 import { MediaModalScreen } from "@rn-app/components/media/MediaModalScreen";
 import { useStringSetting } from "@rn-app/hooks/useSetting";
 import { useCurrentUser } from "../account/hooks/useAccount";
+import { getCurrentUserSessionToken } from "@rn-app/pods/auth/queries";
 
 const RootStack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ export const NavigationRoot = () => {
   const theme = useColorScheme();
 
   const { value: defaultLaunchView } = useStringSetting("default_launch_view");
-  const currentSession = useCurrentUser({ enabled: true });
+  const currentSession = getCurrentUserSessionToken();
 
   let initialState;
   switch (defaultLaunchView) {
