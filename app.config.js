@@ -13,6 +13,14 @@ export default {
       ["./plugins/withAnimatedWebPSupport"],
       ["./plugins/withFastImageWebPSupportIOS.js"],
       ["./plugins/withFastImageWebPSupportAndroid.js"],
+      [
+        "expo-build-properties",
+        {
+          ios: {
+            flipper: true,
+          },
+        },
+      ],
     ],
     assetBundlePatterns: ["**/*"],
     ios: {
