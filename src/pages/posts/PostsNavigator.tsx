@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CommunitiesScreen } from "./screens/CommunitiesScreen";
 import { CommunityScreen } from "./screens/CommunityScreen";
 import { PostScreen } from "./screens/PostScreen";
-import { PostSortTypeSelector } from "@rn-app/components/filter/PostSortTypeSelector";
 import { CommunitySidebarScreen } from "./screens/CommunitySidebarScreen";
 import { ProfileScreen } from "../account/screens/ProfileScreen";
 import { IconButton } from "react-native-paper";
@@ -22,8 +21,7 @@ export const PostsNavigator = () => {
         name="CommunityFeed"
         component={CommunityScreen}
         options={{
-          title: "<Community info>",
-          headerRight: () => <PostSortTypeSelector />,
+          title: "",
         }}
       />
       <Stack.Screen

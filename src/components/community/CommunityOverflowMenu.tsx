@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Text } from "react-native-paper";
 import { CommunityView } from "lemmy-js-client";
 import { useNavigation } from "@react-navigation/native";
+import { useChangeSubscription } from "@rn-app/pages/posts/hooks/useCommunities";
 
 export const CommunityOverflowMenu = ({
   community,
@@ -14,6 +15,12 @@ export const CommunityOverflowMenu = ({
 }) => {
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
+  const {
+    mutate: changeCommunitySubscription,
+    isLoading: changingSubscription,
+  } = useChangeSubscription({
+    communityId: community.community.id,
+  });
 
   const openMenu = () => setVisible(true);
 
@@ -42,13 +49,16 @@ export const CommunityOverflowMenu = ({
       action: () => {
         switch (community.subscribed) {
           case "NotSubscribed":
+            changeCommunitySubscription(true);
             break;
           case "Pending":
-            break;
           case "Subscribed":
+            changeCommunitySubscription(false);
             break;
         }
       },
+      disabled: changingSubscription,
+      closeMenu: false,
     },
   ];
 
@@ -70,8 +80,9 @@ export const CommunityOverflowMenu = ({
           key={type.label}
           onPress={() => {
             type.action?.();
-            closeMenu();
+            type.closeMenu !== false && closeMenu();
           }}
+          disabled={type.disabled}
           title={
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
