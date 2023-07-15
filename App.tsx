@@ -5,11 +5,7 @@ import {
   MD3LightTheme,
   Provider as PaperProvider,
 } from "react-native-paper";
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from "@react-navigation/native";
+
 import {
   QueryClient,
   QueryClientProvider,
@@ -18,17 +14,15 @@ import {
 import React from "react";
 import { useAppState } from "./src/hooks/useAppState";
 import { useOnlineManager } from "./src/hooks/useOnlineManager";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { HomeRoot } from "./src/pages/home/root";
 import { ThemeProvider } from "./src/theme";
-import { MediaModalScreen } from "./src/components/media/MediaModalScreen";
 
 import "react-native-url-polyfill/auto";
 
 import "@rn-app/components/sheets/sheets.tsx";
 import "@rn-app/components/time/timeSetup.ts";
 import { SheetProvider } from "react-native-actions-sheet";
+import { NavigationRoot } from "./src/pages/navigation/NavigationRoot";
 
 function onAppStateChange(status: any) {
   // React Query already supports in web browser refetch on window focus by default
@@ -40,8 +34,6 @@ function onAppStateChange(status: any) {
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2, refetchOnWindowFocus: false } },
 });
-
-const RootStack = createNativeStackNavigator();
 
 export default function App() {
   useOnlineManager();
@@ -60,22 +52,7 @@ export default function App() {
       <ThemeProvider>
         <PaperProvider theme={theme === "dark" ? MD3DarkTheme : MD3LightTheme}>
           <SheetProvider>
-            <NavigationContainer
-              theme={theme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <RootStack.Navigator screenOptions={{ headerShown: false }}>
-                <RootStack.Group>
-                  <RootStack.Screen name={"HOME"} component={HomeRoot} />
-                </RootStack.Group>
-                <RootStack.Group screenOptions={{ presentation: "modal" }}>
-                  <RootStack.Screen
-                    name={"MediaModal"}
-                    component={MediaModalScreen}
-                  />
-                </RootStack.Group>
-              </RootStack.Navigator>
-              <StatusBar style="auto" />
-            </NavigationContainer>
+            <NavigationRoot />
           </SheetProvider>
         </PaperProvider>
       </ThemeProvider>

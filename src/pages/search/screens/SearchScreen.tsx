@@ -35,13 +35,7 @@ type SectionHeader = {
 export const SearchScreen = () => {
   const themedStyles = styles(useTheme());
 
-  const [communityTypeSelector, setCommunityTypeSelector] =
-    useState<CommunityType>("All");
-  const {
-    data: communities,
-    isLoading,
-    invalidate,
-  } = useCommunities(communityTypeSelector);
+  const { data: communities, isLoading, invalidate } = useCommunities("All");
 
   const communitiesList: CommunityListItemType[] = [];
 
@@ -49,10 +43,10 @@ export const SearchScreen = () => {
   communitiesList.push("CommunityTypeSelector");
 
   communities?.sort((a, b) => {
-    if (a.community.name < b.community.name) {
+    if (a.community.name.toLowerCase() < b.community.name.toLowerCase()) {
       return -1;
     }
-    if (a.community.name > b.community.name) {
+    if (a.community.name.toLowerCase() > b.community.name.toLowerCase()) {
       return 1;
     }
     return 0;

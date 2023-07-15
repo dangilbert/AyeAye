@@ -1,0 +1,58 @@
+{
+  "stale": false,
+  "type": "stack",
+  "key": "stack-8CdlyFMfrtus9acX7NAvh",
+  "index": 0,
+  "routeNames": ["HOME", "MediaModal"],
+  "routes": [
+    {
+      "key": "HOME-2EJVicVobNHX5qGNafy1B",
+      "name": "HOME",
+      "state": {
+        "stale": false,
+        "type": "tab",
+        "key": "tab-ADGXqXaF3WEtU95Hd9CFI",
+        "index": 0,
+        "routeNames": ["Posts", "Inbox", "nandor", "Search", "Settings"],
+        "history": [
+          {
+            "type": "route",
+            "key": "Posts-_UbGuHqfmQQdo81ZYMwkT"
+          }
+        ],
+        "routes": [
+          {
+            "name": "Posts",
+            "key": "Posts-_UbGuHqfmQQdo81ZYMwkT",
+            "state": {
+              "stale": false,
+              "type": "stack",
+              "key": "stack-44SAyKUfQyPVJuXTy7ejz",
+              "index": 1,
+              "routeNames": [
+                "Communities",
+                "CommunityFeed",
+                "CommunitySidebar",
+                "Post",
+                "Profile"
+              ],
+              "routes": [
+                {
+                  "key": "Communities-inks5b03ePLMgWnaOW0bN",
+                  "name": "Communities"
+                },
+                {
+                  "key": "CommunityFeed-22HOsSgeOnQajZ26UtB0i",
+                  "name": "CommunityFeed",
+                  "params": {
+                    "communityType": "Local"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

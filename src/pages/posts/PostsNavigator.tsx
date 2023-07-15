@@ -5,7 +5,7 @@ import { PostScreen } from "./screens/PostScreen";
 import { CommunitySidebarScreen } from "./screens/CommunitySidebarScreen";
 import { ProfileScreen } from "../account/screens/ProfileScreen";
 import { IconButton } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 

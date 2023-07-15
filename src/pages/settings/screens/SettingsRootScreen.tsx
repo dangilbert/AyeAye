@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { RadioButton, Switch } from "react-native-paper";
+import { Dropdown } from "react-native-element-dropdown";
 
 interface SettingItem {
   type: "switch" | "multi-option" | "static";
@@ -141,6 +142,16 @@ const sections = [
       },
       {
         type: "multi-option",
+        settingKey: "default_launch_view",
+        displayName: "Default launch view",
+        options: [
+          { name: "Subscribed", value: "Subscribed" },
+          { name: "All", value: "All" },
+          { name: "Local", value: "Local" },
+        ],
+      },
+      {
+        type: "multi-option",
         settingKey: "community_default_sort_type",
         displayName: "Default community sort",
         options: [
@@ -220,30 +231,35 @@ const MultiOptionSettingsListItem = ({
   isFirstElement: boolean;
   isLastElement: boolean;
 }) => {
-  const themedStyles = styles(useTheme());
+  const theme = useTheme();
+  const themedStyles = styles(theme);
 
   const { value, setValue } = useStringSetting(item.settingKey);
   return (
     <View
-      style={[themedStyles.settingsRow, { alignItems: "flex-start" }]}
+      style={[
+        themedStyles.settingsRow,
+        { alignItems: "flex-start", flexDirection: "column" },
+      ]}
       key={`multi_option_${item.settingKey}`}
     >
       <Text variant={"bodyMedium"}>{item.displayName}</Text>
-      <View style={{ flexDirection: "column" }}>
-        {item.options.map((option) => (
-          <Chip
-            style={{ margin: 5 }}
-            onPress={() => setValue(option.value)}
-            icon={
-              value === option.value
-                ? "check-circle-outline"
-                : "checkbox-blank-circle-outline"
-            }
-          >
-            {option.name}
-          </Chip>
-        ))}
-      </View>
+      <Dropdown
+        data={item.options.map((option) => ({
+          value: option.value,
+          label: option.name,
+        }))}
+        labelField={"label"}
+        valueField={"value"}
+        value={value}
+        activeColor={theme.colors.tertiaryBackground}
+        onChange={(value) => setValue(value.value)}
+        style={themedStyles.dropdown}
+        selectedTextStyle={themedStyles.selectedTextStyle}
+        itemTextStyle={themedStyles.itemTextStyle}
+        itemContainerStyle={themedStyles.itemContainerStyle}
+        containerStyle={themedStyles.dropdownContainer}
+      />
     </View>
   );
 };
@@ -314,5 +330,32 @@ const styles = (theme: Theme) =>
       alignSelf: "center",
       borderRadius: 50,
       margin: 10,
+    },
+    dropdown: {
+      width: "100%",
+      height: 50,
+      borderColor: theme.colors.secondaryBackground,
+      backgroundColor: theme.colors.background,
+      borderWidth: 0.5,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      marginVertical: 8,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+      backgroundColor: theme.colors.secondaryBackground,
+    },
+    selectedTextStyle: {
+      fontSize: 16,
+      color: theme.colors.text,
+    },
+    itemTextStyle: {
+      color: theme.colors.text,
+    },
+    itemContainerStyle: {
+      backgroundColor: theme.colors.secondaryBackground,
+    },
+    dropdownContainer: {
+      backgroundColor: theme.colors.secondaryBackground,
     },
   });

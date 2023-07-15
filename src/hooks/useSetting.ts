@@ -8,7 +8,8 @@ export type setting =
   | "show_user_instance_names"
   | "show_community_instance_names"
   | "show_community_icons"
-  | "community_default_sort_type";
+  | "community_default_sort_type"
+  | "default_launch_view";
 
 const defaults = {
   blur_nsfw: true,
@@ -17,6 +18,7 @@ const defaults = {
   show_community_instance_names: false,
   show_community_icons: true,
   community_default_sort_type: "Hot",
+  default_launch_view: "Subscribed",
 };
 
 export const useStringSetting = (name: setting) => {
