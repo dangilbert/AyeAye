@@ -11,9 +11,7 @@ export type PostType =
   | "Unknown";
 
 export const getPostType = (post: Post): PostType => {
-  if (isTextPost(post)) {
-    return "Text";
-  } else if (isImagePost(post)) {
+  if (isImagePost(post)) {
     return "Image";
   } else if (isVideoPost(post)) {
     return "Video";
@@ -21,6 +19,8 @@ export const getPostType = (post: Post): PostType => {
     return "Link";
   } else if (isSimpleLinkPost(post)) {
     return "SimpleLink";
+  } else if (isTextPost(post)) {
+    return "Text";
   }
 
   return "Unknown";
@@ -50,11 +50,13 @@ const isSimpleLinkPost = (post: Post): boolean => {
 };
 
 const isTextPost = (post: Post): boolean => {
+  // It is likely to be a text post, so we should fall back to it even if it has an embed title and description.
+  // Difficult to tell where they came from, though given there is no URL and no image
   return (
     !post.thumbnail_url &&
     !post.url &&
-    !post.embed_title &&
-    !post.embed_description &&
+    // !post.embed_title &&
+    // !post.embed_description &&
     !post.embed_video_url
   );
 };

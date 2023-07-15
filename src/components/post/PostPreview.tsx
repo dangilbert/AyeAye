@@ -39,8 +39,6 @@ export const PostPreview = ({
 }: PostPreviewProps) => {
   const postType = getPostType(post.post);
 
-  // console.log("Post", postType, JSON.stringify(post.post, null, 2));
-
   let content;
   if (postType === "Text") {
     content = (
@@ -105,10 +103,11 @@ export const PostPreview = ({
   }
 
   if (!content) {
-    // console.log("Post type not built", JSON.stringify(post.post, null, 2));
+    console.log("Post type not built", JSON.stringify(post.post, null, 2));
+    //"[![][1]][1]\n\n[![][2]][2]\n\n[![][3]][3] \n\n[![][4]][4] \n\n[1]: https://i.imgur.com/EvIt167.jpeg\n[2]: https://i.imgur.com/mXrFEjU.jpeg\n[3]: https://i.imgur.com/NBiUrW6.jpeg\n[4]: https://i.imgur.com/ML10t1J.jpeg",
   }
 
-  content = content || <ThemedText>Post type not built</ThemedText>;
+  content = content || <ThemedMarkdown>Post type not built</ThemedMarkdown>;
 
   return content;
 };

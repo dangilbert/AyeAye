@@ -7,7 +7,6 @@ import Markdown, {
 } from "react-native-markdown-display";
 import * as WebBrowser from "expo-web-browser";
 import { Text } from "react-native-paper";
-import ImageModal from "@dreamwalk-os/react-native-image-modal";
 import { urlHost } from "@rn-app/utils/urlUtils";
 import { typescale } from "@rn-app/theme/paper-copy/tokens";
 import { ImagePopover } from "./post/media/ImagePopover";
@@ -34,7 +33,7 @@ export const ThemedMarkdown = ({
 };
 
 const rules = {
-  image: (node, children, parent, styles) => {
+  image: (node) => {
     return (
       <View
         style={{
