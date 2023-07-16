@@ -24,7 +24,7 @@ import { CommentItem } from "@rn-app/components/comment/CommentItem";
 import { ProfileOverflowMenu } from "./ProfileOverflowMenu";
 
 export const ProfileScreen = ({ route }) => {
-  console.log("route", route);
+  // console.log("route", route);
   const { userId } = route.params ?? { userId: undefined };
 
   const currentSession = useCurrentUser({ enabled: !userId });
@@ -51,7 +51,7 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
     invalidate: invalidatePosts,
   } = useUserPosts(userId);
 
-  console.log(userProfile);
+  // console.log(userProfile);
 
   const {
     data: userComments,

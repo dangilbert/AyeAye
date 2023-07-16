@@ -6,10 +6,14 @@ import ActionSheet, {
   SheetProps,
 } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { deleteAccount, setActiveLemmySession } from "../hooks/useAccount";
-import { useQueryClient } from "@tanstack/react-query";
+import {
+  deleteAccount,
+  setActiveLemmySession,
+  useUserSessions,
+} from "../hooks/useAccount";
 import { ThemedText } from "@rn-app/components";
 import { getShortActorId } from "@rn-app/utils/actorUtils";
+import RNRestart from "react-native-restart";
 
 interface AccountManageActionSheetProps {
   account: User;
@@ -22,22 +26,23 @@ export const AccountManageActionSheet = ({
 }: SheetProps<AccountManageActionSheetProps>) => {
   const themedStyles = styles(useTheme());
   const insets = useSafeAreaInsets();
-  const queryClient = useQueryClient();
+
+  const allAccounts = useUserSessions();
+  const nextAccount = Object.keys(allAccounts ?? {}).find(
+    (acc) => acc !== account.actorId
+  );
 
   const handleLogout = () => {
     deleteAccount(account.actorId);
-    if (isCurrentAccount) {
-      queryClient.invalidateQueries();
-    } else {
-      queryClient.invalidateQueries(authQueries.users().queryKey);
+    if (isCurrentAccount && nextAccount) {
+      setActiveLemmySession(nextAccount);
     }
-    SheetManager.hide(sheetId);
+    RNRestart.restart();
   };
 
   const setCurrentAccount = () => {
     setActiveLemmySession(account.actorId);
-    queryClient.invalidateQueries();
-    SheetManager.hide(sheetId);
+    RNRestart.restart();
   };
 
   return (
