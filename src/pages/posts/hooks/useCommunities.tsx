@@ -240,6 +240,43 @@ export const useMarkAsRead = (postId: number, communityId?: number) => {
           return data.post_view;
         }
       );
+      queryClient.setQueriesData(
+        {
+          predicate: (query: any) => {
+            return query.queryKey.some((key: any) => key === "posts");
+          },
+        },
+        (oldData: any) => {
+          const relevantPostsPage = oldData.pages.find((page: any) =>
+            page.posts.find((post: any) => post.post.id === postId)
+          );
+
+          const relevantPostsPageIndex =
+            oldData.pages.indexOf(relevantPostsPage);
+
+          relevantPostsPage.posts = relevantPostsPage.posts.map(
+            (post: PostView) => {
+              if (post.post.id === postId) {
+                const updatedPost = {
+                  ...post,
+                  read: true,
+                };
+                return updatedPost;
+              }
+              return post;
+            }
+          );
+
+          const updatedPages = oldData.pages;
+          updatedPages[relevantPostsPageIndex] = relevantPostsPage;
+
+          return {
+            ...oldData,
+            pages: [...updatedPages],
+            buster: new Date().getTime(),
+          };
+        }
+      );
     },
   });
 
