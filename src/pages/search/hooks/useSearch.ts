@@ -8,6 +8,7 @@ export const useSearchCommunities = ({ query }: { query: string }) => {
   const queryString = useThrottle(query);
   const { data, error, isLoading } = useQuery({
     ...searchQueries.searchCommunities({ query: queryString }),
+    staleTime: 1000 * 30,
   });
 
   return { data, error, isLoading };
