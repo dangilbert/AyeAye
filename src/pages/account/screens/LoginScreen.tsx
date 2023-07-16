@@ -109,7 +109,7 @@ export const LoginScreen = () => {
   useEffect(() => {});
 
   return (
-    <ScrollView>
+    <ScrollView keyboardShouldPersistTaps="handled">
       <View style={styles.container}>
         <TextInput
           style={styles.input}

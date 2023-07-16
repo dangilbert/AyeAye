@@ -131,6 +131,23 @@ export const communityQueries = createQueryKeys("communities", {
       };
     },
   }),
+  trendingCommunities: ({
+    communityType,
+  }: {
+    communityType: CommunityType;
+  }) => ({
+    queryKey: [{ entity: "trendingCommunities" }],
+    queryFn: async () => {
+      const res = await useLemmyHttp().listCommunities({
+        type_: communityType,
+        limit: 5,
+        page: 1,
+        sort: "Active",
+        auth: await getCurrentUserSessionToken(),
+      });
+      return res;
+    },
+  }),
   community: (communityId: number) => ({
     queryKey: [{ communityId, entity: "community" }],
     queryFn: async () => await getCommunity({ communityId }),

@@ -1,6 +1,9 @@
 import { ThemedText } from "@rn-app/components";
 import { CommunityRenderItem } from "@rn-app/components/community/CommunityRenderItem";
-import { useCommunities } from "@rn-app/pages/posts/hooks/useCommunities";
+import {
+  useCommunities,
+  useTrendingCommunities,
+} from "@rn-app/pages/posts/hooks/useCommunities";
 import { CommunityType } from "@rn-app/pods/communities/queries";
 import { Theme, useTheme } from "@rn-app/theme";
 import { storage } from "@rn-app/utils/storage";
@@ -9,11 +12,9 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { ActivityIndicator, TextInput } from "react-native-paper";
+import { useSearchCommunities } from "../hooks/useSearch";
 
-type CommunityListItemType =
-  | CommunityItem
-  | SectionHeader
-  | "CommunityTypeSelector";
+type CommunityListItemType = CommunityItem | "CommunityTypeSelector";
 type CommunityItem = {
   community: {
     id?: string;
@@ -28,45 +29,81 @@ type CommunityItem = {
     subscribers: number;
   };
 };
-type SectionHeader = {
-  sectionTitle: string;
-};
 
 export const SearchScreen = () => {
   const themedStyles = styles(useTheme());
 
-  const { data: communities, isLoading, invalidate } = useCommunities("All");
+  const [searchText, setSearchText] = useState("");
+
+  let content;
+  if (!searchText.length) {
+    content = <TrendingView />;
+  } else {
+    content = <SearchView searchText={searchText} />;
+  }
+
+  return (
+    <>
+      <TextInput
+        onChangeText={setSearchText}
+        style={themedStyles.searchInput}
+        underlineColor="transparent"
+        placeholder="Search communities"
+      />
+      {content}
+    </>
+  );
+};
+
+const SearchView = ({ searchText }: { searchText: string }) => {
+  const {
+    data: communities,
+    isLoading,
+    error,
+  } = useSearchCommunities({ query: searchText });
+
+  const communitiesList: CommunityItem[] = [];
+
+  communities?.communities?.forEach((community) => {
+    communitiesList.push(community);
+  });
+
+  return (
+    <FlashList
+      data={communities && [...communitiesList]}
+      estimatedItemSize={60}
+      ListHeaderComponent={() =>
+        isLoading && !communities ? <ActivityIndicator /> : null
+      }
+      renderItem={({ item }) => {
+        return <CommunityRenderItem item={item} />;
+      }}
+      keyboardShouldPersistTaps="handled"
+    />
+  );
+};
+
+const TrendingView = () => {
+  const themedStyles = styles(useTheme());
+
+  const [communityTypeSelector, setCommunityTypeSelector] =
+    useState<CommunityType>("All");
+  const {
+    data: communities,
+    isLoading,
+    invalidate,
+  } = useTrendingCommunities(communityTypeSelector);
 
   const communitiesList: CommunityListItemType[] = [];
 
-  communitiesList.push({ sectionTitle: "Communities" });
   communitiesList.push("CommunityTypeSelector");
 
-  communities?.sort((a, b) => {
-    if (a.community.name.toLowerCase() < b.community.name.toLowerCase()) {
-      return -1;
-    }
-    if (a.community.name.toLowerCase() > b.community.name.toLowerCase()) {
-      return 1;
-    }
-    return 0;
-  });
-
-  const firstLetters = new Set<string>();
-
   communities?.forEach((community) => {
-    if (!firstLetters.has(community.community.name[0].toUpperCase())) {
-      firstLetters.add(community.community.name[0].toUpperCase());
-      communitiesList.push({
-        sectionTitle: community.community.name[0].toUpperCase(),
-      });
-    }
     communitiesList.push(community);
   });
 
   return (
     <>
-      <TextInput />
       <FlashList
         data={communities && [...communitiesList]}
         onRefresh={() => {
@@ -96,6 +133,7 @@ export const SearchScreen = () => {
               return <CommunityRenderItem item={item} />;
           }
         }}
+        keyboardShouldPersistTaps="handled"
       />
     </>
   );
@@ -168,5 +206,9 @@ const styles = (theme: Theme) =>
       fontSize: 16,
       color: theme.colors.text,
       backgroundColor: theme.colors.secondaryBackground,
+    },
+    searchInput: {
+      margin: 16,
+      borderRadius: 8,
     },
   });

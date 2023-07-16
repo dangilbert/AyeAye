@@ -12,3 +12,7 @@ declare module "react-native-markdown-display" {
   >;
   export = ExtendedMarkdown;
 }
+
+declare module "@uidotdev/usehooks" {
+  export function useThrottle(value: any, delay?: number): any;
+}

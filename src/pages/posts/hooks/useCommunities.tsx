@@ -47,6 +47,26 @@ export const useCommunities = (
   };
 };
 
+export const useTrendingCommunities = (communityType: CommunityType) => {
+  const { data, isLoading, error } = useQuery({
+    ...communityQueries.trendingCommunities({ communityType }),
+  });
+
+  const queryClient = useQueryClient();
+
+  return {
+    isLoading,
+    data: data?.communities,
+    error,
+    invalidate: () => {
+      queryClient.invalidateQueries({
+        queryKey: communityQueries.trendingCommunities({ communityType })
+          .queryKey,
+      });
+    },
+  };
+};
+
 export const useCommunity = (communityId: number) => {
   const { data, isLoading, error } = useQuery({
     ...communityQueries.community(communityId),

@@ -13,7 +13,6 @@ import localCommunitiesState from "@rn-app/pages/home/state/localCommunities.jso
 import subscribedCommunitiesState from "@rn-app/pages/home/state/subscribedCommunities.json";
 import { MediaModalScreen } from "@rn-app/components/media/MediaModalScreen";
 import { useStringSetting } from "@rn-app/hooks/useSetting";
-import { useCurrentUser } from "../account/hooks/useAccount";
 import { getCurrentUserSessionToken } from "@rn-app/pods/auth/queries";
 
 const RootStack = createNativeStackNavigator();

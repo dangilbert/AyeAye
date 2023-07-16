@@ -97,6 +97,7 @@ export const CommunitiesScreen = () => {
 
   return (
     <FlashList
+      keyboardShouldPersistTaps="handled"
       data={communities && [...communitiesList]}
       onRefresh={() => {
         invalidate();
