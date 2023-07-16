@@ -48,7 +48,6 @@ export const InboxScreen = () => {
         ]}
       />
       <FlashList
-        keyboardShouldPersistTaps="handled"
         data={filteredMessages}
         estimatedItemSize={100}
         renderItem={({ item }) => <InboxItem message={item} />}

@@ -55,7 +55,6 @@ export const AccountSelectorScreen = () => {
           renderItem={AccountItem}
           estimatedItemSize={100}
           contentContainerStyle={themedStyles.listContentContainer}
-          keyboardShouldPersistTaps="handled"
         />
       </SheetProvider>
     </>

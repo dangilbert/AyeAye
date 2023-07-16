@@ -93,7 +93,6 @@ const LoggedInProfileScreen = ({ userId }: { userId: number }) => {
 
   return (
     <FlashList<PostView | CommentView>
-      keyboardShouldPersistTaps="handled"
       ListHeaderComponent={() => (
         <ProfileHeader
           userProfile={userProfile}

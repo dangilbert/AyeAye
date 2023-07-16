@@ -78,7 +78,6 @@ const SearchView = ({ searchText }: { searchText: string }) => {
       renderItem={({ item }) => {
         return <CommunityRenderItem item={item} />;
       }}
-      keyboardShouldPersistTaps="handled"
     />
   );
 };
@@ -133,7 +132,6 @@ const TrendingView = () => {
               return <CommunityRenderItem item={item} />;
           }
         }}
-        keyboardShouldPersistTaps="handled"
       />
     </>
   );
